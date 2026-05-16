@@ -6,6 +6,10 @@
   --muted: #5c626b;
   --accent: #1f4b82;
   --line: #e3ddd4;
+  --hero-background: #0c0d10;
+  --hero-foreground: #f4f4f5;
+  --hero-muted: #9ca3af;
+  --hero-line: rgba(255, 255, 255, 0.12);
 }
 
 @theme inline {
@@ -14,6 +18,10 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-line: var(--line);
+  --color-hero-background: var(--hero-background);
+  --color-hero-foreground: var(--hero-foreground);
+  --color-hero-muted: var(--hero-muted);
+  --color-hero-line: var(--hero-line);
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
