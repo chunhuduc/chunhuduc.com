@@ -7,7 +7,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="mt-auto border-t border-line/80 bg-background">
-      <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p className="font-medium text-foreground/80">
           {profile.name}{" "}
           <span className="font-normal text-muted">· {year}</span>
