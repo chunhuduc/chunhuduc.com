@@ -15,6 +15,10 @@ export const profile = {
     linkedin: "",
   },
   siteUrl: "https://chunhuduc.com",
+  /** Full-viewport hero background (`public/`) */
+  heroBackground: "/hero-bg.png",
+  /** Hero portrait layer (`public/`). Solid black in source uses CSS screen blend over the photo bg. */
+  heroPortrait: "/hero-portrait.png",
   aboutLead:
     "Senior full-stack engineer and technical leader with 13+ years of experience building scalable backend architectures, cloud-native systems, and high-volume distributed services. Strong background in Node.js, TypeScript, Python automation, and Google Cloud Platform, delivering end-to-end software solutions in both startup and enterprise environments.",
   aboutFocus:

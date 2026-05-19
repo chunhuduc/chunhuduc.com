@@ -13,8 +13,8 @@ const nav = [
 
 function scrollPastHero(): boolean {
   if (typeof window === "undefined") return false;
-  const threshold = Math.min(window.innerHeight * 0.72, 560);
-  return window.scrollY > threshold;
+  // Home hero is full viewport height: switch header after leaving that fold.
+  return window.scrollY > window.innerHeight * 0.92;
 }
 
 export default function SiteHeader() {

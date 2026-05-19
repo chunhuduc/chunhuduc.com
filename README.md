@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | Path | Purpose |
 |------|---------|
 | `content/blog/*.md` | Blog posts (YAML frontmatter: `title`, `date`, `summary`, optional `repo`, `relatedRepos`) |
-| `data/profile.ts` | Name, headline, contact, social URLs |
+| `data/profile.ts` | Name, headline, contact, social URLs, optional `heroPortrait` (`public/` path) |
 | `data/experience.ts` | Employment entries |
 | `data/projects.ts` | Initiative cards (NDA-safe blurbs) |
 | `data/repos.ts` | GitHub showcase rows |

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HomeHero from "@/components/HomeHero";
 import SectionLabel from "@/components/SectionLabel";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
@@ -16,113 +17,9 @@ const employers = [
 export default function Home() {
   const posts = getAllPostsMeta().slice(0, 3);
   const featuredProjects = projects.slice(0, 3);
-  const gh = profile.social.github?.trim();
-  const li = profile.social.linkedin?.trim();
-
   return (
     <>
-      {/* Hero: full-bleed dark band */}
-      <section className="relative w-full overflow-hidden bg-hero-background text-hero-foreground">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_80%_-20%,rgba(31,75,130,0.38),transparent_50%)]"
-          aria-hidden
-        />
-        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12 lg:pb-24">
-          <div className="mb-2 h-1 w-12 rounded-full bg-hero-foreground/90 sm:w-16" aria-hidden />
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:gap-16">
-            <div>
-              <SectionLabel>Intro</SectionLabel>
-              <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-hero-foreground sm:text-5xl lg:text-[3.25rem]">
-                I&apos;m Đức,
-                <span className="mt-2 block text-2xl font-bold text-hero-muted sm:text-3xl">
-                  a Solution Architect and hands-on engineer.
-                </span>
-              </h1>
-              <p className="mt-3 text-sm font-semibold text-hero-foreground/90">{profile.name}</p>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-hero-muted">
-                {profile.subline}
-              </p>
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-hero-foreground/88">
-                {profile.aboutLead}
-              </p>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <a
-                  className="inline-flex items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.35)] transition-opacity hover:opacity-90"
-                  href={`mailto:${profile.email}`}
-                >
-                  Get in touch
-                </a>
-                <Link
-                  href="/projects"
-                  className="inline-flex items-center justify-center rounded-full border border-hero-line bg-white/5 px-6 py-3 text-sm font-bold text-hero-foreground backdrop-blur-sm transition-colors hover:bg-white/10"
-                >
-                  Browse projects
-                </Link>
-                {gh ? (
-                  <a
-                    className="inline-flex items-center justify-center rounded-full border border-transparent px-4 py-3 text-sm font-bold text-accent underline decoration-hero-line underline-offset-4 hover:opacity-90"
-                    href={gh}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    GitHub
-                  </a>
-                ) : null}
-                {li ? (
-                  <a
-                    className="inline-flex items-center justify-center rounded-full border border-transparent px-4 py-3 text-sm font-bold text-accent underline decoration-hero-line underline-offset-4 hover:opacity-90"
-                    href={li}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    LinkedIn
-                  </a>
-                ) : null}
-              </div>
-            </div>
-
-            <aside className="flex flex-col gap-4 rounded-2xl border border-hero-line bg-white/[0.06] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-md">
-              <div className="rounded-xl bg-accent/20 p-4 ring-1 ring-inset ring-white/10">
-                <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-                  Currently
-                </p>
-                <p className="mt-2 text-sm font-semibold leading-snug text-hero-foreground">
-                  Solution Architect at FPT Software
-                </p>
-                <p className="mt-1 text-sm text-hero-muted">{profile.location}</p>
-              </div>
-              <p className="text-sm leading-relaxed text-hero-muted">{profile.aboutFocus}</p>
-              <Link
-                href="/experience"
-                className="text-sm font-bold text-accent hover:opacity-90"
-              >
-                Full timeline
-              </Link>
-            </aside>
-          </div>
-
-          <div className="mt-12 flex justify-start sm:mt-14">
-            <a
-              href="#about"
-              className="group inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-105 hover:opacity-95"
-              aria-label="Scroll to about section"
-            >
-              <svg
-                className="h-5 w-5 transition-transform group-hover:translate-y-0.5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.25"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
+      <HomeHero />
 
       <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6">
       {/* Stats */}
