@@ -16,6 +16,8 @@ const SCROLL_DELTA = 8;
 const MOBILE_DOCK_PRIMED_AFTER_Y = 40;
 /** Within this scroll offset from top, hero-style snap rules apply. */
 const NEAR_TOP_PX = 72;
+/** Below this surface alpha while on hero, use light inks (readable on hero image). */
+const HERO_INK_SURFACE_MAX = 0.52;
 
 /** Intersect [viewport top, viewport top + stripPx] with hero rect; hero coverage → transparent header. Returns 1 = full surface, 0 = none. */
 function headerSurfaceAlphaForHero(stripPx: number): number {
@@ -167,6 +169,8 @@ export default function SiteHeader() {
   }, [menuOpen]);
 
   const a = Math.min(Math.max(surfaceAlpha, 0), 1);
+  /** Light text on hero; dark text once bar is visibly white / mobile menu forces opaque bar. */
+  const heroInk = onHome && !menuOpen && a < HERO_INK_SURFACE_MAX;
 
   return (
     <header
@@ -181,15 +185,23 @@ export default function SiteHeader() {
         borderBottomColor: `rgba(227, 221, 212, ${0.92 * a})`,
         boxShadow: a > 0.04 ? `0 1px 2px rgb(24 26 31 / ${0.06 * a})` : "none",
       }}
-      className={`fixed inset-x-0 z-[100] text-foreground ${dockVisible ? "" : "pointer-events-none"}`}
+      className={`fixed inset-x-0 z-[100] transition-colors duration-300 ease-out ${
+        heroInk ? "text-white" : "text-foreground"
+      } ${dockVisible ? "" : "pointer-events-none"}`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link
           href="/"
-          className="group flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground transition-colors hover:text-accent"
+          className={`group flex items-center gap-2 text-sm font-semibold tracking-tight transition-colors ${
+            heroInk ? "text-white drop-shadow-[0_2px_6px_rgb(0_0_0/0.55)] hover:text-white/95" : "text-foreground hover:text-accent"
+          }`}
         >
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-xs font-bold text-accent"
+            className={
+              heroInk
+                ? "flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.22] bg-white/14 text-xs font-bold text-white shadow-[0_8px_20px_rgb(0_0_0/0.38)]"
+                : "flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-xs font-bold text-accent"
+            }
             aria-hidden
           >
             {"</>"}
@@ -198,11 +210,15 @@ export default function SiteHeader() {
         </Link>
 
         <nav
-          className="hidden flex-wrap items-center justify-end gap-x-6 gap-y-1 text-sm font-medium text-muted md:flex"
+          className={`hidden flex-wrap items-center justify-end gap-x-6 gap-y-1 text-sm font-medium md:flex ${
+            heroInk
+              ? "text-white [&_a]:text-white [&_a]:drop-shadow-[0_2px_6px_rgb(0_0_0/0.5)] [&_a]:transition-opacity [&_a:hover]:opacity-95"
+              : "text-muted [&_a]:transition-colors [&_a:hover]:text-accent"
+          }`}
           aria-label="Primary"
         >
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors hover:text-accent">
+            <Link key={item.href} href={item.href}>
               {item.label}
             </Link>
           ))}
@@ -210,7 +226,11 @@ export default function SiteHeader() {
 
         <button
           type="button"
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line text-foreground transition-colors hover:bg-black/[0.04] md:hidden"
+          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors md:hidden ${
+            heroInk
+              ? "border-white/35 text-white drop-shadow-[0_2px_6px_rgb(0_0_0/0.5)] hover:bg-white/[0.1]"
+              : "border-line text-foreground hover:bg-black/[0.04]"
+          }`}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           onClick={() => setMenuOpen((o) => !o)}
@@ -218,19 +238,19 @@ export default function SiteHeader() {
           <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
           <span className="relative block h-3.5 w-5" aria-hidden>
             <span
-              className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-foreground transition-all ${
-                menuOpen ? "top-1.5 rotate-45" : ""
-              }`}
+              className={`absolute left-0 top-0 h-0.5 w-5 rounded-full transition-all ${
+                heroInk ? "bg-white" : "bg-foreground"
+              } ${menuOpen ? "top-1.5 rotate-45" : ""}`}
             />
             <span
-              className={`absolute left-0 top-1.5 h-0.5 w-5 rounded-full bg-foreground transition-all ${
-                menuOpen ? "opacity-0" : ""
-              }`}
+              className={`absolute left-0 top-1.5 h-0.5 w-5 rounded-full transition-all ${
+                heroInk ? "bg-white" : "bg-foreground"
+              } ${menuOpen ? "opacity-0" : ""}`}
             />
             <span
-              className={`absolute left-0 top-3 h-0.5 w-5 rounded-full bg-foreground transition-all ${
-                menuOpen ? "top-1.5 -rotate-45" : ""
-              }`}
+              className={`absolute left-0 top-3 h-0.5 w-5 rounded-full transition-all ${
+                heroInk ? "bg-white" : "bg-foreground"
+              } ${menuOpen ? "top-1.5 -rotate-45" : ""}`}
             />
           </span>
         </button>
