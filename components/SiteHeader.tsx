@@ -17,39 +17,21 @@ const MOBILE_DOCK_PRIMED_AFTER_Y = 40;
 /** Within this scroll offset from top, hero-style snap rules apply. */
 const NEAR_TOP_PX = 72;
 
-function scrollPastHero(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.scrollY > window.innerHeight * 0.92;
-}
-
 export default function SiteHeader() {
   const pathname = usePathname();
-  const onHome = pathname === "/";
-  const [heroPassed, setHeroPassed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  /** false = tucked above viewport while scrolling down; true = slid down flush with top */
+  /** false = slid up out of view while scrolling down; true = docked flush with top */
   const [dockVisible, setDockVisible] = useState(true);
   /** Mobile-only: becomes true once scrollY crosses MOBILE_DOCK_PRIMED_AFTER_Y (session + route). */
   const [mobileDockPrimed, setMobileDockPrimed] = useState(false);
   const lastYRef = useRef(0);
 
-  const syncHeroPassed = useCallback(() => {
-    if (!onHome) {
-      setHeroPassed(true);
-      return;
-    }
-    setHeroPassed(scrollPastHero());
-  }, [onHome]);
-
   const handleScroll = useCallback(() => {
     const y = window.scrollY;
     const compact = window.matchMedia("(max-width: 767px)").matches;
 
-    syncHeroPassed();
-
     if (menuOpen) {
-      syncHeroPassed();
       lastYRef.current = y;
       return;
     }
@@ -78,11 +60,9 @@ export default function SiteHeader() {
 
     if (delta > SCROLL_DELTA) setDockVisible(false);
     else if (delta < -SCROLL_DELTA) setDockVisible(true);
-  }, [menuOpen, syncHeroPassed, mobileDockPrimed]);
+  }, [menuOpen, mobileDockPrimed]);
 
   useEffect(() => {
-    syncHeroPassed();
-
     const y = typeof window !== "undefined" ? window.scrollY : 0;
     lastYRef.current = y;
 
@@ -107,7 +87,7 @@ export default function SiteHeader() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-  }, [handleScroll, pathname, syncHeroPassed]);
+  }, [handleScroll, pathname]);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -125,115 +105,85 @@ export default function SiteHeader() {
     if (menuOpen) setDockVisible(true);
   }, [menuOpen]);
 
-  const overHero =
-    dockVisible &&
-    !menuOpen &&
-    onHome &&
-    !heroPassed;
-
-  /** Solid bar everywhere except transparent stretch over hero on home while docked visible */
-  const solidBar =
-    dockVisible &&
-    (!onHome || heroPassed || menuOpen);
-
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        dockVisible ? "translate-y-0" : "-translate-y-full pointer-events-none"
+      style={{
+        transform: dockVisible ? "translateY(0)" : "translateY(-100%)",
+        transition: "transform 300ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
+      className={`fixed inset-x-0 z-[100] bg-white border-b border-line text-foreground shadow-sm ${
+        dockVisible ? "" : "pointer-events-none"
       }`}
     >
-      <div
-        className={`transition-[background-color,backdrop-filter,border-color] duration-300 ${
-          solidBar ? "border-b border-line/80 bg-background/90 backdrop-blur-md" : "border-b border-transparent bg-transparent backdrop-blur-0"
-        }`}
-      >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <Link
-            href="/"
-            className={`group flex items-center gap-2 text-sm font-semibold tracking-tight transition-colors ${
-              overHero ? "text-hero-foreground hover:text-white" : "text-foreground hover:text-accent"
-            }`}
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <Link
+          href="/"
+          className="group flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground transition-colors hover:text-accent"
+        >
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-xs font-bold text-accent"
+            aria-hidden
           >
-            <span
-              className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold ${
-                overHero ? "bg-accent text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)]" : "bg-accent/10 text-accent"
-              }`}
-              aria-hidden
-            >
-              {"</>"}
-            </span>
-            <span className="hidden sm:inline">chunhuduc.com</span>
-          </Link>
+            {"</>"}
+          </span>
+          <span className="hidden sm:inline">chunhuduc.com</span>
+        </Link>
 
-          <nav
-            className={`hidden flex-wrap items-center justify-end gap-x-6 gap-y-1 text-sm font-medium md:flex ${
-              overHero ? "text-hero-muted" : "text-muted"
-            }`}
-            aria-label="Primary"
-          >
+        <nav
+          className="hidden flex-wrap items-center justify-end gap-x-6 gap-y-1 text-sm font-medium text-muted md:flex"
+          aria-label="Primary"
+        >
+          {nav.map((item) => (
+            <Link key={item.href} href={item.href} className="transition-colors hover:text-accent">
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line text-foreground transition-colors hover:bg-black/[0.04] md:hidden"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
+          <span className="relative block h-3.5 w-5" aria-hidden>
+            <span
+              className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-foreground transition-all ${
+                menuOpen ? "top-1.5 rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`absolute left-0 top-1.5 h-0.5 w-5 rounded-full bg-foreground transition-all ${
+                menuOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`absolute left-0 top-3 h-0.5 w-5 rounded-full bg-foreground transition-all ${
+                menuOpen ? "top-1.5 -rotate-45" : ""
+              }`}
+            />
+          </span>
+        </button>
+      </div>
+
+      {menuOpen ? (
+        <div id="mobile-nav" className="border-t border-line md:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
             {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={
-                  overHero ? "transition-colors hover:text-hero-foreground" : "transition-colors hover:text-accent"
-                }
+                className="rounded-lg px-3 py-3 text-base font-semibold text-foreground hover:bg-black/[0.04]"
+                onClick={() => setMenuOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
           </nav>
-
-          <button
-            type="button"
-            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors md:hidden ${
-              overHero ? "border-hero-line text-hero-foreground hover:bg-white/5" : "border-line text-foreground hover:bg-black/[0.04]"
-            }`}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-            onClick={() => setMenuOpen((o) => !o)}
-          >
-            <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
-            <span className="relative block h-3.5 w-5" aria-hidden>
-              <span
-                className={`absolute left-0 top-0 h-0.5 w-5 rounded-full transition-all ${
-                  overHero ? "bg-hero-foreground" : "bg-foreground"
-                } ${menuOpen ? "top-1.5 rotate-45" : ""}`}
-              />
-              <span
-                className={`absolute left-0 top-1.5 h-0.5 w-5 rounded-full transition-all ${
-                  overHero ? "bg-hero-foreground" : "bg-foreground"
-                } ${menuOpen ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`absolute left-0 top-3 h-0.5 w-5 rounded-full transition-all ${
-                  overHero ? "bg-hero-foreground" : "bg-foreground"
-                } ${menuOpen ? "top-1.5 -rotate-45" : ""}`}
-              />
-            </span>
-          </button>
         </div>
-
-        {menuOpen ? (
-          <div
-            id="mobile-nav"
-            className="border-t border-line/70 bg-background/95 backdrop-blur-md md:hidden"
-          >
-            <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-lg px-3 py-3 text-base font-semibold text-foreground hover:bg-black/[0.04]"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        ) : null}
-      </div>
+      ) : null}
     </header>
   );
 }
