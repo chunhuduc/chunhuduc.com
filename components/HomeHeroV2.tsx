@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getAllPostsMeta } from "@/lib/posts";
 import { profile } from "@/data/profile";
 
-/** Single full-bleed hero photo (`public/hero-v3.png`). Swap `HomeHero` back in `app/page.tsx` for the two-layer variant. */
-const HERO_IMAGE = "/hero-v3.png";
+/** Single full-bleed hero photo (`public/hero-v6.jpg`). Swap `HomeHero` back in `app/page.tsx` for the two-layer variant. */
+const HERO_IMAGE = "/hero-v6.jpg";
 
 export default function HomeHeroV2() {
   const gh = profile.social.github?.trim();
   const li = profile.social.linkedin?.trim();
+  const latestPost = getAllPostsMeta()[0];
 
   return (
     <section
@@ -20,6 +22,7 @@ export default function HomeHeroV2() {
           src={HERO_IMAGE}
           alt=""
           fill
+          unoptimized
           priority
           sizes="100vw"
           className="object-cover object-center"
@@ -91,20 +94,42 @@ export default function HomeHeroV2() {
                 </Link>
               </div>
               <div className="border-b border-hero-line py-8">
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">
-                  My work
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-hero-muted">
-                  Initiative snapshots and stack notes (NDA-safe). See projects for how engagement,
-                  ownership, and delivery show up in practice.
-                </p>
-                <Link
-                  href="/projects"
-                  className="mt-5 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-hero-foreground transition-colors hover:text-accent"
-                >
-                  Browse portfolio
-                  <span aria-hidden> -&gt;</span>
-                </Link>
+                {latestPost ? (
+                  <>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground leading-snug line-clamp-4">
+                      {latestPost.title}
+                    </p>
+                    {latestPost.summary ? (
+                      <p className="mt-3 text-sm leading-relaxed text-hero-muted line-clamp-4">
+                        {latestPost.summary}
+                      </p>
+                    ) : null}
+                    <Link
+                      href={`/blog/${latestPost.slug}`}
+                      className="mt-5 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-hero-foreground transition-colors hover:text-accent"
+                    >
+                      Read post
+                      <span aria-hidden> -&gt;</span>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">
+                      My work
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-hero-muted">
+                      Initiative snapshots and stack notes (NDA-safe). See projects for how engagement,
+                      ownership, and delivery show up in practice.
+                    </p>
+                    <Link
+                      href="/projects"
+                      className="mt-5 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-hero-foreground transition-colors hover:text-accent"
+                    >
+                      Browse portfolio
+                      <span aria-hidden> -&gt;</span>
+                    </Link>
+                  </>
+                )}
               </div>
               <div className="pt-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">
