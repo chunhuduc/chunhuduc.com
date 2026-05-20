@@ -11,7 +11,7 @@ export default function HomeHero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:size] lg:h-[100dvh] lg:max-h-[100dvh]"
+      className="relative flex min-h-dvh w-full max-lg:h-[100svh] max-lg:max-h-[100svh] flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal] lg:h-[100dvh] lg:max-h-[100dvh] lg:[container-type:size]"
       aria-label="Hero"
     >
       {/* Layer 1: background photo */}
@@ -58,10 +58,10 @@ export default function HomeHero() {
         </div>
       ) : null}
 
-      {/* Layer 3: copy + links; mobile aligns from top padding, lg vertically centers */}
-      <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-start px-4 pt-14 max-lg:pb-[max(7rem,calc(2.75rem+env(safe-area-inset-bottom,0px)))] sm:px-6 sm:pt-20 lg:justify-center lg:pb-16 lg:pt-28">
-        <div className="grid min-h-0 grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-8 xl:gap-10">
-          <div className="order-1 flex flex-col justify-center lg:col-span-4">
+      {/* Layer 3: mobile intro bottom + no sidebar; lg 3-column */}
+      <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 max-lg:h-full max-lg:justify-end max-lg:pb-6 max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] lg:justify-center lg:pb-16 lg:pt-28">
+        <div className="grid min-h-0 w-full grid-cols-1 gap-12 max-lg:h-full max-lg:content-end max-lg:items-end max-lg:gap-0 lg:max-h-none lg:flex-1 lg:grid-cols-12 lg:content-normal lg:items-center lg:gap-8 xl:gap-10">
+          <div className="order-1 flex w-full flex-col max-lg:justify-end lg:col-span-4 lg:justify-center">
             <div className="mb-5 h-1 w-12 rounded-full bg-hero-foreground sm:w-16" aria-hidden />
             <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-hero-foreground sm:text-5xl lg:text-[2.75rem] xl:text-[3.15rem]">
               I&apos;m Đức,
@@ -95,9 +95,9 @@ export default function HomeHero() {
             </div>
           </div>
 
-          {/* Center lane: flow spacer + placeholder when no portrait; Layer 2 draws on top when set */}
+          {/* Center lane: desktop only */}
           <div
-            className={`order-2 flex w-full justify-center lg:col-span-4 lg:items-center ${
+            className={`order-2 hidden w-full justify-center lg:flex lg:col-span-4 lg:items-center ${
               portrait ? "min-h-[36dvh] lg:min-h-0" : "min-h-[260px] lg:min-h-[min(58dvh,620px)]"
             }`}
           >
@@ -123,7 +123,7 @@ export default function HomeHero() {
             ) : null}
           </div>
 
-          <aside className="order-3 lg:col-span-4">
+          <aside className="order-3 hidden lg:col-span-4 lg:block">
             <div className="space-y-0 lg:max-w-md lg:justify-self-end">
               <div className="border-b border-hero-line pb-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">

@@ -30,6 +30,10 @@ function headerSurfaceAlphaForHero(stripPx: number): number {
   return 1 - coverFrac;
 }
 
+function isCompactHeaderChrome(): boolean {
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const onHome = pathname === "/";
@@ -52,7 +56,13 @@ export default function SiteHeader() {
 
   const publishSurfaceAlpha = useCallback((forceMenuOpaque: boolean) => {
     let next = 1;
-    if (forceMenuOpaque || !onHome) {
+    if (forceMenuOpaque) {
+      /* Open mobile menu needs solid bar readability */
+      next = 1;
+    } else if (isCompactHeaderChrome()) {
+      /* Compact: toolbar stays clear until menu expands */
+      next = 0;
+    } else if (!onHome) {
       next = 1;
     } else {
       const strip = Math.ceil(headerRef.current?.getBoundingClientRect().height ?? stripHRef.current);
@@ -177,6 +187,17 @@ export default function SiteHeader() {
     if (menuOpen) setDockVisible(true);
   }, [menuOpen]);
 
+  /** Logo on home scrolls back to top; other routes navigate via href. */
+  const handleBrandClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (pathname !== "/") return;
+      e.preventDefault();
+      setMenuOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [pathname],
+  );
+
   const a = Math.min(Math.max(surfaceAlpha, 0), 1);
   /** Light text on hero; dark text once bar is visibly white / mobile menu forces opaque bar. */
   const heroInk = onHome && !menuOpen && a < HERO_INK_SURFACE_MAX;
@@ -202,6 +223,7 @@ export default function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link
           href="/"
+          onClick={handleBrandClick}
           className={`group flex items-center gap-2 text-sm font-semibold tracking-tight transition-colors ${
             heroInk ? "text-white drop-shadow-[0_2px_6px_rgb(0_0_0/0.55)] hover:text-white/95" : "text-foreground hover:text-accent"
           }`}
@@ -267,7 +289,7 @@ export default function SiteHeader() {
       </div>
 
       {menuOpen ? (
-        <div id="mobile-nav" className="border-t border-line md:hidden">
+        <div id="mobile-nav" className="border-t border-line bg-white shadow-[0_12px_32px_rgb(24_26_31/0.1)] md:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
             {nav.map((item) => (
               <Link
