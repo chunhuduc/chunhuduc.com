@@ -93,12 +93,12 @@ export default function AboutHomeSection() {
       >
         {employers.map(({ name, logoSrc }) => (
           <li key={name} className="flex w-full items-center gap-3 md:w-auto">
-            <span className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/[0.08] p-1.5 ring-1 ring-white/[0.12]">
+            <span className="employer-logo-chip relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden p-1.5">
               <Image
                 src={logoSrc}
                 alt=""
                 fill
-                sizes="40px"
+                sizes="44px"
                 className="object-contain p-0.5"
               />
             </span>
