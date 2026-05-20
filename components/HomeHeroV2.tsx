@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { profile } from "@/data/profile";
 
-/** Single full-bleed hero photo (`public/hero-v2.jpg`). Swap `HomeHero` back in `app/page.tsx` for the two-layer variant. */
-const HERO_IMAGE = "/hero-v2.jpg";
+/** Single full-bleed hero photo (`public/hero-v3.png`). Swap `HomeHero` back in `app/page.tsx` for the two-layer variant. */
+const HERO_IMAGE = "/hero-v3.png";
 
 export default function HomeHeroV2() {
   const gh = profile.social.github?.trim();
