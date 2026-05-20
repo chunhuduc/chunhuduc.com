@@ -36,7 +36,9 @@ export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   /** false = slid up out of view while scrolling down; true = docked flush with top */
-  const [dockVisible, setDockVisible] = useState(true);
+  const [dockVisible, setDockVisible] = useState(false);
+  /** After first paint / route sync, allow transform transition (avoids intro slide on desktop). */
+  const [dockMotionEnabled, setDockMotionEnabled] = useState(false);
   /** Mobile-only: becomes true once scrollY crosses MOBILE_DOCK_PRIMED_AFTER_Y (session + route). */
   const [mobileDockPrimed, setMobileDockPrimed] = useState(false);
   /** 1 = opaque white bar chrome; lower over #hero overlap (continuous fade). */
@@ -100,15 +102,19 @@ export default function SiteHeader() {
     else if (delta < -SCROLL_DELTA) setDockVisible(true);
   }, [mobileDockPrimed, publishSurfaceAlpha]);
 
-  useEffect(() => {
+  /**
+   * Runs before browser paint so mobile cold-load (dock tucked) never flashes “visible header” frame.
+   */
+  useLayoutEffect(() => {
+    setDockMotionEnabled(false);
     lastAlphaRef.current = -1;
 
-    const y = typeof window !== "undefined" ? window.scrollY : 0;
+    const y = window.scrollY;
     lastYRef.current = y;
 
     publishSurfaceAlpha(menuOpenRef.current);
 
-    const compact = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+    const compact = window.matchMedia("(max-width: 767px)").matches;
     const primedRoute = y > MOBILE_DOCK_PRIMED_AFTER_Y;
     setMobileDockPrimed(primedRoute);
 
@@ -125,7 +131,10 @@ export default function SiteHeader() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
 
+    const raf = requestAnimationFrame(() => setDockMotionEnabled(true));
+
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
@@ -177,8 +186,9 @@ export default function SiteHeader() {
       ref={headerRef}
       style={{
         transform: dockVisible ? "translateY(0)" : "translateY(-100%)",
-        transition:
-          "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)",
+        transition: dockMotionEnabled
+          ? "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)"
+          : "background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)",
         backgroundColor: `rgba(255, 255, 255, ${a})`,
         borderBottomWidth: 1,
         borderBottomStyle: "solid",
