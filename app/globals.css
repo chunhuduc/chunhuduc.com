@@ -75,9 +75,25 @@ body {
   }
 }
 
-/* Portrait strip: height from cq units; min-height avoids Next/Image fill parent height 0 when cqh unresolved */
 #hero .hero-portrait-slot {
-  min-height: 42dvh;
-  height: 100%;
-  height: 100cqh;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%) scale(1.06);
+  transform-origin: 50% 100%;
+  width: min(132vw, 2000px);
+  min-height: 100dvh;
+  height: 100dvh;
+  min-height: 100lvh;
+  height: 100lvh;
+}
+
+@media (min-width: 1024px) {
+  #hero .hero-portrait-slot {
+    width: min(99vw, 1400px);
+    min-height: 42dvh;
+    height: 100%;
+    height: 100cqh;
+    transform: translateX(-50%);
+    transform-origin: bottom center;
+  }
 }

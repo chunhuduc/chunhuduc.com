@@ -39,10 +39,10 @@ export default function HomeHero() {
         />
       </div>
 
-      {/* Layer 2: portrait band height from globals; contain + bottom keeps full silhouette (avoid cover+bottom which clips the head). */}
+      {/* Layer 2: portrait band sizing in globals (.hero-portrait-slot); lg+ cq height */}
       {portrait ? (
         <div className="hero-animate-portrait pointer-events-none absolute inset-0 z-[1]">
-          <div className="hero-portrait-slot absolute bottom-0 left-1/2 w-[min(99vw,1400px)] -translate-x-1/2">
+          <div className="hero-portrait-slot absolute">
             <div className="relative h-full w-full">
               <Image
                 src={portrait}
