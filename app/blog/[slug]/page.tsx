@@ -69,7 +69,7 @@ export default async function BlogPostPage({
       </header>
 
       {links.length > 0 ? (
-        <aside className="mt-10 max-w-prose rounded-xl border border-line bg-white/70 p-5">
+        <aside className="mt-10 max-w-prose rounded-xl border border-white/10 bg-white/[0.05] p-5">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-accent">
             Related code
           </h2>

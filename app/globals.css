@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5;
-  --foreground: #121417;
-  --muted: #5c626b;
-  --accent: #1f4b82;
-  --line: #e3ddd4;
+  /* Site-wide dark canvas (match portfolio hero / reference mood) */
+  --background: #0a0b0f;
+  --foreground: #f4f4f5;
+  --muted: #9ca3af;
+  --accent: #6ea8ff;
+  --line: rgba(255, 255, 255, 0.1);
   --hero-background: #0c0d10;
   --hero-foreground: #f4f4f5;
   --hero-muted: #9ca3af;
   --hero-line: rgba(255, 255, 255, 0.12);
+  --surface-raised: rgba(255, 255, 255, 0.04);
 }
 
 @theme inline {
@@ -18,6 +20,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-line: var(--line);
+  --color-surface-raised: var(--surface-raised);
   --color-hero-background: var(--hero-background);
   --color-hero-foreground: var(--hero-foreground);
   --color-hero-muted: var(--hero-muted);
@@ -72,6 +75,69 @@ body {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Home About: staggered fade + slide-up when section enters view */
+@keyframes about-reveal-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.about-section-in-view .about-reveal {
+  animation: about-reveal-fade-up 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.about-section-in-view .about-reveal[data-order="1"] {
+  animation-delay: 0ms;
+}
+.about-section-in-view .about-reveal[data-order="2"] {
+  animation-delay: 90ms;
+}
+.about-section-in-view .about-reveal[data-order="3"] {
+  animation-delay: 180ms;
+}
+.about-section-in-view .about-reveal[data-order="4"] {
+  animation-delay: 270ms;
+}
+.about-section-in-view .about-reveal[data-order="5"] {
+  animation-delay: 380ms;
+}
+.about-section-in-view .about-reveal[data-order="6"] {
+  animation-delay: 470ms;
+}
+.about-section-in-view .about-reveal[data-order="7"] {
+  animation-delay: 580ms;
+}
+.about-section-in-view .about-reveal[data-order="8"] {
+  animation-delay: 670ms;
+}
+.about-section-in-view .about-reveal[data-order="9"] {
+  animation-delay: 760ms;
+}
+.about-section-in-view .about-reveal[data-order="10"] {
+  animation-delay: 850ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .about-section-in-view .about-reveal {
+    animation: none;
   }
 }
 

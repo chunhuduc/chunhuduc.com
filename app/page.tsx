@@ -1,18 +1,11 @@
 import Link from "next/link";
+import AboutHomeSection from "@/components/AboutHomeSection";
 import HomeHero from "@/components/HomeHero";
 import SectionLabel from "@/components/SectionLabel";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { skillGroups } from "@/data/homeSkills";
 import { getAllPostsMeta } from "@/lib/posts";
-
-const employers = [
-  "FPT Software",
-  "TTC Technology Solutions",
-  "HOTTAB",
-  "Appota",
-  "OwlGaming Community",
-];
 
 export default function Home() {
   const posts = getAllPostsMeta().slice(0, 3);
@@ -21,63 +14,8 @@ export default function Home() {
     <>
       <HomeHero />
 
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6">
-      {/* Stats */}
-      <section id="about" className="scroll-mt-24 border-y border-line bg-white/40 py-16">
-        <SectionLabel>About me</SectionLabel>
-        <div className="grid gap-10 lg:grid-cols-[1fr_minmax(0,340px)] lg:gap-16">
-          <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              I&apos;ve been shipping production systems for over a decade.
-            </h2>
-            <p className="mt-5 max-w-prose text-base leading-relaxed text-muted">
-              Architecture ownership plus hands-on delivery: stakeholder alignment, integration
-              boundaries, and code-level execution when schedules are tight.
-            </p>
-            <Link
-              href="/experience"
-              className="mt-6 inline-flex items-center gap-1 text-sm font-bold text-accent hover:opacity-90"
-            >
-              More about me
-              <span aria-hidden> -&gt;</span>
-            </Link>
-          </div>
-          <dl className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-1 lg:gap-8">
-            <div className="rounded-xl border border-line bg-background px-4 py-5">
-              <dt className="text-4xl font-extrabold tabular-nums text-accent">13+</dt>
-              <dd className="mt-2 text-sm font-semibold text-foreground">Years in software</dd>
-            </div>
-            <div className="rounded-xl border border-line bg-background px-4 py-5">
-              <dt className="text-4xl font-extrabold tabular-nums text-accent">SA</dt>
-              <dd className="mt-2 text-sm font-semibold text-foreground">
-                Architect-led delivery today
-              </dd>
-            </div>
-            <div className="rounded-xl border border-line bg-background px-4 py-5">
-              <dt className="text-4xl font-extrabold tabular-nums text-accent">900</dt>
-              <dd className="mt-2 text-sm font-semibold text-foreground">
-                TOEIC (English depth)
-              </dd>
-            </div>
-          </dl>
-        </div>
-
-        <div className="mt-14">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-            Previously worked with
-          </p>
-          <div className="mt-4 flex flex-wrap gap-x-10 gap-y-3">
-            {employers.map((name) => (
-              <span
-                key={name}
-                className="text-sm font-bold tracking-tight text-foreground/70"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6">
+      <AboutHomeSection />
 
       {/* Skills */}
       <section className="mt-24">
@@ -91,7 +29,7 @@ export default function Home() {
           {skillGroups.map((g) => (
             <article
               key={g.title}
-              className="flex flex-col rounded-2xl border border-line bg-white/60 p-6 shadow-[0_8px_24px_rgba(18,20,23,0.04)] transition-shadow hover:shadow-[0_12px_32px_rgba(18,20,23,0.07)]"
+              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.35)] transition-[border-color,box-shadow] hover:border-accent/25 hover:shadow-[0_20px_56px_rgba(0,0,0,0.4)]"
             >
               <div className="mb-4 h-1 w-10 rounded-full bg-accent" aria-hidden />
               <h3 className="text-lg font-bold text-foreground">{g.title}</h3>
@@ -100,7 +38,7 @@ export default function Home() {
                 {g.tags.map((t) => (
                   <li
                     key={t}
-                    className="rounded-full bg-line/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-foreground/75"
+                    className="rounded-full bg-white/[0.08] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-foreground/80"
                   >
                     {t}
                   </li>
@@ -131,7 +69,7 @@ export default function Home() {
           {featuredProjects.map((p) => (
             <article
               key={p.title}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white/70 shadow-[0_10px_36px_rgba(18,20,23,0.05)]"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_18px_48px_rgba(0,0,0,0.32)] transition-[border-color,box-shadow] hover:border-accent/20"
             >
               <div className="h-2 bg-gradient-to-r from-accent to-accent/40 transition-opacity group-hover:opacity-90" />
               <div className="flex flex-1 flex-col p-6">
@@ -139,7 +77,7 @@ export default function Home() {
                   {p.tags.slice(0, 3).map((t) => (
                     <span
                       key={t}
-                      className="rounded-full bg-line/80 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted"
+                      className="rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted"
                     >
                       {t}
                     </span>
@@ -186,7 +124,7 @@ export default function Home() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col rounded-2xl border border-line bg-white/60 p-6 shadow-[0_8px_24px_rgba(18,20,23,0.04)] transition-all hover:border-accent/25 hover:shadow-[0_14px_40px_rgba(18,20,23,0.08)]"
+                className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.35)] transition-all hover:border-accent/25 hover:shadow-[0_22px_56px_rgba(0,0,0,0.42)]"
               >
                 <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
                   {post.date}{" "}
@@ -208,7 +146,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="mt-28 rounded-3xl bg-accent px-8 py-14 text-center text-white shadow-[0_20px_50px_rgba(31,75,130,0.35)] sm:px-12">
+      <section className="mt-28 rounded-3xl bg-accent px-8 py-14 text-center text-white shadow-[0_24px_64px_rgba(110,168,255,0.22)] sm:px-12">
         <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
           Interested in working together?
         </h2>

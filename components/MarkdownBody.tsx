@@ -45,7 +45,7 @@ const components: Components = {
     const inline = !className;
     if (inline) {
       return (
-        <code className="rounded bg-line/60 px-1.5 py-0.5 text-[0.9em] font-medium text-foreground">
+        <code className="rounded bg-white/12 px-1.5 py-0.5 text-[0.9em] font-medium text-foreground">
           {children}
         </code>
       );
@@ -55,7 +55,7 @@ const components: Components = {
     );
   },
   pre: ({ children }) => (
-    <pre className="mt-4 overflow-x-auto rounded-lg border border-line bg-[#f0ebe3] p-4 text-sm leading-relaxed text-foreground">
+    <pre className="mt-4 overflow-x-auto rounded-lg border border-white/12 bg-[#12141a] p-4 text-sm leading-relaxed text-foreground/95">
       {children}
     </pre>
   ),
@@ -66,7 +66,7 @@ const components: Components = {
     </div>
   ),
   th: ({ children }) => (
-    <th className="border-b border-line bg-line/40 px-3 py-2 text-left font-semibold">
+    <th className="border-b border-line bg-white/[0.08] px-3 py-2 text-left font-semibold">
       {children}
     </th>
   ),

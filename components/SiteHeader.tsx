@@ -210,11 +210,11 @@ export default function SiteHeader() {
         transition: dockMotionEnabled
           ? "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)"
           : "background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)",
-        backgroundColor: `rgba(255, 255, 255, ${a})`,
+        backgroundColor: `rgba(10, 11, 15, ${0.92 * a})`,
         borderBottomWidth: 1,
         borderBottomStyle: "solid",
-        borderBottomColor: `rgba(227, 221, 212, ${0.92 * a})`,
-        boxShadow: a > 0.04 ? `0 1px 2px rgb(24 26 31 / ${0.06 * a})` : "none",
+        borderBottomColor: `rgba(255, 255, 255, ${0.1 * a})`,
+        boxShadow: a > 0.04 ? `0 1px 0 rgb(255 255 255 / ${0.05 * a})` : "none",
       }}
       className={`fixed inset-x-0 z-[100] transition-colors duration-300 ease-out ${
         heroInk ? "text-white" : "text-foreground"
@@ -232,7 +232,7 @@ export default function SiteHeader() {
             className={
               heroInk
                 ? "flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.22] bg-white/14 text-xs font-bold text-white shadow-[0_8px_20px_rgb(0_0_0/0.38)]"
-                : "flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-xs font-bold text-accent"
+                : "flex h-8 w-8 items-center justify-center rounded-lg border border-white/12 bg-accent/18 text-xs font-bold text-accent"
             }
             aria-hidden
           >
@@ -261,7 +261,7 @@ export default function SiteHeader() {
           className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors md:hidden ${
             heroInk
               ? "border-white/35 text-white drop-shadow-[0_2px_6px_rgb(0_0_0/0.5)] hover:bg-white/[0.1]"
-              : "border-line text-foreground hover:bg-black/[0.04]"
+              : "border-white/14 text-foreground hover:bg-white/[0.06]"
           }`}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
@@ -289,13 +289,16 @@ export default function SiteHeader() {
       </div>
 
       {menuOpen ? (
-        <div id="mobile-nav" className="border-t border-line bg-white shadow-[0_12px_32px_rgb(24_26_31/0.1)] md:hidden">
+        <div
+          id="mobile-nav"
+          className="border-t border-white/10 bg-[#0c0e14] shadow-[0_16px_40px_rgba(0,0,0,0.55)] md:hidden"
+        >
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
             {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-lg px-3 py-3 text-base font-semibold text-foreground hover:bg-black/[0.04]"
+                className="rounded-lg px-3 py-3 text-base font-semibold text-foreground hover:bg-white/[0.06]"
                 onClick={() => setMenuOpen(false)}
               >
                 {item.label}

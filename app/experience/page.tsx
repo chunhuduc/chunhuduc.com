@@ -43,7 +43,7 @@ export default function ExperiencePage() {
         ))}
       </ol>
 
-      <section className="mt-16 rounded-xl border border-line bg-white/50 p-6 sm:p-8">
+      <section className="mt-16 rounded-xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
         <h2 className="text-lg font-bold text-foreground">Education</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Bachelor of Engineering in Software Engineering, FPT University (2009 to 2013),
