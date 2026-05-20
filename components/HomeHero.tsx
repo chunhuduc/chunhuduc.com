@@ -11,7 +11,7 @@ export default function HomeHero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-hero-background text-hero-foreground lg:h-[100dvh] lg:max-h-[100dvh]"
+      className="relative flex min-h-dvh w-full flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:size] lg:h-[100dvh] lg:max-h-[100dvh]"
       aria-label="Hero"
     >
       {/* Layer 1: background photo */}
@@ -39,10 +39,10 @@ export default function HomeHero() {
         />
       </div>
 
-      {/* Layer 2: portrait = 80% of hero height (locked to 100dvh on lg), pinned bottom; PNG kept via unoptimized */}
+      {/* Layer 2: portrait band height from globals; contain + bottom keeps full silhouette (avoid cover+bottom which clips the head). */}
       {portrait ? (
-        <div className="pointer-events-none absolute inset-0 z-[1]">
-          <div className="absolute bottom-0 left-1/2 h-[100%] w-[min(92vw,820px)] -translate-x-1/2">
+        <div className="hero-animate-portrait pointer-events-none absolute inset-0 z-[1]">
+          <div className="hero-portrait-slot absolute bottom-0 left-1/2 w-[min(99vw,1400px)] -translate-x-1/2">
             <div className="relative h-full w-full">
               <Image
                 src={portrait}
@@ -50,7 +50,7 @@ export default function HomeHero() {
                 fill
                 priority
                 unoptimized
-                sizes="(max-width: 1024px) 92vw, 820px"
+                sizes="(max-width: 1024px) 99vw, 1400px"
                 className="object-contain object-bottom"
               />
             </div>
@@ -59,7 +59,7 @@ export default function HomeHero() {
       ) : null}
 
       {/* Layer 3: copy + links, vertically centered in remaining viewport */}
-      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:pb-16 lg:pt-28">
+      <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:pb-16 lg:pt-28">
         <div className="grid min-h-0 grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-8 xl:gap-10">
           <div className="order-1 flex flex-col justify-center lg:col-span-4">
             <div className="mb-5 h-1 w-12 rounded-full bg-hero-foreground sm:w-16" aria-hidden />

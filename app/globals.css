@@ -30,3 +30,53 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Hero: fade (quick) + slide-up (slow) as separate timelines. Respects prefers-reduced-motion. */
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-slide-up {
+  from {
+    transform: translateY(16px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hero-animate-portrait {
+  opacity: 0;
+  transform: translateY(16px);
+  animation:
+    hero-fade-in 0.55s ease-out 130ms forwards,
+    hero-slide-up 1s cubic-bezier(0.22, 1, 0.36, 1) 130ms forwards;
+}
+
+.hero-animate-text {
+  opacity: 0;
+  transform: translateY(16px);
+  animation:
+    hero-fade-in 0.55s ease-out 320ms forwards,
+    hero-slide-up 1.05s cubic-bezier(0.22, 1, 0.36, 1) 320ms forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-animate-portrait,
+  .hero-animate-text {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Portrait strip: 70% of hero height (#hero has container-type:size). Use object-contain + wider slot so heads are not clipped (cover+bottom trims the top). */
+#hero .hero-portrait-slot {
+  height: 100%;
+  height: 100cqh;
+}
