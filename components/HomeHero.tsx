@@ -58,8 +58,8 @@ export default function HomeHero() {
         </div>
       ) : null}
 
-      {/* Layer 3: copy + links, vertically centered in remaining viewport */}
-      <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:pb-16 lg:pt-28">
+      {/* Layer 3: copy + links; mobile aligns from top padding, lg vertically centers */}
+      <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-start px-4 pt-14 max-lg:pb-[max(7rem,calc(2.75rem+env(safe-area-inset-bottom,0px)))] sm:px-6 sm:pt-20 lg:justify-center lg:pb-16 lg:pt-28">
         <div className="grid min-h-0 grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center lg:gap-8 xl:gap-10">
           <div className="order-1 flex flex-col justify-center lg:col-span-4">
             <div className="mb-5 h-1 w-12 rounded-full bg-hero-foreground sm:w-16" aria-hidden />
