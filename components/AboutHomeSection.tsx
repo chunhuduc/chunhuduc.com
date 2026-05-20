@@ -1,14 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import { createRevealOrders } from "@/lib/revealStagger";
 import { profile } from "@/data/profile";
 
 const employers = [
-  "FPT Software",
-  "TTC Technology Solutions",
-  "HOTTAB",
-  "Appota",
-  "OwlGaming Community",
+  { name: "FPT Software", logoSrc: "/employers/fpt-software.png" },
+  { name: "TTC Technology Solutions", logoSrc: "/employers/ttc.png" },
+  { name: "HOTTAB", logoSrc: "/employers/hottab.png" },
+  { name: "Appota", logoSrc: "/employers/appota.png" },
+  { name: "OwlGaming Community", logoSrc: "/employers/owlgaming.png" },
 ] as const;
 
 /**
@@ -87,16 +88,19 @@ export default function AboutHomeSection() {
         </p>
       </div>
       <ul
-        className="reveal-stagger-item mt-8 flex list-none flex-wrap gap-x-12 gap-y-6 p-0 sm:gap-x-14"
+        className="reveal-stagger-item mt-8 flex list-none flex-col gap-6 p-0 md:flex-row md:flex-wrap md:gap-x-14 md:gap-y-6"
         style={ro()}
       >
-        {employers.map((name) => (
-          <li key={name} className="flex items-center gap-3">
-            <span
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.08] ring-1 ring-white/[0.12]"
-              aria-hidden
-            >
-              <span className="h-2 w-2 rotate-45 rounded-[1px] bg-white/70" />
+        {employers.map(({ name, logoSrc }) => (
+          <li key={name} className="flex w-full items-center gap-3 md:w-auto">
+            <span className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white/[0.08] p-1.5 ring-1 ring-white/[0.12]">
+              <Image
+                src={logoSrc}
+                alt=""
+                width={28}
+                height={28}
+                className="object-contain"
+              />
             </span>
             <span className="text-sm font-semibold tracking-tight text-foreground/90">{name}</span>
           </li>
