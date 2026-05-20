@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -231,12 +232,19 @@ export default function SiteHeader() {
           <span
             className={
               heroInk
-                ? "flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.22] bg-white/14 text-xs font-bold text-white shadow-[0_8px_20px_rgb(0_0_0/0.38)]"
-                : "flex h-8 w-8 items-center justify-center rounded-lg border border-white/12 bg-accent/18 text-xs font-bold text-accent"
+                ? "flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-white/[0.22] bg-white/14 shadow-[0_8px_20px_rgb(0_0_0/0.38)]"
+                : "flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg border border-white/12 bg-accent/18"
             }
             aria-hidden
           >
-            {"</>"}
+            <Image
+              src="/favi.svg"
+              alt=""
+              width={32}
+              height={32}
+              className="h-6 w-6 object-contain"
+              priority
+            />
           </span>
           <span className="hidden sm:inline">chunhuduc.com</span>
         </Link>

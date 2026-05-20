@@ -79,7 +79,7 @@ const components: Components = {
 
 export default function MarkdownBody({ content }: { content: string }) {
   return (
-    <div className="max-w-prose">
+    <div className="">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
         {content}
       </ReactMarkdown>

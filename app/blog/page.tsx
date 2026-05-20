@@ -12,7 +12,7 @@ export default function BlogPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
-      <header className="max-w-3xl">
+      <header className="">
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">Blog</h1>
         <p className="mt-3 text-base leading-relaxed text-muted">
           Short posts on systems design, integrations, and tooling. Written in Markdown under{" "}

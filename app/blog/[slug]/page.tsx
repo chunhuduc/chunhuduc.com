@@ -58,7 +58,7 @@ export default async function BlogPostPage({
       <Link href="/blog" className="text-sm font-semibold text-accent hover:opacity-90">
         Back to blog
       </Link>
-      <header className="mt-6 max-w-prose">
+      <header className="mt-6">
         <p className="text-sm font-medium text-muted">{post.date}</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-foreground">
           {post.title}
@@ -69,7 +69,7 @@ export default async function BlogPostPage({
       </header>
 
       {links.length > 0 ? (
-        <aside className="mt-10 max-w-prose rounded-xl border border-white/10 bg-white/[0.05] p-5">
+        <aside className="mt-10 rounded-xl border border-white/10 bg-white/[0.05] p-5">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-accent">
             Related code
           </h2>

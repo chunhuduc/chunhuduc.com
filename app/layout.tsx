@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     description:
       "Solution Architect and hands-on engineer. TypeScript, Node, enterprise web, distributed systems.",
   },
+  icons: {
+    icon: [{ url: "/favi.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({
