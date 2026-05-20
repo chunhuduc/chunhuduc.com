@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import MarkdownBody from "@/components/MarkdownBody";
+import RevealStaggerRoot from "@/components/RevealStaggerRoot";
+import { createRevealOrders } from "@/lib/revealStagger";
 import { getPostBySlug, getPostSlugs } from "@/lib/posts";
 
 export async function generateStaticParams() {
@@ -53,23 +55,39 @@ export default async function BlogPostPage({
   if (post.repo) links.push({ label: post.repo, href: githubRepoUrl(post.repo) });
   post.relatedRepos?.forEach((r) => links.push({ label: r, href: githubRepoUrl(r) }));
 
+  const ro = createRevealOrders();
+
   return (
-    <article className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
-      <Link href="/blog" className="text-sm font-semibold text-accent hover:opacity-90">
+    <RevealStaggerRoot as="article" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
+      <Link
+        href="/blog"
+        className="reveal-stagger-item text-sm font-semibold text-accent hover:opacity-90"
+        style={ro()}
+      >
         Back to blog
       </Link>
       <header className="mt-6">
-        <p className="text-sm font-medium text-muted">{post.date}</p>
-        <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-foreground">
+        <p className="reveal-stagger-item text-sm font-medium text-muted" style={ro()}>
+          {post.date}
+        </p>
+        <h1
+          className="reveal-stagger-item mt-2 text-4xl font-extrabold tracking-tight text-foreground"
+          style={ro()}
+        >
           {post.title}
         </h1>
         {post.summary ? (
-          <p className="mt-4 text-lg leading-relaxed text-muted">{post.summary}</p>
+          <p className="reveal-stagger-item mt-4 text-lg leading-relaxed text-muted" style={ro()}>
+            {post.summary}
+          </p>
         ) : null}
       </header>
 
       {links.length > 0 ? (
-        <aside className="mt-10 rounded-xl border border-white/10 bg-white/[0.05] p-5">
+        <aside
+          className="reveal-stagger-item mt-10 rounded-xl border border-white/10 bg-white/[0.05] p-5"
+          style={ro()}
+        >
           <h2 className="text-xs font-semibold uppercase tracking-wider text-accent">
             Related code
           </h2>
@@ -90,9 +108,9 @@ export default async function BlogPostPage({
         </aside>
       ) : null}
 
-      <div className="mt-10">
+      <div className="reveal-stagger-item mt-10" style={ro()}>
         <MarkdownBody content={post.content} />
       </div>
-    </article>
+    </RevealStaggerRoot>
   );
 }
