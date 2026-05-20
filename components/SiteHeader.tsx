@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -17,21 +17,57 @@ const MOBILE_DOCK_PRIMED_AFTER_Y = 40;
 /** Within this scroll offset from top, hero-style snap rules apply. */
 const NEAR_TOP_PX = 72;
 
+/** Intersect [viewport top, viewport top + stripPx] with hero rect; hero coverage → transparent header. Returns 1 = full surface, 0 = none. */
+function headerSurfaceAlphaForHero(stripPx: number): number {
+  if (typeof document === "undefined" || stripPx <= 0) return 1;
+  const hero = document.getElementById("hero");
+  if (!hero) return 1;
+  const h = hero.getBoundingClientRect();
+  const overlap = Math.max(0, Math.min(stripPx, h.bottom) - Math.max(0, h.top));
+  const coverFrac = Math.min(Math.max(overlap / stripPx, 0), 1);
+  return 1 - coverFrac;
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
+  const onHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
 
   /** false = slid up out of view while scrolling down; true = docked flush with top */
   const [dockVisible, setDockVisible] = useState(true);
   /** Mobile-only: becomes true once scrollY crosses MOBILE_DOCK_PRIMED_AFTER_Y (session + route). */
   const [mobileDockPrimed, setMobileDockPrimed] = useState(false);
+  /** 1 = opaque white bar chrome; lower over #hero overlap (continuous fade). */
+  const [surfaceAlpha, setSurfaceAlpha] = useState(1);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const stripHRef = useRef(72);
+  const lastAlphaRef = useRef(-1);
   const lastYRef = useRef(0);
+  const menuOpenRef = useRef(menuOpen);
+  menuOpenRef.current = menuOpen;
+
+  const publishSurfaceAlpha = useCallback((forceMenuOpaque: boolean) => {
+    let next = 1;
+    if (forceMenuOpaque || !onHome) {
+      next = 1;
+    } else {
+      const strip = Math.ceil(headerRef.current?.getBoundingClientRect().height ?? stripHRef.current);
+      stripHRef.current = Math.max(strip, 48);
+      next = headerSurfaceAlphaForHero(stripHRef.current);
+    }
+    if (Math.abs(next - lastAlphaRef.current) < 0.012) return;
+    lastAlphaRef.current = next;
+    setSurfaceAlpha(next);
+  }, [onHome]);
 
   const handleScroll = useCallback(() => {
     const y = window.scrollY;
     const compact = window.matchMedia("(max-width: 767px)").matches;
+    const mo = menuOpenRef.current;
 
-    if (menuOpen) {
+    publishSurfaceAlpha(mo);
+
+    if (mo) {
       lastYRef.current = y;
       return;
     }
@@ -60,11 +96,15 @@ export default function SiteHeader() {
 
     if (delta > SCROLL_DELTA) setDockVisible(false);
     else if (delta < -SCROLL_DELTA) setDockVisible(true);
-  }, [menuOpen, mobileDockPrimed]);
+  }, [mobileDockPrimed, publishSurfaceAlpha]);
 
   useEffect(() => {
+    lastAlphaRef.current = -1;
+
     const y = typeof window !== "undefined" ? window.scrollY : 0;
     lastYRef.current = y;
+
+    publishSurfaceAlpha(menuOpenRef.current);
 
     const compact = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
     const primedRoute = y > MOBILE_DOCK_PRIMED_AFTER_Y;
@@ -87,7 +127,28 @@ export default function SiteHeader() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-  }, [handleScroll, pathname]);
+  }, [handleScroll, pathname, publishSurfaceAlpha]);
+
+  /** Observe header height for hero-strip overlap sampling */
+  useLayoutEffect(() => {
+    const node = headerRef.current;
+    if (!node || typeof ResizeObserver === "undefined") return;
+
+    const sync = () => {
+      stripHRef.current = Math.max(48, Math.ceil(node.getBoundingClientRect().height));
+      publishSurfaceAlpha(menuOpenRef.current);
+    };
+
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(node);
+    return () => ro.disconnect();
+  }, [pathname, menuOpen, publishSurfaceAlpha]);
+
+  useLayoutEffect(() => {
+    lastAlphaRef.current = -1;
+    publishSurfaceAlpha(menuOpenRef.current);
+  }, [menuOpen, publishSurfaceAlpha]);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -105,15 +166,22 @@ export default function SiteHeader() {
     if (menuOpen) setDockVisible(true);
   }, [menuOpen]);
 
+  const a = Math.min(Math.max(surfaceAlpha, 0), 1);
+
   return (
     <header
+      ref={headerRef}
       style={{
         transform: dockVisible ? "translateY(0)" : "translateY(-100%)",
-        transition: "transform 300ms cubic-bezier(0.22, 1, 0.36, 1)",
+        transition:
+          "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)",
+        backgroundColor: `rgba(255, 255, 255, ${a})`,
+        borderBottomWidth: 1,
+        borderBottomStyle: "solid",
+        borderBottomColor: `rgba(227, 221, 212, ${0.92 * a})`,
+        boxShadow: a > 0.04 ? `0 1px 2px rgb(24 26 31 / ${0.06 * a})` : "none",
       }}
-      className={`fixed inset-x-0 z-[100] bg-white border-b border-line text-foreground shadow-sm ${
-        dockVisible ? "" : "pointer-events-none"
-      }`}
+      className={`fixed inset-x-0 z-[100] text-foreground ${dockVisible ? "" : "pointer-events-none"}`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link
