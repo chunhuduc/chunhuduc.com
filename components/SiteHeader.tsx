@@ -41,8 +41,8 @@ export default function SiteHeader() {
   const [dockMotionEnabled, setDockMotionEnabled] = useState(false);
   /** Mobile-only: becomes true once scrollY crosses MOBILE_DOCK_PRIMED_AFTER_Y (session + route). */
   const [mobileDockPrimed, setMobileDockPrimed] = useState(false);
-  /** 1 = opaque white bar chrome; lower over #hero overlap (continuous fade). */
-  const [surfaceAlpha, setSurfaceAlpha] = useState(1);
+  /** 1 = opaque white bar chrome; on home start at 0 to avoid a white flash before hero overlap is measured. */
+  const [surfaceAlpha, setSurfaceAlpha] = useState(() => (pathname === "/" ? 0 : 1));
   const headerRef = useRef<HTMLElement | null>(null);
   const stripHRef = useRef(72);
   const lastAlphaRef = useRef(-1);
