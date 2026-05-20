@@ -156,7 +156,7 @@ export default function HomeHero() {
               </div>
               <div className="pt-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">
-                  Follow me
+                  Contact me
                 </p>
                 <div className="mt-4 flex flex-wrap gap-4">
                   <a

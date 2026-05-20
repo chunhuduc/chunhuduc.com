@@ -9,10 +9,20 @@ export const profile = {
   phone: "+84 988 070 102",
   email: "chunhuduc@gmail.com",
   englishNote: "English (TOEIC 900)",
-  /** Replace when ready so CTAs render */
+  /**
+   * Public contact URLs (hero “Contact me” chips, footer, CTAs). Leave "" to hide a chip.
+   * Order on hero: GitHub, LinkedIn, Upwork, Facebook, Discord, Telegram, WhatsApp, Zalo, then phone + email.
+   * WhatsApp / Zalo: empty string uses wa.me / zalo.me from `phone`.
+   */
   social: {
-    github: "",
-    linkedin: "",
+    upwork: "https://www.upwork.com/freelancers/chunhuduc",
+    linkedin: "https://www.linkedin.com/in/chunhuduc/",
+    github: "https://github.com/chunhuduc",
+    facebook: "https://www.facebook.com/ducchu90",
+    discord: "",
+    telegram: "",
+    whatsapp: "",
+    zalo: "",
   },
   siteUrl: "https://chunhuduc.com",
   /** Full-viewport hero background (`public/`) */
