@@ -92,8 +92,14 @@ function IconEmail() {
   );
 }
 
-/** White rounded tile + dark glyph. Order: GitHub / LinkedIn / Upwork first, then rest. */
-export default function HeroFollowMe() {
+/** White rounded tile + dark glyph. “Contact me” row: use `variant="hero"` in hero sidebar, `variant="section"` on the main page background. */
+export default function HeroFollowMe({
+  variant = "hero",
+  className = "",
+}: {
+  variant?: "hero" | "section";
+  className?: string;
+}) {
   const s = profile.social;
   const digits = phoneDigits(profile.phone);
   const waUrl = (typeof s.whatsapp === "string" && s.whatsapp.trim()) || `https://wa.me/${digits}`;
@@ -106,8 +112,15 @@ export default function HeroFollowMe() {
   const dc = typeof s.discord === "string" ? s.discord.trim() : "";
   const tg = typeof s.telegram === "string" ? s.telegram.trim() : "";
 
+  const headingClassName =
+    variant === "hero"
+      ? "text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground"
+      : "text-xs font-bold uppercase tracking-[0.18em] text-foreground";
+
   return (
-    <div className="mt-4 flex flex-wrap gap-3">
+    <div className={className}>
+      <p className={headingClassName}>Contact me</p>
+      <div className="mt-4 flex flex-wrap gap-3">
       {gh ? (
         <FollowChip href={gh} label="GitHub">
           <IconGitHub />
@@ -169,6 +182,7 @@ export default function HeroFollowMe() {
       <FollowChip href={`mailto:${profile.email}`} label="Email">
         <IconEmail />
       </FollowChip>
+      </div>
     </div>
   );
 }

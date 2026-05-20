@@ -131,10 +131,7 @@ export default function HomeHeroV2() {
                 )}
               </div>
               <div className="pt-8">
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">
-                  Contact me
-                </p>
-                <HeroFollowMe />
+                <HeroFollowMe variant="hero" />
               </div>
             </div>
           </aside>

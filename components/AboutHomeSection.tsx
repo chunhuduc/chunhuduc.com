@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import HeroFollowMe from "@/components/HeroFollowMe";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import { createRevealOrders } from "@/lib/revealStagger";
 import { profile } from "@/data/profile";
@@ -106,6 +107,13 @@ export default function AboutHomeSection() {
           </li>
         ))}
       </ul>
+
+      <div
+        className="reveal-stagger-item mt-16 border-t border-line/80 pt-12 lg:hidden"
+        style={ro()}
+      >
+        <HeroFollowMe variant="section" />
+      </div>
     </RevealStaggerRoot>
   );
 }
