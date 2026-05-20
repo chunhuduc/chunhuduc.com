@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AboutHomeSection from "@/components/AboutHomeSection";
-import HomeHero from "@/components/HomeHero";
+// Swap to `@/components/HomeHero` for the two-layer hero (background + portrait cutout).
+import HomeHeroV2 from "@/components/HomeHeroV2";
 import SectionLabel from "@/components/SectionLabel";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
@@ -12,7 +13,7 @@ export default function Home() {
   const featuredProjects = projects.slice(0, 3);
   return (
     <>
-      <HomeHero />
+      <HomeHeroV2 />
 
       <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6">
       <AboutHomeSection />
