@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
+import SiteShell from "@/components/SiteShell";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -39,7 +40,7 @@ export default function RootLayout({
     <html lang="en" className={`${manrope.variable} h-full scroll-smooth antialiased`}>
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <SiteHeader />
-        <div className="flex-1">{children}</div>
+        <SiteShell>{children}</SiteShell>
         <SiteFooter />
       </body>
     </html>
