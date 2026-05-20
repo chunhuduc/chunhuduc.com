@@ -97,9 +97,9 @@ export default function AboutHomeSection() {
               <Image
                 src={logoSrc}
                 alt=""
-                width={28}
-                height={28}
-                className="object-contain"
+                fill
+                sizes="40px"
+                className="object-contain p-0.5"
               />
             </span>
             <span className="text-sm font-semibold tracking-tight text-foreground/90">{name}</span>
