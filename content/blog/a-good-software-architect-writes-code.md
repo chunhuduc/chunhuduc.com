@@ -4,36 +4,33 @@ date: "2026-05-19"
 summary: "If your architect can't write a working prototype of what they're proposing, that's not architecture. That's guessing."
 ---
 
-There is nothing worse than an architect who has not touched code for years.
+One of the biggest problems in software teams is architects who stopped coding years ago.
 
-An architect who does not code loses touch with reality.
+Once you lose hands-on experience, your decisions slowly drift away from reality.
 
-I call them **rusty architects**.
+You start seeing architects who:
 
-They design systems they cannot build themselves. They pick technologies they have never used. They create patterns that look great on a whiteboard but fall apart in production.
+- Recommend technologies they’ve never deployed.
+- Push patterns that look elegant in diagrams but create pain in production.
+- Choose distributed systems before proving a simpler monolith can no longer scale.
+- Copy “best practices” from talks and blogs without understanding the operational cost.
+- Keep outdated stacks alive because changing them feels risky, even while complexity grows.
+- Estimate architecture decisions without ever validating them in actual code.
 
-I have seen it too many times:
+I’ve watched teams spend months untangling systems designed by people who never had to maintain them.
 
-- **Microservices** chosen by people who never shipped a modular monolith long enough to learn where boundaries really belong.
-- **N-layered** boxes drawn by people who never built the same product shape with **clean architecture** and **vertical slices**.
-- **Stacks** chosen from conference talks and trends, not from hands-on trade-offs in your codebase.
-- **Stacks** kept because they looked modern once, while operations and hiring costs pile up.
-- **Decisions** made without knowing implementation cost because nobody measured it in code.
+The best architects work differently:
 
----
+- They still write code.
+- They prototype ideas before enforcing them across teams.
+- They review pull requests and stay aware of implementation friction.
+- They understand trade-offs because they’ve experienced them directly in production.
+- They know which decisions improve velocity and which ones quietly slow a company down.
 
-## A great software architect does the opposite
+Great architecture is not just drawing systems.
 
-- Writes **core code** that sets the standard for the team.
-- **Reviews** pull requests and understands the real pain points.
-- **Prototypes** before locking the whole org into a direction.
-- Stays **hands-on** with the tools and frameworks the team uses every day.
-- Knows the **cost** of each architectural decision because they have felt it in the editor and in production.
+It’s taking responsibility for what happens after deployment too.
 
-The best architects I have worked with do not only **design** solutions. They **build** them alongside their team.
+The strongest architects I’ve worked with were builders first. They designed systems with their teams, not above them.
 
-They improve productivity because they know what is easy, what is hard, and what is impossible with the stack you actually have.
-
-**Architecture is about owning outcomes** from design through deployment.
-
-If your architect can't write a working prototype of what they're proposing, that's not architecture. That's guessing.
+Because when you still code, your architecture stays grounded in reality.
