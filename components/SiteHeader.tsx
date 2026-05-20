@@ -12,6 +12,10 @@ const nav = [
 ];
 
 const SCROLL_DELTA = 8;
+/** Mobile: user must scroll past this once before the dock is allowed near the top (hide on cold load only). */
+const MOBILE_DOCK_PRIMED_AFTER_Y = 40;
+/** Within this scroll offset from top, hero-style snap rules apply. */
+const NEAR_TOP_PX = 72;
 
 function scrollPastHero(): boolean {
   if (typeof window === "undefined") return false;
@@ -26,6 +30,8 @@ export default function SiteHeader() {
 
   /** false = tucked above viewport while scrolling down; true = slid down flush with top */
   const [dockVisible, setDockVisible] = useState(true);
+  /** Mobile-only: becomes true once scrollY crosses MOBILE_DOCK_PRIMED_AFTER_Y (session + route). */
+  const [mobileDockPrimed, setMobileDockPrimed] = useState(false);
   const lastYRef = useRef(0);
 
   const syncHeroPassed = useCallback(() => {
@@ -38,13 +44,31 @@ export default function SiteHeader() {
 
   const handleScroll = useCallback(() => {
     const y = window.scrollY;
+    const compact = window.matchMedia("(max-width: 767px)").matches;
 
     syncHeroPassed();
 
-    if (menuOpen) return;
+    if (menuOpen) {
+      syncHeroPassed();
+      lastYRef.current = y;
+      return;
+    }
 
-    if (y < 72) {
-      setDockVisible(true);
+    if (compact && y > MOBILE_DOCK_PRIMED_AFTER_Y && !mobileDockPrimed) {
+      setMobileDockPrimed(true);
+    }
+
+    const primed = mobileDockPrimed || y > MOBILE_DOCK_PRIMED_AFTER_Y;
+    const nearTop = y < NEAR_TOP_PX;
+
+    if (compact && !primed && nearTop) {
+      setDockVisible(false);
+      lastYRef.current = y;
+      return;
+    }
+
+    if (nearTop) {
+      if (!compact || primed) setDockVisible(true);
       lastYRef.current = y;
       return;
     }
@@ -54,13 +78,27 @@ export default function SiteHeader() {
 
     if (delta > SCROLL_DELTA) setDockVisible(false);
     else if (delta < -SCROLL_DELTA) setDockVisible(true);
-  }, [menuOpen, syncHeroPassed]);
+  }, [menuOpen, syncHeroPassed, mobileDockPrimed]);
 
   useEffect(() => {
     syncHeroPassed();
+
     const y = typeof window !== "undefined" ? window.scrollY : 0;
     lastYRef.current = y;
-    setDockVisible(y < 72);
+
+    const compact = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+    const primedRoute = y > MOBILE_DOCK_PRIMED_AFTER_Y;
+    setMobileDockPrimed(primedRoute);
+
+    if (!compact) {
+      setDockVisible(y < NEAR_TOP_PX);
+    } else if (y < NEAR_TOP_PX && !primedRoute) {
+      setDockVisible(false);
+    } else if (y < NEAR_TOP_PX) {
+      setDockVisible(true);
+    } else {
+      setDockVisible(true);
+    }
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);

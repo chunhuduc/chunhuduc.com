@@ -73,7 +73,7 @@ export default function HomeHero() {
               {profile.subline}
             </p>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-muted">{profile.headline}</p>
-            <div className="mt-10">
+            <div className="hidden md:mt-10 md:block">
               <a
                 href="#about"
                 className="group inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-105 hover:opacity-95"
