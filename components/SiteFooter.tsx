@@ -65,7 +65,7 @@ export default function SiteFooter() {
                 </div>
               </div>
               <div className="reveal-stagger-item" style={ro()}>
-                <SocialLinksRow className="text-foreground/90" />
+                <SocialLinksRow className="text-foreground" />
               </div>
             </div>
 

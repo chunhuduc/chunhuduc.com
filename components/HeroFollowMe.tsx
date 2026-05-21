@@ -22,10 +22,7 @@ export default function HeroFollowMe({
   return (
     <div className={className}>
       <p className={headingClassName}>Contact me</p>
-      <SocialLinksRow
-        className={`mt-5 ${rowToneClass}`}
-        useContactSocialLinksClass
-      />
+      <SocialLinksRow className={`mt-5 ${rowToneClass}`} />
     </div>
   );
 }

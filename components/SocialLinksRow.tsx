@@ -47,7 +47,7 @@ function IconLinkedIn() {
 function IconFacebook() {
   return (
     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+      <path d="M9.101 23.691v-3.192H6.127v-4.108h2.974v-3.127c0-2.916 1.74-4.539 4.414-4.539 1.277 0 1.96.095 2.283.138v2.647H14.46c-1.476 0-1.764.701-1.764 1.732v2.122h3.591l-.465 4.108h-3.126v3.192H9.101z" />
     </svg>
   );
 }
@@ -94,20 +94,12 @@ function IconEmail() {
 
 export type SocialLinksRowProps = {
   className?: string;
-  /**
-   * When true, sibling fade + lift from `.contact-social-links` in globals.css applies.
-   * When false, use `.footer-social-links` (simple hover tint; no sibling dimming).
-   */
-  useContactSocialLinksClass?: boolean;
 };
 
 /**
  * Icon-only outbound links driven by `profile` (no heading). Used in hero/contact blocks and footer.
  */
-export default function SocialLinksRow({
-  className = "",
-  useContactSocialLinksClass = false,
-}: SocialLinksRowProps) {
+export default function SocialLinksRow({ className = "" }: SocialLinksRowProps) {
   const s = profile.social;
   const digits = phoneDigits(profile.phone);
   const waUrl = (typeof s.whatsapp === "string" && s.whatsapp.trim()) || `https://wa.me/${digits}`;
@@ -119,10 +111,8 @@ export default function SocialLinksRow({
   const dc = typeof s.discord === "string" ? s.discord.trim() : "";
   const tg = typeof s.telegram === "string" ? s.telegram.trim() : "";
 
-  const rowBasis = useContactSocialLinksClass ? "contact-social-links" : "footer-social-links";
-
   return (
-    <div className={[rowBasis, className].filter(Boolean).join(" ")}>
+    <div className={["contact-social-links", className].filter(Boolean).join(" ")}>
       {gh ? (
         <SocialChip href={gh} label="GitHub">
           <IconGitHub />
