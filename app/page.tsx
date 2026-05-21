@@ -23,46 +23,55 @@ export default function Home() {
     <>
       <HomeHeroV2 />
 
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6">
-        <AboutHomeSection />
+      <div
+        className="bg-section-soft text-foreground"
+        role="region"
+        aria-label="About section"
+      >
+        <div className="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+          <AboutHomeSection />
+        </div>
+      </div>
 
-        {/* Skills */}
-        <RevealStaggerRoot as="section" className="mt-24">
-          <SectionLabel className="reveal-stagger-item mb-3" style={skillsRo()}>
-            My skills
-          </SectionLabel>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <h2
-              className="reveal-stagger-item max-w-xl text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
-              style={skillsRo()}
-            >
-              A practical stack for enterprise web and distributed backends.
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {skillGroups.map((g) => (
-              <article
-                key={g.title}
-                className="reveal-stagger-item flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.35)] transition-[border-color,box-shadow] hover:border-accent/25 hover:shadow-[0_20px_56px_rgba(0,0,0,0.4)]"
+      <div className="bg-background text-foreground">
+        <div className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+          {/* Skills */}
+          <RevealStaggerRoot as="section" className="mt-24">
+            <SectionLabel className="reveal-stagger-item mb-3" style={skillsRo()}>
+              My skills
+            </SectionLabel>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <h2
+                className="reveal-stagger-item max-w-xl text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
                 style={skillsRo()}
               >
-                <div className="mb-4 h-1 w-10 rounded-full bg-accent" aria-hidden />
-                <h3 className="text-lg font-bold text-foreground">{g.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{g.blurb}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {g.tags.map((t) => (
-                    <li
-                      key={t}
-                      className="rounded-full bg-white/[0.08] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-foreground/80"
-                    >
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </RevealStaggerRoot>
+                A practical stack for enterprise web and distributed backends.
+              </h2>
+            </div>
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {skillGroups.map((g) => (
+                <article
+                  key={g.title}
+                  className="reveal-stagger-item flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.35)] transition-[border-color,box-shadow] hover:border-accent/25 hover:shadow-[0_20px_56px_rgba(0,0,0,0.4)]"
+                  style={skillsRo()}
+                >
+                  <div className="mb-4 h-1 w-10 rounded-full bg-accent" aria-hidden />
+                  <h3 className="text-lg font-bold text-foreground">{g.title}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{g.blurb}</p>
+                  <ul className="mt-4 flex flex-wrap gap-2">
+                    {g.tags.map((t) => (
+                      <li
+                        key={t}
+                        className="rounded-full bg-white/[0.08] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-foreground/80"
+                      >
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </RevealStaggerRoot>
 
         {/* Portfolio */}
         <RevealStaggerRoot as="section" className="mt-24">
@@ -195,6 +204,7 @@ export default function Home() {
             Let&apos;s talk -&gt;
           </a>
         </RevealStaggerRoot>
+        </div>
       </div>
     </>
   );

@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Site-wide dark canvas (match portfolio hero / reference mood) */
-  --background: #0a0b0f;
+  /* Site-wide dark canvas */
+  --background: #1b1f24;
   --foreground: #f4f4f5;
   --muted: #9ca3af;
   --accent: #6ea8ff;
   --line: rgba(255, 255, 255, 0.1);
-  --hero-background: #0c0d10;
+  --hero-background: #1b1f24;
   --hero-foreground: #f4f4f5;
   --hero-muted: #9ca3af;
   --hero-line: rgba(255, 255, 255, 0.12);
   --surface-raised: rgba(255, 255, 255, 0.04);
+  /* Full-width bands under hero: lifts “About” slightly above the deeper page canvas */
+  --section-soft: #2d343f66;
 }
 
 @theme inline {
@@ -21,6 +23,7 @@
   --color-accent: var(--accent);
   --color-line: var(--line);
   --color-surface-raised: var(--surface-raised);
+  --color-section-soft: var(--section-soft);
   --color-hero-background: var(--hero-background);
   --color-hero-foreground: var(--hero-foreground);
   --color-hero-muted: var(--hero-muted);
@@ -53,6 +56,22 @@ body {
   }
 }
 
+/* Scroll-to-about chevron inside hero circular CTA */
+@keyframes hero-scroll-chevron-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.hero-scroll-chevron-bounce {
+  display: inline-flex;
+  animation: hero-scroll-chevron-bounce 1.2s ease-in-out infinite;
+}
+
 .hero-animate-portrait {
   opacity: 0;
   transform: translateY(16px);
@@ -75,6 +94,10 @@ body {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .hero-scroll-chevron-bounce {
+    animation: none;
   }
 }
 
@@ -135,4 +158,43 @@ body {
     0 8px 28px rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(10px) saturate(1.15);
   -webkit-backdrop-filter: blur(10px) saturate(1.15);
+}
+
+/* Contact icons (HeroFollowMe): flat glyphs, sibling fade on hover, lift active link */
+.contact-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.contact-social-links > a {
+  opacity: 0.62;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact-social-links:has(> a:hover) > a:not(:hover) {
+  opacity: 0.32;
+}
+
+.contact-social-links > a:hover {
+  opacity: 1;
+  transform: translateY(-5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-social-links > a {
+    transition: opacity 0.28s ease;
+  }
+
+  .contact-social-links > a:hover {
+    transform: none;
+  }
+}
+
+/* Raster brand marks (Upwork / Zalo) rendered as monocrome like inline SVG icons */
+.contact-social-links > a img {
+  filter: brightness(0) invert(1);
+  opacity: 0.94;
 }

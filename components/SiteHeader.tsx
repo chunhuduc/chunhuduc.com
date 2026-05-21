@@ -299,7 +299,7 @@ export default function SiteHeader() {
       {menuOpen ? (
         <div
           id="mobile-nav"
-          className="border-t border-white/10 bg-[#0c0e14] shadow-[0_16px_40px_rgba(0,0,0,0.55)] md:hidden"
+          className="border-t border-white/10 bg-background shadow-[0_16px_40px_rgba(0,0,0,0.55)] md:hidden"
         >
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
             {nav.map((item) => (
