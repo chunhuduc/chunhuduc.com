@@ -50,7 +50,7 @@ export default function SiteFooter() {
               >
                 <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/15 bg-white/[0.06] sm:h-16 sm:w-16 md:h-[4.75rem] md:w-[4.75rem]">
                   <Image
-                    src="/hero-portrait.png"
+                    src="/avt5.png"
                     alt={`${profile.name} portrait`}
                     fill
                     className="object-cover object-[50%_12%]"
