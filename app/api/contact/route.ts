@@ -19,6 +19,7 @@ export async function POST(request: Request) {
   const raw = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
   const altchaCheck = await verifyAltchaToken(
     typeof raw.altcha === "string" ? raw.altcha : String(raw.altcha ?? ""),
+    request,
   );
   if (!altchaCheck.ok) {
     return NextResponse.json({ error: altchaCheck.error }, { status: 403 });

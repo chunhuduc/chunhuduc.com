@@ -1,0 +1,24 @@
+{
+  "include": [
+    {
+      "path": "docs/profile/CV.md",
+      "title": "CV",
+      "sourceUri": "/experience"
+    },
+    {
+      "path": "docs/projects/SUMMARIES.md",
+      "title": "Project summaries",
+      "sourceUri": "/projects"
+    },
+    {
+      "path": "docs/career/POSITIONING.md",
+      "title": "Positioning",
+      "sourceUri": "/ask"
+    },
+    {
+      "path": "docs/profile/LINKEDIN.md",
+      "title": "LinkedIn draft",
+      "sourceUri": "/ask"
+    }
+  ]
+}

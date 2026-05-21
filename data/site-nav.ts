@@ -8,6 +8,7 @@ export const SITE_HEADER_NAV = [
   { href: "/experience", label: "Experience" },
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Blog" },
+  { href: "/ask", label: "Ask AI" },
 ] as const satisfies readonly SiteNavItem[];
 
 export const SITE_FOOTER_NAV = [
@@ -16,4 +17,5 @@ export const SITE_FOOTER_NAV = [
   { href: "/experience", label: "Experience" },
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Blog" },
+  { href: "/ask", label: "Ask AI" },
 ] as const satisfies readonly SiteNavItem[];

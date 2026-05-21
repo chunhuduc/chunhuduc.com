@@ -4,7 +4,7 @@ import { getAllPostsMeta } from "@/lib/posts";
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://chunhuduc.com";
   const posts = getAllPostsMeta();
-  const fixed = ["", "/experience", "/projects", "/blog"].map((path) => ({
+  const fixed = ["", "/experience", "/projects", "/blog", "/ask"].map((path) => ({
     url: `${base}${path}`,
     lastModified: new Date(),
   }));

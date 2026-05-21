@@ -84,6 +84,38 @@ Forwarding only receives mail. To **reply from** `contact@chunhuduc.com` in Gmai
 - [ ] Gmail receives the inquiry; visitor receives auto-reply.
 - [ ] Reply from Gmail reaches the visitor (Reply-To is their address).
 
+## Ask Đức AI (RAG chat)
+
+Portfolio assistant at **`/ask`**, grounded on public site data + optional private SA markdown (ingest only).
+
+### Setup
+
+1. **Postgres + pgvector (recommended: [Neon](https://neon.tech) free tier):**
+   - Why not Supabase free? Projects **pause after ~7 days idle** and need manual **Resume** (data safe, but `/ask` breaks until you unpause).
+   - Neon free: compute **scale-to-zero after ~5 min idle**, wakes on the next query (~1s cold start). No dashboard "project paused" for a portfolio chat.
+   - Create a Neon project → SQL Editor → run [`supabase/migrations/001_rag.sql`](supabase/migrations/001_rag.sql) (`CREATE EXTENSION vector` included).
+   - Copy the **pooled** connection string → `DATABASE_URL` (Vercel: use the pooler URL).
+2. **Env:** copy [`.env.example`](.env.example) → `.env.local`. Set `DATABASE_URL`, `GEMINI_API_KEY`, `ALTCHA_HMAC_SECRET`, `ADMIN_SECRET`.
+3. **Ingest** (local):
+
+```bash
+npm run knowledge:ingest
+# Optional SA workspace (NDA-safe allowlist in knowledge/ingest.manifest.json):
+SA_KNOWLEDGE_ROOT=C:/BRAINSTORM/SA npm run knowledge:ingest
+```
+
+4. **Vercel:** add the same env vars (except `SA_KNOWLEDGE_ROOT`; run ingest locally after content changes).
+
+### Operations
+
+| Task | Command / URL |
+|------|----------------|
+| Re-ingest after CV/blog changes | `npm run knowledge:ingest` |
+| Review knowledge gaps | `/admin/knowledge` (requires `ADMIN_SECRET`) |
+| Chat API | `POST /api/chat` (SSE: `sources`, `text`, `done`) |
+
+**LLM:** default `LLM_PROVIDER=gemini` (free tier). Set `LLM_PROVIDER=openai` + `OPENAI_API_KEY` to switch (re-ingest required).
+
 ## Fonts
 
 **Manrope** is loaded with `latin` and `vietnamese` subsets via `next/font/google` in `app/layout.tsx`.

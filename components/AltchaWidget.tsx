@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isLocalhostClient } from "@/lib/altcha-local";
 import "altcha";
 import "altcha/themes/business.css";
 
@@ -23,6 +24,10 @@ export default function AltchaWidget({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  if (isLocalhostClient()) {
+    return null;
+  }
 
   if (!mounted) {
     return (

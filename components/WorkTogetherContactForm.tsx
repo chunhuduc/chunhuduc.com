@@ -1,6 +1,7 @@
 "use client";
 
 import AltchaWidget from "@/components/AltchaWidget";
+import { isLocalhostClient } from "@/lib/altcha-local";
 import { useState, type CSSProperties, type FormEvent } from "react";
 
 export type WorkTogetherContactFormProps = {
@@ -35,7 +36,7 @@ export default function WorkTogetherContactForm({
     const form = e.currentTarget;
     const data = new FormData(form);
     const altcha = String(data.get("altcha") ?? "").trim();
-    if (!altcha) {
+    if (!isLocalhostClient() && !altcha) {
       setStatus("error");
       setErrorMessage("Complete the verification challenge before submitting.");
       return;

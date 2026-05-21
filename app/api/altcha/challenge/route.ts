@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
-import { altchaChallengeHandler, isAltchaConfigured } from "@/lib/altcha";
+import { altchaChallengeHandler, isAltchaConfigured, isAltchaEnforced } from "@/lib/altcha";
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!isAltchaEnforced(request)) {
+    return NextResponse.json({ skipped: true, reason: "localhost" });
+  }
+
   if (!isAltchaConfigured()) {
     return NextResponse.json(
       { error: "ALTCHA is not configured." },

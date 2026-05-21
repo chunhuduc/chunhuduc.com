@@ -5,6 +5,7 @@ import {
   CappedMap,
 } from "altcha-lib/frameworks/nextjs";
 import { deriveKey } from "altcha-lib/algorithms/pbkdf2";
+import { isLocalhostRequest } from "./altcha-local";
 
 type AltchaApi = ReturnType<typeof create>;
 
@@ -13,6 +14,17 @@ let api: AltchaApi | null = null;
 export function isAltchaConfigured(): boolean {
   return Boolean(process.env.ALTCHA_HMAC_SECRET?.trim());
 }
+
+/** Production-like verification; skipped on localhost unless ALTCHA_ENFORCE_LOCALHOST=true */
+export function isAltchaEnforced(request?: Request): boolean {
+  if (!isAltchaConfigured()) return false;
+  if (process.env.ALTCHA_ENFORCE_LOCALHOST === "true") return true;
+  if (request && isLocalhostRequest(request)) return false;
+  if (!request && process.env.NODE_ENV === "development") return false;
+  return true;
+}
+
+export { isLocalhostClient, isLocalhostHost, isLocalhostRequest } from "./altcha-local";
 
 async function getApi(): Promise<AltchaApi> {
   if (!isAltchaConfigured()) {
@@ -48,8 +60,9 @@ export async function altchaChallengeHandler(request: Request): Promise<Response
 
 export async function verifyAltchaToken(
   token: string | undefined,
+  request?: Request,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  if (!isAltchaConfigured()) {
+  if (!isAltchaEnforced(request)) {
     return { ok: true };
   }
 
