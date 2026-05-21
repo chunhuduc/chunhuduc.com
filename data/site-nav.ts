@@ -3,7 +3,6 @@ export type SiteNavItem = {
   readonly label: string;
 };
 
-/** Primary nav in the site header */
 export const SITE_HEADER_NAV = [
   { href: "/", label: "Home" },
   { href: "/experience", label: "Experience" },
@@ -11,9 +10,6 @@ export const SITE_HEADER_NAV = [
   { href: "/blog", label: "Blog" },
 ] as const satisfies readonly SiteNavItem[];
 
-/**
- * Footer link row ends at Blog. Append `mailto:` Contact in the footer from `profile.email`.
- */
 export const SITE_FOOTER_NAV = [
   { href: "/", label: "Home" },
   { href: "/#about", label: "About" },
