@@ -5,7 +5,7 @@ import HomeHeroV2 from "@/components/HomeHeroV2";
 import HomeSurfaceStrip from "@/components/HomeSurfaceStrip";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
-import { profile } from "@/data/profile";
+import WorkTogetherSection from "@/components/WorkTogetherSection";
 import { projects } from "@/data/projects";
 import { skillGroups } from "@/data/homeSkills";
 import { createRevealOrders } from "@/lib/revealStagger";
@@ -18,7 +18,6 @@ export default function Home() {
   const skillsRo = createRevealOrders();
   const portfolioRo = createRevealOrders();
   const blogRo = createRevealOrders();
-  const ctaRo = createRevealOrders();
 
   return (
     <>
@@ -188,31 +187,7 @@ export default function Home() {
           </div>
         </RevealStaggerRoot>
 
-        <RevealStaggerRoot
-          as="section"
-          className="mt-28 rounded-3xl bg-accent px-8 py-14 text-center text-white shadow-[0_24px_64px_rgba(110,168,255,0.22)] sm:px-12"
-        >
-          <h2
-            className="reveal-stagger-item text-2xl font-extrabold tracking-tight sm:text-3xl"
-            style={ctaRo()}
-          >
-            Interested in working together?
-          </h2>
-          <p
-            className="reveal-stagger-item mx-auto mt-4 max-w-lg text-sm leading-relaxed text-white/85"
-            style={ctaRo()}
-          >
-            Short intro plus ideal timelines helps me reply faster. For enterprise work, expect crisp
-            scope and realistic milestones.
-          </p>
-          <a
-            href={`mailto:${profile.email}`}
-            className="reveal-stagger-item mt-8 inline-flex items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-extrabold text-accent transition-opacity hover:opacity-95"
-            style={ctaRo()}
-          >
-            Let&apos;s talk -&gt;
-          </a>
-        </RevealStaggerRoot>
+        <WorkTogetherSection className="mt-28" />
       </HomeSurfaceStrip>
     </>
   );
