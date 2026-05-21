@@ -21,7 +21,7 @@ export const documents = pgTable(
     originalContent: text("original_content").notNull(),
     enrichedContent: text("enriched_content"),
     /** Stored via raw SQL on ingest; not mapped in Drizzle selects by default */
-    embeddingProvider: text("embedding_provider").notNull().default("gemini"),
+    embeddingProvider: text("embedding_provider").notNull().default("openai"),
     contentHash: text("content_hash").notNull(),
     status: text("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

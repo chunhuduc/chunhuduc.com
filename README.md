@@ -93,9 +93,9 @@ Portfolio assistant at **`/ask`**, grounded on public site data + optional priva
 1. **Postgres + pgvector (recommended: [Neon](https://neon.tech) free tier):**
    - Why not Supabase free? Projects **pause after ~7 days idle** and need manual **Resume** (data safe, but `/ask` breaks until you unpause).
    - Neon free: compute **scale-to-zero after ~5 min idle**, wakes on the next query (~1s cold start). No dashboard "project paused" for a portfolio chat.
-   - Create a Neon project → SQL Editor → run [`supabase/migrations/001_rag.sql`](supabase/migrations/001_rag.sql) (`CREATE EXTENSION vector` included).
+   - Create a Neon project → SQL Editor → run [`supabase/migrations/001_rag.sql`](supabase/migrations/001_rag.sql) then [`002_openai_embeddings.sql`](supabase/migrations/002_openai_embeddings.sql) if using OpenAI (`CREATE EXTENSION vector` included).
    - Copy the **pooled** connection string → `DATABASE_URL` (Vercel: use the pooler URL).
-2. **Env:** copy [`.env.example`](.env.example) → `.env.local`. Set `DATABASE_URL`, `GEMINI_API_KEY`, `ALTCHA_HMAC_SECRET`, `ADMIN_SECRET`.
+2. **Env:** copy [`.env.example`](.env.example) → `.env.local`. Set `DATABASE_URL`, `OPENAI_API_KEY`, `ALTCHA_HMAC_SECRET`, `ADMIN_SECRET`.
 3. **Ingest** (local):
 
 ```bash
@@ -114,7 +114,7 @@ SA_KNOWLEDGE_ROOT=C:/BRAINSTORM/SA npm run knowledge:ingest
 | Review knowledge gaps | `/admin/knowledge` (requires `ADMIN_SECRET`) |
 | Chat API | `POST /api/chat` (SSE: `sources`, `text`, `done`) |
 
-**LLM:** default `LLM_PROVIDER=gemini` (free tier). Set `LLM_PROVIDER=openai` + `OPENAI_API_KEY` to switch (re-ingest required).
+**LLM:** default `LLM_PROVIDER=openai` (`gpt-4o-mini` + `text-embedding-3-small`). Run migration `002` when switching from Gemini, then re-ingest. Set `LLM_PROVIDER=gemini` + `GEMINI_API_KEY` to use Gemini instead (768-dim vectors; use `001` only).
 
 ## Fonts
 
