@@ -24,7 +24,7 @@ export default function AboutHomeSection() {
     <RevealStaggerRoot
       as="section"
       id="about"
-      className="scroll-mt-24 py-20"
+      className="scroll-mt-24"
       aria-labelledby="about-heading"
     >
       <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:gap-x-16 lg:gap-y-0">
