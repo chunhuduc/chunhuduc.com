@@ -218,3 +218,16 @@ body {
   filter: brightness(0) invert(1);
   opacity: 0.94;
 }
+
+/* Footer horizontal rules: 2px, cool grey (reference ~ #3f444e on dark canvas) */
+.footer-border-top {
+  border-top: 1.5px solid #3f444e;
+}
+
+.footer-divider {
+  margin-top: calc(var(--spacing) * 8);
+  margin-bottom: calc(var(--spacing) * 8);
+  height: 0;
+  border: 0;
+  border-top: 1.5px solid #3f444e;
+}

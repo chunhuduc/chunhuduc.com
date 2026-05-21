@@ -27,19 +27,24 @@ function FooterNavLink({ href, label }: { href: string; label: string }) {
   );
 }
 
+function siteDomainLabel(siteUrl: string): string {
+  return siteUrl.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+}
+
 export default function SiteFooter() {
   const year = new Date().getFullYear();
   const digits = phoneDigits(profile.phone);
   const mailto = `mailto:${profile.email}`;
+  const domainLabel = siteDomainLabel(profile.siteUrl);
 
-  const navItems = [...SITE_FOOTER_NAV, ...FOOTER_CONTACT] as readonly { href: string; label: string }[];
+  const navItems = [...SITE_FOOTER_NAV] as readonly { href: string; label: string }[];
 
   return (
-    <footer className="mt-auto border-t border-line/80 bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-[4.25rem]">
-        <div className="flex flex-col gap-12 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-x-14">
+    <footer className="footer-border-top mt-auto bg-background">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div className="flex flex-col gap-12 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-x-14 py-10">
           {/* Left · identity + socials */}
-          <div className="flex flex-col gap-8 lg:gap-10">
+          <div className="flex flex-col gap-5">
             <div className="flex flex-row items-start gap-4 sm:gap-5">
               <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/15 bg-white/[0.06] sm:h-16 sm:w-16 md:h-[4.75rem] md:w-[4.75rem]">
                 <Image
@@ -99,18 +104,24 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-white/10 sm:mt-16" />
+        {/* Narrow rule on mobile (reference); full width inside gutter from sm */}
+        <div className="mx-auto w-[95%] max-w-xl sm:w-full sm:max-w-none">
+          <hr className="footer-divider" aria-hidden />
+        </div>
 
-        <div className="flex flex-col-reverse gap-6 pt-10 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-8 sm:gap-y-4">
-          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm sm:gap-x-8">
+        {/* Mobile: nav centered above · copyright centered below · Desktop: row justify-between */}
+        <div className="flex flex-col items-center gap-8 py-0 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-8 sm:gap-y-4">
+          <ul className="flex max-w-[min(100%,22rem)] flex-wrap justify-center gap-x-5 gap-y-3 text-center text-sm sm:max-w-none sm:justify-start sm:text-left sm:gap-x-8">
             {navItems.map((item) => (
               <li key={`${item.label}-${item.href}`}>
                 <FooterNavLink href={item.href} label={item.label} />
               </li>
             ))}
           </ul>
-          <p className="text-xs text-muted sm:text-sm">
-            © {year} {profile.name}
+          <p className="max-w-[min(100%,20rem)] text-center text-[11px] leading-relaxed text-muted sm:max-w-none sm:text-right sm:text-xs md:text-sm">
+            <span className="block font-medium text-foreground/85">
+              © {year} {profile.name}
+            </span>
           </p>
         </div>
       </div>
