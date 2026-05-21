@@ -4,6 +4,8 @@ Personal site for **CHU NHƯ ĐỨC**: Next.js (App Router), Tailwind CSS v4, Ma
 
 Canonical résumé facts live in a separate private workspace; sync `data/*.ts` manually when your public story changes.
 
+**Improvement backlog (private SA repo):** [`docs/career/chunhuduc-site-backlog.md`](../SA/docs/career/chunhuduc-site-backlog.md) (sibling folder `SA` on disk).
+
 ## Local development
 
 ```bash
