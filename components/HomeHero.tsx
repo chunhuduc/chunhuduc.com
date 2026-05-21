@@ -66,7 +66,7 @@ export default function HomeHero() {
             <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-hero-foreground sm:text-5xl lg:text-[2.75rem] xl:text-[3.15rem]">
               I&apos;m Đức,
               <span className="mt-2 block text-2xl font-bold text-hero-muted sm:text-3xl">
-                a Solution Architect and hands-on engineer.
+                a {profile.title}.
               </span>
             </h1>
             <p className="mt-4 max-w-md text-sm font-semibold text-hero-foreground/90">

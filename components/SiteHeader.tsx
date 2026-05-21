@@ -5,12 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-const nav = [
-  { href: "/", label: "Home" },
-  { href: "/experience", label: "Experience" },
-  { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
-];
+import { SITE_HEADER_NAV } from "@/data/site-nav";
+import { BACKGROUND_RGB } from "@/lib/themeColors";
 
 const SCROLL_DELTA = 8;
 /** Mobile: user must scroll past this once before the dock is allowed near the top (hide on cold load only). */
@@ -211,7 +207,7 @@ export default function SiteHeader() {
         transition: dockMotionEnabled
           ? "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)"
           : "background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)",
-        backgroundColor: `rgba(10, 11, 15, ${0.92 * a})`,
+        backgroundColor: `rgba(${BACKGROUND_RGB[0]}, ${BACKGROUND_RGB[1]}, ${BACKGROUND_RGB[2]}, ${0.92 * a})`,
         borderBottomWidth: 1,
         borderBottomStyle: "solid",
         borderBottomColor: `rgba(255, 255, 255, ${0.1 * a})`,
@@ -257,7 +253,7 @@ export default function SiteHeader() {
           }`}
           aria-label="Primary"
         >
-          {nav.map((item) => (
+          {SITE_HEADER_NAV.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}
             </Link>
@@ -302,7 +298,7 @@ export default function SiteHeader() {
           className="border-t border-white/10 bg-background shadow-[0_16px_40px_rgba(0,0,0,0.55)] md:hidden"
         >
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
-            {nav.map((item) => (
+            {SITE_HEADER_NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Site-wide dark canvas */
+  /* Site-wide dark canvas (#1b1f24). RGB echoed in lib/themeColors.ts BACKGROUND_RGB for header blend. */
   --background: #1b1f24;
   --foreground: #f4f4f5;
   --muted: #9ca3af;
@@ -195,6 +195,26 @@ body {
 
 /* Raster brand marks (Upwork / Zalo) rendered as monocrome like inline SVG icons */
 .contact-social-links > a img {
+  filter: brightness(0) invert(1);
+  opacity: 0.94;
+}
+
+/* Footer-only social row (no sibling fade; simple accent hover) */
+.footer-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+}
+
+.footer-social-links > a {
+  color: inherit;
+}
+
+.footer-social-links > a:hover {
+  color: var(--accent);
+}
+
+.footer-social-links > a img {
   filter: brightness(0) invert(1);
   opacity: 0.94;
 }

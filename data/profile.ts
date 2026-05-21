@@ -2,6 +2,7 @@
 
 export const profile = {
   name: "CHU NHƯ ĐỨC",
+  title: "Solution Architect and hands-on engineer",
   headline:
     "Independent Solution Architect · MVP & roadmap clarity + hands-on delivery",
   subline: "TypeScript / Node · Enterprise web & distributed systems",
