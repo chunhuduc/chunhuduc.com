@@ -52,6 +52,7 @@ export async function POST(request: Request) {
   const autoResult = await resend.emails.send({
     from: fromHeader,
     to: [parsed.data.email],
+    replyTo: to,
     subject: autoReply.subject,
     text: autoReply.text,
   });

@@ -16,8 +16,8 @@ const MAX_PROJECT = 8000;
 export function getContactConfig() {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const to = process.env.CONTACT_TO_EMAIL?.trim() || profile.email;
-  const from = process.env.CONTACT_FROM_EMAIL?.trim() || "noreply@chunhuduc.com";
-  const fromName = process.env.CONTACT_FROM_NAME?.trim() || "chunhuduc.com";
+  const from = process.env.CONTACT_FROM_EMAIL?.trim() || profile.email;
+  const fromName = process.env.CONTACT_FROM_NAME?.trim() || "Chu Nhu Duc";
   const siteName = process.env.CONTACT_SITE_NAME?.trim() || "chunhuduc.com";
 
   return { apiKey, to, from, fromName, siteName };
@@ -74,7 +74,8 @@ export function buildAutoReplyContent(data: ContactPayload, siteName: string) {
     "",
     `Thanks for reaching out via ${siteName}. Your message was received.`,
     "",
-    "I typically reply within a few business days. If your note is urgent, include timeline and scope in one place so I can respond faster.",
+    "I typically reply within a few business days. You can reply to this email if you want to add details.",
+    "If your note is urgent, include timeline and scope in one place so I can respond faster.",
     "",
     "Best,",
     "CHU NHƯ ĐỨC",

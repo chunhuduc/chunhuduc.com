@@ -58,7 +58,7 @@ Docs: [Cloudflare Email Routing](https://developers.cloudflare.com/email-routing
 | Variable | Example |
 |----------|---------|
 | `RESEND_API_KEY` | `re_...` |
-| `CONTACT_FROM_EMAIL` | `noreply@chunhuduc.com` (or `onboarding@resend.dev` before domain verify) |
+| `CONTACT_FROM_EMAIL` | `contact@chunhuduc.com` (replyable; or `onboarding@resend.dev` before domain verify) |
 | `CONTACT_TO_EMAIL` | `contact@chunhuduc.com` |
 
 The homepage form posts to **`POST /api/contact`** (owner notification + visitor auto-reply).
