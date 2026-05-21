@@ -1,6 +1,7 @@
 import WorkTogetherContactForm from "@/components/WorkTogetherContactForm";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
+import SocialLinksRow from "@/components/SocialLinksRow";
 import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 import { createRevealOrders } from "@/lib/revealStagger";
 
@@ -69,6 +70,9 @@ export default function WorkTogetherSection({
           >
             {lead}
           </p>
+          <div className="reveal-stagger-item mt-8" style={ro()}>
+            <SocialLinksRow className="text-foreground" />
+          </div>
           {!showForm ? (
             <a
               href={ctaHref}
