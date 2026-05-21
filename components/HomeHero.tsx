@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { profile } from "@/data/profile";
+import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 
 export default function HomeHero() {
   const gh = profile.social.github?.trim();
@@ -163,7 +164,7 @@ export default function HomeHero() {
                 <div className="mt-4 flex flex-wrap gap-4">
                   <a
                     className="text-hero-foreground transition-opacity hover:opacity-80"
-                    href={`mailto:${profile.email}`}
+                    href={CONTACT_FORM_HREF}
                     aria-label="Email"
                   >
                     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>

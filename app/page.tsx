@@ -32,7 +32,7 @@ export default function Home() {
       {/* Strip 2 · base · Skills */}
       <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
-          <SectionLabel className="reveal-stagger-item mb-3" style={skillsRo()}>
+          <SectionLabel className="reveal-stagger-item" style={skillsRo()}>
             My skills
           </SectionLabel>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -74,7 +74,7 @@ export default function Home() {
         <RevealStaggerRoot as="section">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="reveal-stagger-item" style={portfolioRo()}>
-              <SectionLabel className="mb-3">My portfolio</SectionLabel>
+              <SectionLabel>My portfolio</SectionLabel>
               <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
                 Recent initiative snapshots (NDA-safe).
               </h2>
@@ -127,12 +127,12 @@ export default function Home() {
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 4 · base · Blog + closing CTA */}
-      <HomeSurfaceStrip surface="base" kind="closing">
+      {/* Strip 4 · base · Blog */}
+      <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
           <div className="flex flex-col gap-14 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-14 xl:gap-x-[4.25rem]">
             <header className="max-lg:max-w-xl lg:col-span-5">
-              <SectionLabel className="reveal-stagger-item mb-3" style={blogRo()}>
+              <SectionLabel className="reveal-stagger-item" style={blogRo()}>
                 Blog & articles
               </SectionLabel>
               <h2
@@ -177,7 +177,6 @@ export default function Home() {
                         {post.summary ? (
                           <p className="mt-4 text-sm leading-relaxed text-muted">{post.summary}</p>
                         ) : null}
-                       
                       </Link>
                     </li>
                   ))}
@@ -186,8 +185,11 @@ export default function Home() {
             </div>
           </div>
         </RevealStaggerRoot>
+      </HomeSurfaceStrip>
 
-        <WorkTogetherSection className="mt-28" />
+      {/* Strip 5 · soft · Contact CTA */}
+      <HomeSurfaceStrip surface="base" kind="closing">
+        <WorkTogetherSection />
       </HomeSurfaceStrip>
     </>
   );

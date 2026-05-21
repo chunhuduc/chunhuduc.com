@@ -10,13 +10,12 @@ export type WorkTogetherContactFormProps = {
 };
 
 const fieldClass =
-  "w-full border-0 border-b border-white/15 bg-transparent py-3 text-sm text-foreground placeholder:text-muted/70 transition-colors focus:border-accent/80 focus:outline-none";
+  "w-full border-0 border-b border-slate-400/40 bg-transparent py-3.5 text-sm text-foreground placeholder:text-muted/60 transition-colors focus:border-accent/70 focus:outline-none";
 
-const labelClass =
-  "block text-xs font-bold uppercase tracking-[0.14em] text-foreground";
+const labelClass = "block text-sm font-bold text-foreground";
 
 const submitClass =
-  "group inline-flex shrink-0 cursor-pointer items-center gap-2.5 border-0 bg-transparent px-2 py-1 text-lg font-extrabold uppercase tracking-[0.12em] text-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 sm:text-xl";
+  "group inline-flex shrink-0 cursor-pointer items-center gap-2.5 border-0 bg-transparent px-2 py-1 text-lg font-extrabold uppercase tracking-[0.12em] text-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#232b35] disabled:cursor-not-allowed disabled:opacity-50 sm:text-xl";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
@@ -103,7 +102,7 @@ export default function WorkTogetherContactForm({
         </p>
         <p>
           <label htmlFor="work-together-name" className={labelClass}>
-            Your name
+            Name
           </label>
           <input
             id="work-together-name"
@@ -111,7 +110,7 @@ export default function WorkTogetherContactForm({
             type="text"
             autoComplete="name"
             disabled={status === "loading"}
-            className={`${fieldClass} mt-2`}
+            className={`${fieldClass} mt-3`}
             placeholder="How should I address you?"
           />
         </p>
@@ -126,7 +125,7 @@ export default function WorkTogetherContactForm({
             autoComplete="email"
             required
             disabled={status === "loading"}
-            className={`${fieldClass} mt-2`}
+            className={`${fieldClass} mt-3`}
             placeholder="you@company.com"
           />
         </p>
@@ -139,7 +138,7 @@ export default function WorkTogetherContactForm({
             name="project"
             rows={4}
             disabled={status === "loading"}
-            className={`${fieldClass} mt-2 resize-y min-h-[6.5rem]`}
+            className={`${fieldClass} mt-3 resize-y min-h-[6.5rem]`}
             placeholder="Scope, stack, timeline, or what you need clarity on"
           />
         </p>

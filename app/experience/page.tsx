@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
-import { createRevealOrders } from "@/lib/revealStagger";
 import { experience } from "@/data/experience";
 import { profile } from "@/data/profile";
+import { CONTACT_FORM_HREF } from "@/lib/contactHref";
+import { createRevealOrders } from "@/lib/revealStagger";
 
 export const metadata: Metadata = {
   title: "Experience",
@@ -65,9 +67,9 @@ export default function ExperiencePage() {
         </p>
         <p className="mt-4 text-sm text-muted">
           Contact:{" "}
-          <a className="font-medium text-accent hover:opacity-90" href={`mailto:${profile.email}`}>
+          <Link className="font-medium text-accent hover:opacity-90" href={CONTACT_FORM_HREF}>
             {profile.email}
-          </a>
+          </Link>
         </p>
       </section>
     </RevealStaggerRoot>

@@ -4,18 +4,15 @@ import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SocialLinksRow from "@/components/SocialLinksRow";
 import { SITE_FOOTER_NAV } from "@/data/site-nav";
 import { profile } from "@/data/profile";
+import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 import { phoneDigits } from "@/lib/phoneDigits";
 import { createRevealOrders } from "@/lib/revealStagger";
 
-const FOOTER_CONTACT = [
-  { href: `mailto:${profile.email}`, label: "Contact" as const },
-];
-
 function FooterNavLink({ href, label }: { href: string; label: string }) {
-  const isMailOrTel =
-    href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("http");
+  const isExternal =
+    href.startsWith("tel:") || (href.startsWith("http") && !href.startsWith("/"));
   const className = "font-medium text-foreground/90 underline-offset-[3px] transition-colors hover:text-accent";
-  if (isMailOrTel) {
+  if (isExternal) {
     return (
       <a href={href} className={`${className} underline decoration-foreground/30`}>
         {label}
@@ -32,7 +29,7 @@ function FooterNavLink({ href, label }: { href: string; label: string }) {
 export default function SiteFooter() {
   const year = new Date().getFullYear();
   const digits = phoneDigits(profile.phone);
-  const mailto = `mailto:${profile.email}`;
+  const contactHref = CONTACT_FORM_HREF;
   const ro = createRevealOrders();
 
   const navItems = [...SITE_FOOTER_NAV] as readonly { href: string; label: string }[];
@@ -91,12 +88,12 @@ export default function SiteFooter() {
               <div className="grid gap-8 sm:grid-cols-2 sm:gap-x-10">
                 <div className="reveal-stagger-item" style={ro()}>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">Email me:</p>
-                  <a
-                    href={mailto}
+                  <Link
+                    href={contactHref}
                     className="mt-3 inline-block text-base font-bold text-foreground underline decoration-foreground/40 decoration-2 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent/70"
                   >
                     {profile.email}
-                  </a>
+                  </Link>
                 </div>
                 <div className="reveal-stagger-item" style={ro()}>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">Call me:</p>

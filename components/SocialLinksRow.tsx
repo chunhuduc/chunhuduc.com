@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { profile } from "@/data/profile";
+import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 import { phoneDigits } from "@/lib/phoneDigits";
 
 const chipClassName =
@@ -156,7 +157,7 @@ export default function SocialLinksRow({ className = "" }: SocialLinksRowProps) 
       <SocialChip href={`tel:${digits}`} label="Phone">
         <IconPhone />
       </SocialChip>
-      <SocialChip href={`mailto:${profile.email}`} label="Email">
+      <SocialChip href={CONTACT_FORM_HREF} label="Email">
         <IconEmail />
       </SocialChip>
     </div>

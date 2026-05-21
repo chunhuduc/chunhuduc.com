@@ -6,7 +6,7 @@ type SectionLabelProps = {
   style?: CSSProperties;
 };
 
-/** Webflow-style path label: `/ Section name` */
+/** Home section path label (canonical): `/ Section name` — accent, uppercase, tracking 0.2em */
 export default function SectionLabel({ children, className = "", style }: SectionLabelProps) {
   return (
     <p

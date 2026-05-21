@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
+import SectionLabel from "@/components/SectionLabel";
 import { createRevealOrders } from "@/lib/revealStagger";
 import { profile } from "@/data/profile";
 
@@ -29,12 +30,9 @@ export default function AboutHomeSection() {
     >
       <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:gap-x-16 lg:gap-y-0">
         <div className="min-w-0">
-          <p
-            className="reveal-stagger-item mb-3 text-xs font-bold uppercase tracking-[0.22em]"
-            style={ro()}
-          >
-            <span className="text-accent">/</span> About me
-          </p>
+          <SectionLabel className="reveal-stagger-item" style={ro()}>
+            About me
+          </SectionLabel>
           <h2
             id="about-heading"
             className="reveal-stagger-item text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-[2.125rem]"
