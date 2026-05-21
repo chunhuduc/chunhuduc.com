@@ -8,7 +8,8 @@ export const profile = {
   subline: "TypeScript / Node · Enterprise web & distributed systems",
   location: "Hanoi, Vietnam",
   phone: "+84 988 070 102",
-  email: "chunhuduc@gmail.com",
+  /** Public contact; delivered to Gmail via Cloudflare Email Routing */
+  email: "contact@chunhuduc.com",
   englishNote: "English (TOEIC 900)",
   /**
    * Public contact URLs (hero “Contact me” chips, footer, CTAs). Leave "" to hide a chip.

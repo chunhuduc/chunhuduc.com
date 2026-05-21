@@ -12,7 +12,6 @@ export type WorkTogetherSectionProps = {
   ctaLabel?: string;
   /** Defaults to `mailto:` using `profile.email` */
   ctaHref?: string;
-  email?: string;
   submitLabel?: string;
   className?: string;
   showForm?: boolean;
@@ -32,7 +31,6 @@ export default function WorkTogetherSection({
   lead = DEFAULT_LEAD,
   ctaLabel = "Let's talk",
   ctaHref = `mailto:${profile.email}`,
-  email = profile.email,
   submitLabel = "Submit",
   className = "",
   showForm = true,
@@ -96,7 +94,6 @@ export default function WorkTogetherSection({
 
           {showForm ? (
             <WorkTogetherContactForm
-              email={email}
               submitLabel={submitLabel}
               className="reveal-stagger-item min-w-0 lg:pt-1"
               style={ro()}
