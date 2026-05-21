@@ -1,5 +1,6 @@
 "use client";
 
+import AltchaWidget from "@/components/AltchaWidget";
 import { useState, type CSSProperties, type FormEvent } from "react";
 
 export type WorkTogetherContactFormProps = {
@@ -15,7 +16,7 @@ const labelClass =
   "block text-xs font-bold uppercase tracking-[0.14em] text-foreground";
 
 const submitClass =
-  "group mt-10 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-sm font-extrabold uppercase tracking-[0.14em] text-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
+  "group inline-flex shrink-0 cursor-pointer items-center gap-2.5 border-0 bg-transparent px-2 py-1 text-lg font-extrabold uppercase tracking-[0.12em] text-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 sm:text-xl";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
@@ -26,6 +27,7 @@ export default function WorkTogetherContactForm({
 }: WorkTogetherContactFormProps) {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [altchaKey, setAltchaKey] = useState(0);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,11 +35,19 @@ export default function WorkTogetherContactForm({
 
     const form = e.currentTarget;
     const data = new FormData(form);
+    const altcha = String(data.get("altcha") ?? "").trim();
+    if (!altcha) {
+      setStatus("error");
+      setErrorMessage("Complete the verification challenge before submitting.");
+      return;
+    }
+
     const payload = {
       name: String(data.get("name") ?? "").trim(),
       email: String(data.get("email") ?? "").trim(),
       project: String(data.get("project") ?? "").trim(),
       company: String(data.get("company") ?? "").trim(),
+      altcha,
     };
 
     setStatus("loading");
@@ -62,6 +72,7 @@ export default function WorkTogetherContactForm({
 
       setStatus("success");
       form.reset();
+      setAltchaKey((k) => k + 1);
     } catch {
       setStatus("error");
       setErrorMessage("Network error. Check your connection and try again.");
@@ -133,24 +144,30 @@ export default function WorkTogetherContactForm({
           />
         </p>
       </div>
-      <button
-        type="submit"
-        className={submitClass}
-        disabled={status === "loading" || status === "success"}
-      >
-        {status === "loading" ? "Sending…" : submitLabel}
-        <span
-          className="text-accent transition-transform group-hover:-translate-y-0.5"
-          aria-hidden
+      <div className="mt-10 flex w-full flex-col gap-4 max-sm:gap-6 sm:gap-3">
+        <AltchaWidget
+          disabled={status === "loading"}
+          resetKey={altchaKey}
+        />
+        <button
+          type="submit"
+          className={`${submitClass} self-end sm:self-start`}
+          disabled={status === "loading" || status === "success"}
         >
-          ↑
-        </span>
-      </button>
+          {status === "loading" ? "Sending…" : submitLabel}
+          <span
+            className="text-accent transition-transform group-hover:-translate-y-0.5"
+            aria-hidden
+          >
+            ↑
+          </span>
+        </button>
+      </div>
       {status !== "idle" ? (
         <p
           id={statusId}
           role={status === "error" ? "alert" : "status"}
-          className={`mt-4 text-sm leading-relaxed ${
+          className={`mt-4 text-sm leading-relaxed sm:mt-3 ${
             status === "success"
               ? "text-foreground/90"
               : status === "error"

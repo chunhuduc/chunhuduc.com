@@ -6,4 +6,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Site content
 
-- **Contact row (hero “Contact me”) and other CTAs:** Edit phone, email, and `social` in [`data/profile.ts`](data/profile.ts). Form mail: Resend via [`app/api/contact/route.ts`](app/api/contact/route.ts); inbound `contact@` via Cloudflare Email Routing (see [`README.md`](README.md)).
+- **Contact row (hero “Contact me”) and other CTAs:** Edit phone, email, and `social` in [`data/profile.ts`](data/profile.ts). Form: ALTCHA ([`lib/altcha.ts`](lib/altcha.ts), [`components/AltchaWidget.tsx`](components/AltchaWidget.tsx)) + Resend ([`app/api/contact/route.ts`](app/api/contact/route.ts)); inbound `contact@` via Cloudflare Email Routing (see [`README.md`](README.md)).

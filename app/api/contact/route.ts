@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { verifyAltchaToken } from "@/lib/altcha";
 import {
   buildAutoReplyContent,
   buildOwnerEmailContent,
@@ -13,6 +14,14 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
+  }
+
+  const raw = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+  const altchaCheck = await verifyAltchaToken(
+    typeof raw.altcha === "string" ? raw.altcha : String(raw.altcha ?? ""),
+  );
+  if (!altchaCheck.ok) {
+    return NextResponse.json({ error: altchaCheck.error }, { status: 403 });
   }
 
   const parsed = parseContactBody(body);

@@ -34,7 +34,15 @@ Optional later: set **`GITHUB_TOKEN`** in Vercel if you add build-time GitHub me
 
 ## Contact email (`contact@chunhuduc.com`)
 
-Public address in [`data/profile.ts`](data/profile.ts). Inbound uses **Cloudflare Email Routing**; the site form sends via **Resend**.
+Public address in [`data/profile.ts`](data/profile.ts). Inbound uses **Cloudflare Email Routing**; the site form sends via **Resend** and is protected by **ALTCHA** (privacy-friendly proof-of-work captcha).
+
+### ALTCHA (contact form)
+
+1. Generate a secret: `openssl rand -hex 32`
+2. Set `ALTCHA_HMAC_SECRET` in `.env.local` and on Vercel (same value in every environment).
+3. The widget loads challenges from `GET /api/altcha/challenge`; `POST /api/contact` verifies the `altcha` payload before sending email.
+
+If `ALTCHA_HMAC_SECRET` is unset, the challenge endpoint returns 503 and the contact API skips verification (local dev only; set the secret before production).
 
 ### 1. Cloudflare Email Routing (receive)
 
