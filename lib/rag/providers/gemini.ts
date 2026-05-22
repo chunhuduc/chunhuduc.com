@@ -1,6 +1,10 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { embed, generateObject, generateText, streamText } from "ai";
-import { z } from "zod";
+import {
+  ENRICH_PROMPT_SUFFIX,
+  enrichSchemaStrict,
+  normalizeEnriched,
+} from "../enrich-schema";
 import {
   getGeminiChatModel,
   getGeminiEmbedModel,
@@ -8,16 +12,6 @@ import {
 } from "../config";
 import type { EnrichedMetadata } from "../types";
 import type { LlmProviderApi } from "./types";
-
-const enrichSchema = z.object({
-  role: z.string().optional(),
-  stack: z.array(z.string()).optional(),
-  concepts: z.array(z.string()).optional(),
-  domain: z.string().optional(),
-  responsibilities: z.array(z.string()).optional(),
-  keywords: z.array(z.string()).optional(),
-  likely_questions: z.array(z.string()).optional(),
-});
 
 function getGoogle() {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
@@ -52,8 +46,8 @@ export const geminiProvider: LlmProviderApi = {
     const google = getGoogle();
     const { object } = await generateObject({
       model: google(getGeminiChatModel()),
-      schema: enrichSchema,
-      prompt: `Extract structured metadata from this portfolio text. Do NOT add facts not present in the source.
+      schema: enrichSchemaStrict,
+      prompt: `Extract structured metadata from this portfolio text. Do NOT add facts not present in the source. ${ENRICH_PROMPT_SUFFIX}
 
 Title: ${context.title}
 Source: ${context.source}
@@ -63,7 +57,7 @@ Source text:
 ${originalContent}
 ---`,
     });
-    return object;
+    return normalizeEnriched(object);
   },
 
   async chatStream({ system, user, onTextDelta }) {

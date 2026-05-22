@@ -1,22 +1,16 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { embed, generateObject, generateText, streamText } from "ai";
-import { z } from "zod";
+import {
+  ENRICH_PROMPT_SUFFIX,
+  enrichSchemaStrict,
+  normalizeEnriched,
+} from "../enrich-schema";
 import {
   getOpenaiChatModel,
   getOpenaiEmbedModel,
 } from "../config";
 import type { EnrichedMetadata } from "../types";
 import type { LlmProviderApi } from "./types";
-
-const enrichSchema = z.object({
-  role: z.string().optional(),
-  stack: z.array(z.string()).optional(),
-  concepts: z.array(z.string()).optional(),
-  domain: z.string().optional(),
-  responsibilities: z.array(z.string()).optional(),
-  keywords: z.array(z.string()).optional(),
-  likely_questions: z.array(z.string()).optional(),
-});
 
 function getOpenAI() {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
@@ -45,8 +39,8 @@ export const openaiProvider: LlmProviderApi = {
     const openai = getOpenAI();
     const { object } = await generateObject({
       model: openai(getOpenaiChatModel()),
-      schema: enrichSchema,
-      prompt: `Extract structured metadata from this portfolio text. Do NOT add facts not present in the source.
+      schema: enrichSchemaStrict,
+      prompt: `Extract structured metadata from this portfolio text. Do NOT add facts not present in the source. ${ENRICH_PROMPT_SUFFIX}
 
 Title: ${context.title}
 Source: ${context.source}
@@ -56,7 +50,7 @@ Source text:
 ${originalContent}
 ---`,
     });
-    return object;
+    return normalizeEnriched(object);
   },
 
   async chatStream({ system, user, onTextDelta }) {
