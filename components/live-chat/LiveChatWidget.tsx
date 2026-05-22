@@ -75,6 +75,14 @@ export default function LiveChatWidget() {
     () => !skipAltcha() && !isAltchaVerified(),
   );
   const [altchaKey, setAltchaKey] = useState(0);
+
+  const visitorHasMessaged = messages.some((m) => m.sender === "visitor");
+
+  useEffect(() => {
+    if (skipAltcha() || !visitorHasMessaged) return;
+    markAltchaVerified();
+    setShowAltcha(false);
+  }, [visitorHasMessaged]);
   const [ready, setReady] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const openRef = useRef(open);
@@ -260,7 +268,7 @@ export default function LiveChatWidget() {
     const altchaInput = form.querySelector<HTMLInputElement>('input[name="altcha"]');
     const altcha = altchaInput?.value?.trim() ?? "";
 
-    if (!skipAltcha() && !isAltchaVerified()) {
+    if (!skipAltcha() && !isAltchaVerified() && !visitorHasMessaged) {
       if (!altcha) {
         setError("Complete the verification challenge before sending.");
         return;

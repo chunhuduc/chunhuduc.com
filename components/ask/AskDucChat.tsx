@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import type { ChatSourceCitation } from "@/lib/rag/types";
-import AskComposer from "./AskComposer";
+import AskComposer, { markAltchaVerified } from "./AskComposer";
 import AskExampleChips from "./AskExampleChips";
 import AskMessageList, { type ChatMessage } from "./AskMessageList";
 
@@ -38,6 +38,7 @@ export default function AskDucChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [altchaEpoch, setAltchaEpoch] = useState(0);
   const abortRef = useRef<AbortController | null>(null);
 
   const sendQuestion = useCallback(async (question: string, altcha: string) => {
@@ -126,6 +127,8 @@ export default function AskDucChat() {
             : m,
         ),
       );
+      markAltchaVerified();
+      setAltchaEpoch((n) => n + 1);
     } catch (e) {
       if ((e as Error).name === "AbortError") return;
       const msg = e instanceof Error ? e.message : "Something went wrong.";
@@ -155,6 +158,7 @@ export default function AskDucChat() {
       </div>
 
       <AskComposer
+        key={altchaEpoch}
         value={input}
         onChange={setInput}
         onSubmit={(altcha) => void sendQuestion(input, altcha)}

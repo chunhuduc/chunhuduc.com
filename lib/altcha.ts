@@ -58,6 +58,31 @@ export async function altchaChallengeHandler(request: Request): Promise<Response
   return instance.challengeHandler(request);
 }
 
+/**
+ * Verify ALTCHA on submit. When `trustedSession` is true (e.g. repeat message in the
+ * same chat session), an empty token is accepted because the widget is hidden client-side
+ * and ALTCHA payloads are single-use.
+ */
+export async function verifyAltchaForSubmit(
+  token: string | undefined,
+  request: Request | undefined,
+  options?: { trustedSession?: boolean },
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!isAltchaEnforced(request)) {
+    return { ok: true };
+  }
+
+  const trimmed = token?.trim();
+  if (!trimmed) {
+    if (options?.trustedSession) {
+      return { ok: true };
+    }
+    return { ok: false, error: "Complete the verification challenge." };
+  }
+
+  return verifyAltchaToken(trimmed, request);
+}
+
 export async function verifyAltchaToken(
   token: string | undefined,
   request?: Request,

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { verifyAltchaToken } from "@/lib/altcha";
+import { verifyAltchaForSubmit } from "@/lib/altcha";
 import { publishInboxUpdate, publishMessage } from "@/lib/live-chat/ably-server";
 import { isLiveChatEnabled, MAX_MESSAGE_LENGTH } from "@/lib/live-chat/config";
 import { maybeNotifyOwnerNewMessage } from "@/lib/live-chat/notify";
 import {
+  conversationHasVisitorMessages,
   insertMessage,
   listMessages,
   updateConversationVisitor,
@@ -79,9 +80,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Forbidden." }, { status: 403 });
   }
 
-  const altchaCheck = await verifyAltchaToken(
+  const trustedSession = await conversationHasVisitorMessages(conversationId);
+  const altchaCheck = await verifyAltchaForSubmit(
     typeof body.altcha === "string" ? body.altcha : "",
     request,
+    { trustedSession },
   );
   if (!altchaCheck.ok) {
     return NextResponse.json({ error: altchaCheck.error }, { status: 403 });

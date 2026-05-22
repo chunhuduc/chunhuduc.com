@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { verifyAltchaToken } from "@/lib/altcha";
+import { verifyAltchaForSubmit } from "@/lib/altcha";
 import { isDatabaseConfigured } from "@/lib/db/client";
 import { getDb } from "@/lib/db/client";
 import { chatLogs } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
 import { toCitations } from "@/lib/rag/citations";
 import { maybeCreateKnowledgeGap, retrievalStats } from "@/lib/rag/gap-detect";
@@ -49,20 +50,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const altchaCheck = await verifyAltchaToken(
-    typeof body.altcha === "string" ? body.altcha : "",
-    request,
-  );
-  if (!altchaCheck.ok) {
-    return NextResponse.json({ error: altchaCheck.error }, { status: 403 });
-  }
-
   const question = String(body.question ?? "").trim().slice(0, MAX_QUESTION);
   if (!question) {
     return NextResponse.json({ error: "Question is required." }, { status: 400 });
   }
 
   const sessionId = String(body.sessionId ?? "").trim().slice(0, 64) || null;
+
+  const trustedSession = sessionId ? await askSessionHasPriorLogs(sessionId) : false;
+  const altchaCheck = await verifyAltchaForSubmit(
+    typeof body.altcha === "string" ? body.altcha : "",
+    request,
+    { trustedSession },
+  );
+  if (!altchaCheck.ok) {
+    return NextResponse.json({ error: altchaCheck.error }, { status: 403 });
+  }
 
   let chunks;
   try {
@@ -196,6 +199,21 @@ export async function POST(request: Request) {
       Connection: "keep-alive",
     },
   });
+}
+
+async function askSessionHasPriorLogs(sessionId: string): Promise<boolean> {
+  try {
+    const db = getDb();
+    const rows = await db
+      .select({ id: chatLogs.id })
+      .from(chatLogs)
+      .where(eq(chatLogs.sessionId, sessionId))
+      .limit(1);
+    return rows.length > 0;
+  } catch (e) {
+    console.error("ask session lookup failed", e);
+    return false;
+  }
 }
 
 async function logChat(params: {

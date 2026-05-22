@@ -21,7 +21,7 @@ function readAltchaFromForm(form: HTMLFormElement): string {
   return input?.value?.trim() ?? "";
 }
 
-function isSessionVerified(): boolean {
+export function isAltchaSessionVerified(): boolean {
   if (typeof sessionStorage === "undefined") return false;
   const raw = sessionStorage.getItem(ALTCHA_SESSION_KEY);
   if (!raw) return false;
@@ -41,7 +41,7 @@ export default function AskComposer({
   loading,
 }: Props) {
   const [showAltcha, setShowAltcha] = useState(
-    () => !skipAltcha() && !isSessionVerified(),
+    () => !skipAltcha() && !isAltchaSessionVerified(),
   );
   const [altchaKey, setAltchaKey] = useState(0);
   const [error, setError] = useState("");
@@ -53,13 +53,11 @@ export default function AskComposer({
     const form = e.currentTarget;
     const altcha = readAltchaFromForm(form);
 
-    if (!skipAltcha() && !isSessionVerified()) {
+    if (!skipAltcha() && !isAltchaSessionVerified()) {
       if (!altcha) {
         setError("Complete the verification challenge before submitting.");
         return;
       }
-      markAltchaVerified();
-      setShowAltcha(false);
     }
 
     setError("");

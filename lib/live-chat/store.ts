@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { liveConversations, liveMessages } from "@/lib/db/schema";
 import type { LiveChatConversationDto, LiveChatMessageDto, LiveChatSender } from "./types";
@@ -99,6 +99,24 @@ export async function insertMessage(params: {
     body: row.body,
     createdAt: row.createdAt.toISOString(),
   };
+}
+
+export async function conversationHasVisitorMessages(
+  conversationId: string,
+): Promise<boolean> {
+  const db = getDb();
+  const rows = await db
+    .select({ id: liveMessages.id })
+    .from(liveMessages)
+    .where(
+      and(
+        eq(liveMessages.conversationId, conversationId),
+        eq(liveMessages.sender, "visitor"),
+      ),
+    )
+    .limit(1);
+
+  return rows.length > 0;
 }
 
 export async function listMessages(
