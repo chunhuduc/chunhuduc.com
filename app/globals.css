@@ -46,6 +46,20 @@ body {
   display: none;
 }
 
+/* iOS Safari: inputs below 16px trigger page zoom on focus */
+.live-chat-panel input,
+.live-chat-panel textarea,
+.live-chat-panel select {
+  font-size: 16px;
+}
+@media (min-width: 640px) {
+  .live-chat-panel input,
+  .live-chat-panel textarea,
+  .live-chat-panel select {
+    font-size: 0.875rem;
+  }
+}
+
 /* Hero: fade (quick) + slide-up (slow) as separate timelines. Respects prefers-reduced-motion. */
 @keyframes hero-fade-in {
   from {

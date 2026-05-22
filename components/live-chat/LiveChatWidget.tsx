@@ -278,7 +278,7 @@ export default function LiveChatWidget() {
     <div className="pointer-events-none fixed bottom-4 right-4 z-[60] flex flex-col items-end sm:bottom-6 sm:right-6">
       {open ? (
         <div
-          className="pointer-events-auto mb-3 flex h-[min(32rem,70dvh)] w-[min(100vw-2rem,22rem)] flex-col overflow-hidden rounded-2xl border border-white/12 bg-[#0f1115]/95 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-md"
+          className="live-chat-panel pointer-events-auto mb-3 flex h-[min(32rem,70dvh)] w-[min(100vw-2rem,22rem)] touch-manipulation flex-col overflow-hidden rounded-2xl border border-white/12 bg-[#0f1115]/95 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-md"
           role="dialog"
           aria-label="Chat with Đức"
         >
@@ -348,7 +348,7 @@ export default function LiveChatWidget() {
                   placeholder="Name (optional)"
                   value={visitorName}
                   onChange={(e) => setVisitorName(e.target.value)}
-                  className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-hero-foreground placeholder:text-hero-muted"
+                  className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-base text-hero-foreground placeholder:text-hero-muted sm:text-sm"
                   maxLength={120}
                 />
                 <input
@@ -356,7 +356,7 @@ export default function LiveChatWidget() {
                   placeholder="Email (optional)"
                   value={visitorEmail}
                   onChange={(e) => setVisitorEmail(e.target.value)}
-                  className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-hero-foreground placeholder:text-hero-muted"
+                  className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-base text-hero-foreground placeholder:text-hero-muted sm:text-sm"
                   maxLength={254}
                 />
               </div>
@@ -376,7 +376,7 @@ export default function LiveChatWidget() {
                   maxLength={2000}
                   disabled={loading || !ready}
                   placeholder="Type a message…"
-                  className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-hero-foreground placeholder:text-hero-muted focus:border-accent/50 focus:outline-none"
+                  className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-base text-hero-foreground placeholder:text-hero-muted focus:border-accent/50 focus:outline-none sm:text-sm"
                 />
                 <button
                   type="submit"
