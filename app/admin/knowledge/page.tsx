@@ -97,7 +97,7 @@ export default function AdminKnowledgePage() {
             value={secret}
             onChange={(e) => setSecret(e.target.value)}
             placeholder="ADMIN_SECRET"
-            className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-base sm:text-sm"
             autoComplete="current-password"
           />
           <button
@@ -147,7 +147,7 @@ export default function AdminKnowledgePage() {
                   setEdits((prev) => ({ ...prev, [g.id]: e.target.value }))
                 }
                 rows={5}
-                className="mt-4 w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-sm"
+                className="mt-4 w-full rounded-lg border border-white/10 bg-background px-3 py-2 text-base sm:text-sm"
               />
               <div className="mt-4 flex gap-3">
                 <button

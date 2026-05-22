@@ -160,7 +160,7 @@ export default function AdminChatClient() {
             type="password"
             value={secret}
             onChange={(e) => setSecret(e.target.value)}
-            className="w-full rounded-lg border border-line bg-background px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-line bg-background px-3 py-2 text-base sm:text-sm"
             placeholder="Admin secret"
             autoComplete="current-password"
           />
@@ -249,7 +249,7 @@ export default function AdminChatClient() {
                     maxLength={2000}
                     disabled={loading}
                     placeholder="Reply…"
-                    className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2 text-sm"
+                    className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2 text-base sm:text-sm"
                   />
                   <button
                     type="submit"
