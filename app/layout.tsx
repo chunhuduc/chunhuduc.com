@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import LiveChatRoot from "@/components/live-chat/LiveChatRoot";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteShell from "@/components/SiteShell";
@@ -49,6 +50,7 @@ export default function RootLayout({
         <SiteHeader />
         <SiteShell>{children}</SiteShell>
         <SiteFooter />
+        <LiveChatRoot />
       </body>
     </html>
   );

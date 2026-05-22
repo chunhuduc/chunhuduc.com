@@ -37,6 +37,15 @@ body {
   color: var(--foreground);
 }
 
+/* Scrollable regions without visible scrollbar (chat message lists) */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Hero: fade (quick) + slide-up (slow) as separate timelines. Respects prefers-reduced-motion. */
 @keyframes hero-fade-in {
   from {

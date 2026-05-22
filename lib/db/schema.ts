@@ -72,6 +72,39 @@ export type RetrievedChunkRef = {
   similarity: number;
 };
 
+export const liveConversations = pgTable(
+  "live_conversations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    visitorToken: text("visitor_token").notNull(),
+    visitorName: text("visitor_name"),
+    visitorEmail: text("visitor_email"),
+    pageUrl: text("page_url"),
+    status: text("status").notNull().default("open"),
+    lastMessageAt: timestamp("last_message_at", { withTimezone: true }).notNull().defaultNow(),
+    ownerLastReadAt: timestamp("owner_last_read_at", { withTimezone: true }),
+    lastNotifyAt: timestamp("last_notify_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("live_conversations_status_last_msg_idx").on(t.status, t.lastMessageAt)],
+);
+
+export const liveMessages = pgTable(
+  "live_messages",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => liveConversations.id, { onDelete: "cascade" }),
+    sender: text("sender").notNull(),
+    body: text("body").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("live_messages_conversation_created_idx").on(t.conversationId, t.createdAt)],
+);
+
 export type DocumentRow = typeof documents.$inferSelect;
 export type ChatLogRow = typeof chatLogs.$inferSelect;
 export type KnowledgeGapRow = typeof knowledgeGaps.$inferSelect;
+export type LiveConversationRow = typeof liveConversations.$inferSelect;
+export type LiveMessageRow = typeof liveMessages.$inferSelect;

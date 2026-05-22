@@ -12,6 +12,7 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.78",
     "@ai-sdk/openai": "^3.0.64",
+    "ably": "^2.21.0",
     "ai": "^6.0.188",
     "altcha": "^3.0.9",
     "altcha-lib": "^2.1.0",

@@ -116,6 +116,27 @@ SA_KNOWLEDGE_ROOT=C:/BRAINSTORM/SA npm run knowledge:ingest
 
 **LLM:** default `LLM_PROVIDER=openai` (`gpt-4o-mini` + `text-embedding-3-small`). Run migration `002` when switching from Gemini, then re-ingest. Set `LLM_PROVIDER=gemini` + `GEMINI_API_KEY` to use Gemini instead (768-dim vectors; use `001` only).
 
+## Live chat (human overlay)
+
+Widget on every page: visitor chats with you directly (not AI). Realtime via [Ably](https://ably.com); email alerts via Resend.
+
+### Setup
+
+1. Run [`supabase/migrations/003_live_chat.sql`](supabase/migrations/003_live_chat.sql) in Neon SQL Editor (after `001`).
+2. Create an Ably app (Free tier) → copy **API key** → `ABLY_API_KEY` (server only, never `NEXT_PUBLIC_`).
+3. Env: `LIVE_CHAT_ENABLED=true`, `DATABASE_URL`, `ABLY_API_KEY`, `RESEND_API_KEY`, `CONTACT_TO_EMAIL` (or `LIVE_CHAT_NOTIFY_EMAIL`), `ALTCHA_HMAC_SECRET`, `ADMIN_SECRET`. Set `LIVE_CHAT_EMAIL_NOTIFY=false` to disable owner email.
+
+### Operations
+
+| Task | URL / command |
+|------|----------------|
+| Visitor widget | Floating button on all pages when configured |
+| Admin inbox | `/admin/chat` (same `ADMIN_SECRET` as knowledge gaps) |
+| Email on new visitor message | Resend to `CONTACT_TO_EMAIL` / `LIVE_CHAT_NOTIFY_EMAIL`; debounced ~3 min per conversation |
+| Visitor new-reply UX | Red badge on bubble + short sound when panel closed or tab in background |
+
+Ask AI at `/ask` is unchanged and runs in parallel with live chat.
+
 ## Fonts
 
 **Manrope** is loaded with `latin` and `vietnamese` subsets via `next/font/google` in `app/layout.tsx`.
