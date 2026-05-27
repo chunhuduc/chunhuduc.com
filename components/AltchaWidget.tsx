@@ -20,14 +20,12 @@ export default function AltchaWidget({
   className = "",
 }: AltchaWidgetProps) {
   const [mounted, setMounted] = useState(false);
+  const [skipOnLocalhost, setSkipOnLocalhost] = useState(false);
 
   useEffect(() => {
+    setSkipOnLocalhost(isLocalhostClient());
     setMounted(true);
   }, []);
-
-  if (isLocalhostClient()) {
-    return null;
-  }
 
   if (!mounted) {
     return (
@@ -35,6 +33,10 @@ export default function AltchaWidget({
         Loading verification…
       </p>
     );
+  }
+
+  if (skipOnLocalhost) {
+    return null;
   }
 
   return (

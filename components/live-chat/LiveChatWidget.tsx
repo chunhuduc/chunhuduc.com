@@ -321,7 +321,7 @@ export default function LiveChatWidget() {
                       type="button"
                       disabled={loading}
                       onClick={() => handleStarter(s)}
-                      className="rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-left text-xs font-semibold text-hero-foreground/90 transition-colors hover:border-accent/30 hover:bg-white/[0.08] disabled:opacity-50"
+                      className="cursor-pointer rounded-full border border-white/12 bg-white/[0.05] px-3 py-1.5 text-left text-xs font-semibold text-hero-foreground/90 transition-colors hover:border-accent/30 hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {s}
                     </button>
