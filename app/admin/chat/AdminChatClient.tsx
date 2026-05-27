@@ -7,6 +7,7 @@ import type {
   LiveChatMessageDto,
   LiveChatMessagePayload,
 } from "@/lib/live-chat/types";
+import ChatSendButton from "@/components/ChatSendButton";
 import { formatVisitorDisplay } from "@/lib/live-chat/visitor";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -19,7 +20,8 @@ export default function AdminChatClient() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [messages, setMessages] = useState<LiveChatMessageDto[]>([]);
   const [reply, setReply] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const [replyLoading, setReplyLoading] = useState(false);
   const [error, setError] = useState("");
 
   const { listRef, onScroll, forceScrollToBottom } = useChatMessageListScroll(
@@ -100,11 +102,11 @@ export default function AdminChatClient() {
 
   useEffect(() => {
     if (!loggedIn || !selectedId) return;
-    setLoading(true);
+    setMessagesLoading(true);
     void loadMessages(selectedId)
       .catch((e) => setError(e instanceof Error ? e.message : "Load failed."))
       .finally(() => {
-        setLoading(false);
+        setMessagesLoading(false);
         requestAnimationFrame(() => forceScrollToBottom());
       });
   }, [loggedIn, selectedId, loadMessages, forceScrollToBottom]);
@@ -127,7 +129,7 @@ export default function AdminChatClient() {
   async function handleReply(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedId || !reply.trim()) return;
-    setLoading(true);
+    setReplyLoading(true);
     setError("");
     try {
       const res = await fetch(`/api/live-chat/admin/conversations/${selectedId}/messages`, {
@@ -147,7 +149,7 @@ export default function AdminChatClient() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Reply failed.");
     } finally {
-      setLoading(false);
+      setReplyLoading(false);
     }
   }
 
@@ -281,17 +283,15 @@ export default function AdminChatClient() {
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
                     maxLength={2000}
-                    disabled={loading}
+                    disabled={messagesLoading || replyLoading}
                     placeholder="Reply…"
                     className="min-w-0 flex-1 rounded-lg border border-line px-3 py-2 text-base sm:text-sm"
                   />
-                  <button
-                    type="submit"
-                    disabled={loading || !reply.trim()}
-                    className="rounded-lg bg-accent px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
-                  >
-                    Send
-                  </button>
+                  <ChatSendButton
+                    loading={replyLoading}
+                    disabled={messagesLoading || !reply.trim()}
+                    className="px-4 py-2 text-sm"
+                  />
                 </div>
               </form>
             </>

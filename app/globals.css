@@ -66,6 +66,48 @@ body {
   }
 }
 
+/* Live chat: panel enter/exit + mobile backdrop (see LiveChatWidget) */
+.live-chat-panel--anim {
+  --live-chat-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  transform-origin: bottom right;
+  opacity: 0;
+  transform: translate3d(0, 14px, 0) scale(0.96);
+  transition:
+    opacity 0.3s var(--live-chat-ease),
+    transform 0.3s var(--live-chat-ease);
+}
+
+.live-chat-panel--anim.is-shown {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.live-chat-backdrop {
+  --live-chat-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  opacity: 0;
+  transition: opacity 0.3s var(--live-chat-ease);
+}
+
+.live-chat-backdrop.is-shown {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-chat-panel--anim,
+  .live-chat-backdrop {
+    transition: none;
+  }
+
+  .live-chat-panel--anim:not(.is-shown) {
+    opacity: 0;
+  }
+
+  .live-chat-panel--anim.is-shown {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Hero: fade (quick) + slide-up (slow) as separate timelines. Respects prefers-reduced-motion. */
 @keyframes hero-fade-in {
   from {

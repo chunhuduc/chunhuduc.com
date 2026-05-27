@@ -1,6 +1,7 @@
 "use client";
 
 import AltchaWidget from "@/components/AltchaWidget";
+import ChatSendButton from "@/components/ChatSendButton";
 import { isLocalhostClient } from "@/lib/altcha-local";
 import type { LiveChatMessageDto, LiveChatMessagePayload } from "@/lib/live-chat/types";
 import { useChatMessageListScroll } from "@/hooks/useChatMessageListScroll";
@@ -15,6 +16,8 @@ import {
   STORAGE_VISITOR_TOKEN,
 } from "./constants";
 import { LIVE_CHAT_STARTERS } from "./starters";
+
+const PANEL_TRANSITION_MS = 300;
 
 const skipAltcha = () => typeof window !== "undefined" && isLocalhostClient();
 
@@ -78,6 +81,8 @@ function applyVisitorProfile(
 
 export default function LiveChatWidget() {
   const [open, setOpen] = useState(false);
+  const [panelMounted, setPanelMounted] = useState(false);
+  const [panelShown, setPanelShown] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [visitorToken, setVisitorToken] = useState<string | null>(null);
   const [messages, setMessages] = useState<LiveChatMessageDto[]>([]);
@@ -116,6 +121,40 @@ export default function LiveChatWidget() {
     setLastReadAt(latest);
     setUnreadCount(0);
   }, []);
+
+  const closeChat = useCallback(() => {
+    markAllRead(messages);
+    setOpen(false);
+  }, [messages, markAllRead]);
+
+  useEffect(() => {
+    if (open) {
+      setPanelMounted(true);
+      const frame = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setPanelShown(true));
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+    setPanelShown(false);
+    return undefined;
+  }, [open]);
+
+  useEffect(() => {
+    if (panelShown || !panelMounted) return undefined;
+    const t = window.setTimeout(() => setPanelMounted(false), PANEL_TRANSITION_MS);
+    return () => clearTimeout(t);
+  }, [panelShown, panelMounted]);
+
+  useEffect(() => {
+    if (!panelMounted) return undefined;
+    const mobile = window.matchMedia("(max-width: 639px)");
+    if (!mobile.matches) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [panelMounted]);
 
   const appendMessage = useCallback((msg: LiveChatMessageDto) => {
     setMessages((prev) => {
@@ -310,13 +349,27 @@ export default function LiveChatWidget() {
   }
 
   return (
-    <div className="pointer-events-none fixed bottom-4 right-4 z-[60] flex flex-col items-end sm:bottom-6 sm:right-6">
-      {open ? (
+    <>
+      {panelMounted ? (
         <div
-          className="live-chat-panel pointer-events-auto mb-3 flex h-[min(32rem,70dvh)] w-[min(100vw-2rem,22rem)] touch-manipulation flex-col overflow-hidden rounded-2xl border border-white/12 bg-[#0f1115]/95 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-md"
-          role="dialog"
-          aria-label="Chat with Đức"
-        >
+          className={`live-chat-backdrop fixed inset-0 z-[59] bg-black/35 backdrop-blur-md sm:hidden ${
+            panelShown ? "is-shown pointer-events-auto" : "pointer-events-none"
+          }`}
+          onClick={closeChat}
+          aria-hidden
+        />
+      ) : null}
+
+      <div className="pointer-events-none fixed bottom-4 right-4 z-[60] flex flex-col items-end sm:bottom-6 sm:right-6">
+        {panelMounted ? (
+          <div
+            className={`live-chat-panel live-chat-panel--anim mb-3 flex h-[min(32rem,70dvh)] w-[min(100vw-2rem,22rem)] touch-manipulation flex-col overflow-hidden rounded-2xl border border-white/12 bg-[#0f1115]/95 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-md ${
+              panelShown ? "is-shown pointer-events-auto" : "pointer-events-none"
+            }`}
+            role="dialog"
+            aria-label="Chat with Đức"
+            aria-hidden={!panelShown}
+          >
           <header className="flex items-start justify-between gap-2 border-b border-white/10 px-4 py-3">
             <div>
               <p className="text-sm font-bold text-hero-foreground">Chat with Đức</p>
@@ -326,12 +379,9 @@ export default function LiveChatWidget() {
             </div>
             <button
               type="button"
-              className="rounded-lg px-2 py-1 text-hero-muted transition-colors hover:bg-white/10 hover:text-hero-foreground"
+              className="cursor-pointer rounded-lg px-2 py-1 text-hero-muted transition-colors hover:bg-white/10 hover:text-hero-foreground"
               aria-label="Close chat"
-              onClick={() => {
-                markAllRead(messages);
-                setOpen(false);
-              }}
+              onClick={closeChat}
             >
               ✕
             </button>
@@ -413,13 +463,11 @@ export default function LiveChatWidget() {
                   placeholder="Type a message…"
                   className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-base text-hero-foreground placeholder:text-hero-muted focus:border-accent/50 focus:outline-none sm:text-sm"
                 />
-                <button
-                  type="submit"
-                  disabled={loading || !ready || !input.trim()}
-                  className="shrink-0 rounded-lg bg-accent px-3 py-2 text-xs font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-                >
-                  Send
-                </button>
+                <ChatSendButton
+                  loading={loading}
+                  disabled={!ready || !input.trim()}
+                  className="px-3 py-2 text-xs uppercase tracking-wider"
+                />
               </div>
               {error ? (
                 <p className="mt-2 text-xs text-red-400" role="alert">
@@ -428,20 +476,19 @@ export default function LiveChatWidget() {
               ) : null}
             </form>
           </div>
-        </div>
-      ) : null}
+          </div>
+        ) : null}
 
-      <button
-        type="button"
-        onClick={() => {
-          if (open) {
-            markAllRead(messages);
-            setOpen(false);
-          } else {
-            setOpen(true);
-          }
-        }}
-        className="pointer-events-auto relative flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_28px_rgba(31,75,130,0.55)] transition-transform hover:scale-105"
+        <button
+          type="button"
+          onClick={() => {
+            if (open) {
+              closeChat();
+            } else {
+              setOpen(true);
+            }
+          }}
+          className="pointer-events-auto relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_28px_rgba(31,75,130,0.55)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-105 active:scale-95"
         aria-label={
           open
             ? "Close chat"
@@ -470,7 +517,8 @@ export default function LiveChatWidget() {
             />
           )}
         </svg>
-      </button>
-    </div>
+        </button>
+      </div>
+    </>
   );
 }
