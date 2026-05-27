@@ -3,6 +3,12 @@ export type SiteNavItem = {
   readonly label: string;
 };
 
+/** True when `pathname` is the nav target or a nested route (e.g. `/blog/foo`). Home is exact `/` only. */
+export function isSiteNavItemActive(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export const SITE_HEADER_NAV = [
   { href: "/", label: "Home" },
   { href: "/experience", label: "Experience" },

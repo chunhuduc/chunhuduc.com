@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { SITE_HEADER_NAV } from "@/data/site-nav";
+import { SITE_HEADER_NAV, isSiteNavItemActive } from "@/data/site-nav";
 import {
   headerSurfaceAlphaForBleed,
   pathnameUsesHeaderBleed,
@@ -22,6 +22,18 @@ const HERO_INK_SURFACE_MAX = 0.52;
 
 function isCompactHeaderChrome(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+}
+
+function headerNavActiveClass(heroInk: boolean) {
+  return heroInk
+    ? "text-white underline decoration-white/75 underline-offset-[6px] drop-shadow-[0_2px_6px_rgb(0_0_0/0.5)]"
+    : "text-foreground underline decoration-foreground/45 underline-offset-[6px]";
+}
+
+function headerNavLinkClass(heroInk: boolean) {
+  return heroInk
+    ? "text-white drop-shadow-[0_2px_6px_rgb(0_0_0/0.5)] transition-opacity hover:opacity-95"
+    : "transition-colors hover:text-accent";
 }
 
 export default function SiteHeader() {
@@ -243,11 +255,21 @@ export default function SiteHeader() {
           }`}
           aria-label="Primary"
         >
-          {SITE_HEADER_NAV.map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
-            </Link>
-          ))}
+          {SITE_HEADER_NAV.map((item) => {
+            const active = isSiteNavItemActive(pathname, item.href);
+            if (active) {
+              return (
+                <span key={item.href} aria-current="page" className={headerNavActiveClass(heroInk)}>
+                  {item.label}
+                </span>
+              );
+            }
+            return (
+              <Link key={item.href} href={item.href} className={headerNavLinkClass(heroInk)}>
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <button
@@ -288,16 +310,30 @@ export default function SiteHeader() {
           className="border-t border-white/10 bg-background shadow-[0_16px_40px_rgba(0,0,0,0.55)] md:hidden"
         >
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
-            {SITE_HEADER_NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-lg px-3 py-3 text-base font-semibold text-foreground hover:bg-white/[0.06]"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {SITE_HEADER_NAV.map((item) => {
+              const active = isSiteNavItemActive(pathname, item.href);
+              if (active) {
+                return (
+                  <span
+                    key={item.href}
+                    aria-current="page"
+                    className="rounded-lg px-3 py-3 text-base font-semibold text-foreground underline decoration-foreground/45 underline-offset-[6px]"
+                  >
+                    {item.label}
+                  </span>
+                );
+              }
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg px-3 py-3 text-base font-semibold text-foreground hover:bg-white/[0.06]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       ) : null}
