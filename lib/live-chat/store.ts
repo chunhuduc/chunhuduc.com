@@ -26,6 +26,29 @@ export async function createConversation(params: {
   return { conversationId: id, visitorToken };
 }
 
+export async function getConversationVisitor(
+  conversationId: string,
+  visitorToken: string,
+): Promise<{ visitorName: string | null; visitorEmail: string | null } | null> {
+  if (!(await verifyVisitorAccess(conversationId, visitorToken))) return null;
+  const db = getDb();
+  const rows = await db
+    .select({
+      visitorName: liveConversations.visitorName,
+      visitorEmail: liveConversations.visitorEmail,
+    })
+    .from(liveConversations)
+    .where(eq(liveConversations.id, conversationId))
+    .limit(1);
+
+  const row = rows[0];
+  if (!row) return null;
+  return {
+    visitorName: row.visitorName,
+    visitorEmail: row.visitorEmail,
+  };
+}
+
 export async function verifyVisitorAccess(
   conversationId: string,
   visitorToken: string,

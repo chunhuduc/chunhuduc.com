@@ -5,11 +5,13 @@ import { isLiveChatEnabled, MAX_MESSAGE_LENGTH } from "@/lib/live-chat/config";
 import { maybeNotifyOwnerNewMessage } from "@/lib/live-chat/notify";
 import {
   conversationHasVisitorMessages,
+  getConversationVisitor,
   insertMessage,
   listMessages,
   updateConversationVisitor,
   verifyVisitorAccess,
 } from "@/lib/live-chat/store";
+import { parseVisitorProfilePatch } from "@/lib/live-chat/visitor";
 import { getClientIp, checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -32,8 +34,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    const messages = await listMessages(conversationId);
-    return NextResponse.json({ messages });
+    const [messages, visitor] = await Promise.all([
+      listMessages(conversationId),
+      getConversationVisitor(conversationId, visitorToken),
+    ]);
+    return NextResponse.json({ messages, visitor });
   } catch (e) {
     console.error("live-chat list messages failed", e);
     return NextResponse.json({ error: "Could not load messages." }, { status: 502 });
@@ -90,13 +95,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: altchaCheck.error }, { status: 403 });
   }
 
-  if (body.visitorName || body.visitorEmail) {
-    await updateConversationVisitor(conversationId, visitorToken, {
-      visitorName:
-        typeof body.visitorName === "string" ? body.visitorName.trim().slice(0, 120) : undefined,
-      visitorEmail:
-        typeof body.visitorEmail === "string" ? body.visitorEmail.trim().slice(0, 254) : undefined,
-    });
+  const { patch: visitorPatch, error: visitorError } = parseVisitorProfilePatch(body);
+  if (visitorError) {
+    return NextResponse.json({ error: visitorError }, { status: 400 });
+  }
+  if (Object.keys(visitorPatch).length > 0) {
+    const updated = await updateConversationVisitor(conversationId, visitorToken, visitorPatch);
+    if (!updated) {
+      return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+    }
   }
 
   try {

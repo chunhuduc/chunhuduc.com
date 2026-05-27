@@ -6,6 +6,7 @@ import {
   getLiveChatNotifyEmail,
 } from "./config";
 import { getConversationForNotify, setLastNotifyAt } from "./store";
+import { formatVisitorNotifyLines } from "./visitor";
 
 export async function maybeNotifyOwnerNewMessage(params: {
   conversationId: string;
@@ -34,7 +35,7 @@ export async function maybeNotifyOwnerNewMessage(params: {
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://chunhuduc.com";
   const adminUrl = `${baseUrl}/admin/chat?id=${encodeURIComponent(params.conversationId)}`;
-  const who = conv.visitorName || conv.visitorEmail || "A visitor";
+  const { who, lines: visitorLines } = formatVisitorNotifyLines(conv);
   const preview = params.messageBody.slice(0, 500);
   const page = conv.pageUrl ? `\nPage: ${conv.pageUrl}` : "";
 
@@ -42,9 +43,9 @@ export async function maybeNotifyOwnerNewMessage(params: {
   const result = await resend.emails.send({
     from: `${fromName} <${from}>`,
     to: [to],
-    replyTo: conv.visitorEmail || undefined,
+    replyTo: conv.visitorEmail?.trim() || undefined,
     subject: `[${siteName}] New live chat from ${who}`,
-    text: `New message on ${siteName} live chat.\n\nFrom: ${who}${page}\n\n${preview}\n\nReply in admin inbox:\n${adminUrl}`,
+    text: `New message on ${siteName} live chat.\n\n${visitorLines}${page}\n\n${preview}\n\nReply in admin inbox:\n${adminUrl}`,
   });
 
   if (result.error) {

@@ -61,6 +61,21 @@ function countUnreadOwnerMessages(msgs: LiveChatMessageDto[], lastReadAt: number
   ).length;
 }
 
+type VisitorProfile = {
+  visitorName: string | null;
+  visitorEmail: string | null;
+};
+
+function applyVisitorProfile(
+  visitor: VisitorProfile | null | undefined,
+  setName: (v: string) => void,
+  setEmail: (v: string) => void,
+) {
+  if (!visitor) return;
+  setName(visitor.visitorName ?? "");
+  setEmail(visitor.visitorEmail ?? "");
+}
+
 export default function LiveChatWidget() {
   const [open, setOpen] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -152,8 +167,12 @@ export default function LiveChatWidget() {
       });
       const res = await fetch(`/api/live-chat/messages?${params}`);
       if (!res.ok) return;
-      const json = (await res.json()) as { messages: LiveChatMessageDto[] };
+      const json = (await res.json()) as {
+        messages: LiveChatMessageDto[];
+        visitor?: VisitorProfile | null;
+      };
       const msgs = json.messages ?? [];
+      applyVisitorProfile(json.visitor, setVisitorName, setVisitorEmail);
       setUnreadCount(countUnreadOwnerMessages(msgs, getLastReadAt()));
     })();
   }, []);
@@ -188,8 +207,12 @@ export default function LiveChatWidget() {
     const params = new URLSearchParams({ conversationId: cid, visitorToken: token });
     const res = await fetch(`/api/live-chat/messages?${params}`);
     if (!res.ok) return;
-    const json = (await res.json()) as { messages: LiveChatMessageDto[] };
+    const json = (await res.json()) as {
+      messages: LiveChatMessageDto[];
+      visitor?: VisitorProfile | null;
+    };
     const msgs = json.messages ?? [];
+    applyVisitorProfile(json.visitor, setVisitorName, setVisitorEmail);
     setMessages(msgs);
     return msgs;
   }, []);
@@ -237,8 +260,12 @@ export default function LiveChatWidget() {
           visitorToken,
           body: text.trim(),
           altcha: altcha || undefined,
-          visitorName: visitorName.trim() || undefined,
-          visitorEmail: visitorEmail.trim() || undefined,
+          ...(visitorName.trim() || visitorEmail.trim()
+            ? {
+                visitorName: visitorName.trim(),
+                visitorEmail: visitorEmail.trim(),
+              }
+            : {}),
         }),
       });
       if (!res.ok) {

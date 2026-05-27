@@ -7,6 +7,7 @@ import type {
   LiveChatMessageDto,
   LiveChatMessagePayload,
 } from "@/lib/live-chat/types";
+import { formatVisitorDisplay } from "@/lib/live-chat/visitor";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
@@ -150,6 +151,12 @@ export default function AdminChatClient() {
     }
   }
 
+  const selectedConversation =
+    selectedId != null ? conversations.find((c) => c.id === selectedId) : undefined;
+  const selectedVisitor = selectedConversation
+    ? formatVisitorDisplay(selectedConversation)
+    : null;
+
   if (!loggedIn) {
     return (
       <div className="mx-auto max-w-md px-4 py-16">
@@ -187,30 +194,38 @@ export default function AdminChatClient() {
             {conversations.length === 0 ? (
               <li className="px-3 py-4 text-sm text-muted">No open conversations.</li>
             ) : (
-              conversations.map((c) => (
-                <li key={c.id}>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(c.id)}
-                    className={`w-full px-3 py-3 text-left text-sm transition-colors hover:bg-muted/10 ${
-                      selectedId === c.id ? "bg-accent/10" : ""
-                    }`}
-                  >
-                    <span className="font-semibold text-foreground">
-                      {c.visitorName || c.visitorEmail || "Visitor"}
-                      {c.unread ? (
-                        <span
-                          className="ml-2 inline-block h-2 w-2 rounded-full bg-accent"
-                          aria-hidden
-                        />
+              conversations.map((c) => {
+                const visitor = formatVisitorDisplay(c);
+                return (
+                  <li key={c.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedId(c.id)}
+                      className={`w-full px-3 py-3 text-left text-sm transition-colors hover:bg-muted/10 ${
+                        selectedId === c.id ? "bg-accent/10" : ""
+                      }`}
+                    >
+                      <span className="font-semibold text-foreground">
+                        {visitor.title}
+                        {c.unread ? (
+                          <span
+                            className="ml-2 inline-block h-2 w-2 rounded-full bg-accent"
+                            aria-hidden
+                          />
+                        ) : null}
+                      </span>
+                      {visitor.subtitle ? (
+                        <span className="mt-0.5 block truncate text-xs text-muted">
+                          {visitor.subtitle}
+                        </span>
                       ) : null}
-                    </span>
-                    <span className="mt-1 block truncate text-xs text-muted">
-                      {c.lastPreview ?? "—"}
-                    </span>
-                  </button>
-                </li>
-              ))
+                      <span className="mt-1 block truncate text-xs text-muted">
+                        {c.lastPreview ?? "—"}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })
             )}
           </ul>
         </aside>
@@ -222,6 +237,25 @@ export default function AdminChatClient() {
             </p>
           ) : (
             <>
+              {selectedVisitor ? (
+                <div className="border-b border-line px-4 py-3">
+                  {selectedConversation?.visitorName ? (
+                    <p className="text-sm font-semibold text-foreground">
+                      {selectedConversation.visitorName}
+                    </p>
+                  ) : (
+                    <p className="text-sm font-semibold text-foreground">{selectedVisitor.title}</p>
+                  )}
+                  {selectedConversation?.visitorEmail ? (
+                    <a
+                      href={`mailto:${selectedConversation.visitorEmail}`}
+                      className="mt-0.5 block text-xs text-accent hover:underline"
+                    >
+                      {selectedConversation.visitorEmail}
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
               <div
                 ref={listRef}
                 onScroll={onScroll}
