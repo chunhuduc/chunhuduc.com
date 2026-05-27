@@ -6,6 +6,10 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { SITE_HEADER_NAV } from "@/data/site-nav";
+import {
+  headerSurfaceAlphaForBleed,
+  pathnameUsesHeaderBleed,
+} from "@/lib/headerBleed";
 import { BACKGROUND_RGB } from "@/lib/themeColors";
 
 const SCROLL_DELTA = 8;
@@ -13,19 +17,8 @@ const SCROLL_DELTA = 8;
 const MOBILE_DOCK_PRIMED_AFTER_Y = 40;
 /** Within this scroll offset from top, hero-style snap rules apply. */
 const NEAR_TOP_PX = 72;
-/** Below this surface alpha while on hero, use light inks (readable on hero image). */
+/** Below this surface alpha while over bleed content, home hero uses light inks. */
 const HERO_INK_SURFACE_MAX = 0.52;
-
-/** Intersect [viewport top, viewport top + stripPx] with hero rect; hero coverage → transparent header. Returns 1 = full surface, 0 = none. */
-function headerSurfaceAlphaForHero(stripPx: number): number {
-  if (typeof document === "undefined" || stripPx <= 0) return 1;
-  const hero = document.getElementById("hero");
-  if (!hero) return 1;
-  const h = hero.getBoundingClientRect();
-  const overlap = Math.max(0, Math.min(stripPx, h.bottom) - Math.max(0, h.top));
-  const coverFrac = Math.min(Math.max(overlap / stripPx, 0), 1);
-  return 1 - coverFrac;
-}
 
 function isCompactHeaderChrome(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
@@ -34,6 +27,7 @@ function isCompactHeaderChrome(): boolean {
 export default function SiteHeader() {
   const pathname = usePathname();
   const onHome = pathname === "/";
+  const headerBleeds = pathnameUsesHeaderBleed(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
 
   /** false = slid up out of view while scrolling down; true = docked flush with top */
@@ -42,8 +36,8 @@ export default function SiteHeader() {
   const [dockMotionEnabled, setDockMotionEnabled] = useState(false);
   /** Mobile-only: becomes true once scrollY crosses MOBILE_DOCK_PRIMED_AFTER_Y (session + route). */
   const [mobileDockPrimed, setMobileDockPrimed] = useState(false);
-  /** 1 = opaque white bar chrome; on home start at 0 to avoid a white flash before hero overlap is measured. */
-  const [surfaceAlpha, setSurfaceAlpha] = useState(() => (pathname === "/" ? 0 : 1));
+  /** 1 = opaque bar; bleed routes start at 0 before overlap is measured. */
+  const [surfaceAlpha, setSurfaceAlpha] = useState(() => (headerBleeds ? 0 : 1));
   const headerRef = useRef<HTMLElement | null>(null);
   const stripHRef = useRef(72);
   const lastAlphaRef = useRef(-1);
@@ -59,17 +53,17 @@ export default function SiteHeader() {
     } else if (isCompactHeaderChrome()) {
       /* Compact: toolbar stays clear until menu expands */
       next = 0;
-    } else if (!onHome) {
+    } else if (!headerBleeds) {
       next = 1;
     } else {
       const strip = Math.ceil(headerRef.current?.getBoundingClientRect().height ?? stripHRef.current);
       stripHRef.current = Math.max(strip, 48);
-      next = headerSurfaceAlphaForHero(stripHRef.current);
+      next = headerSurfaceAlphaForBleed(stripHRef.current);
     }
     if (Math.abs(next - lastAlphaRef.current) < 0.012) return;
     lastAlphaRef.current = next;
     setSurfaceAlpha(next);
-  }, [onHome]);
+  }, [headerBleeds]);
 
   const handleScroll = useCallback(() => {
     const y = window.scrollY;

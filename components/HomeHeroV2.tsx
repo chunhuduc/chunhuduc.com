@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
+import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
 import { profile } from "@/data/profile";
 
@@ -12,7 +13,7 @@ export default function HomeHeroV2() {
 
   return (
     <section
-      id="hero"
+      id={HEADER_BLEED_ID}
       className="relative flex min-h-dvh w-full max-lg:h-[100svh] max-lg:max-h-[100svh] flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal] lg:h-[100dvh] lg:max-h-[100dvh]"
       aria-label="Hero"
     >

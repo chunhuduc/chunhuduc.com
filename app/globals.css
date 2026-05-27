@@ -196,7 +196,7 @@ body {
   }
 }
 
-#hero .hero-portrait-slot {
+#header-bleed .hero-portrait-slot {
   left: 50%;
   bottom: 0;
   transform: translate(-50%) scale(1.1);
@@ -209,7 +209,7 @@ body {
 }
 
 @media (min-width: 1024px) {
-  #hero .hero-portrait-slot {
+  #header-bleed .hero-portrait-slot {
     width: min(99vw, 1400px);
     min-height: 42dvh;
     height: 100%;
@@ -271,6 +271,7 @@ body {
 }
 
 /* Footer horizontal rules: 2px, cool grey (reference ~ #3f444e on dark canvas) */
+.surface-band-border-top,
 .footer-border-top {
   border-top: 1.5px solid #3f444e;
 }

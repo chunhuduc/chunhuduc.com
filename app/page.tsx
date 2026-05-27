@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AboutHomeSection from "@/components/AboutHomeSection";
+import BlogArticlesSection from "@/components/BlogArticlesSection";
 // Swap to `@/components/HomeHero` for the two-layer hero (background + portrait cutout).
 import HomeHeroV2 from "@/components/HomeHeroV2";
 import HomeSurfaceStrip from "@/components/HomeSurfaceStrip";
@@ -130,60 +131,7 @@ export default function Home() {
       {/* Strip 4 · base · Blog */}
       <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
-          <div className="flex flex-col gap-14 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-14 xl:gap-x-[4.25rem]">
-            <header className="max-lg:max-w-xl lg:col-span-5">
-              <SectionLabel className="reveal-stagger-item" style={blogRo()}>
-                Blog & articles
-              </SectionLabel>
-              <h2
-                className="reveal-stagger-item text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
-                style={blogRo()}
-              >
-                Check out my latest articles and tutorials
-              </h2>
-              <Link
-                href="/blog"
-                className="reveal-stagger-item mt-8 inline-block text-sm font-bold text-accent transition-opacity hover:opacity-90"
-                style={blogRo()}
-              >
-                Browse all articles -&gt;
-              </Link>
-            </header>
-
-            <div className="lg:col-span-7">
-              {posts.length === 0 ? (
-                <p className="reveal-stagger-item text-sm text-muted lg:pt-1" style={blogRo()}>
-                  No posts yet.
-                </p>
-              ) : (
-                <ul className="m-0 list-none space-y-0 p-0">
-                  {posts.map((post, idx) => (
-                    <li
-                      key={post.slug}
-                      className={`reveal-stagger-item ${idx > 0 ? "border-t border-[#3f444e] pt-10 mt-10" : "lg:pt-1"}`}
-                      style={blogRo()}
-                    >
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="group block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                      >
-                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
-                          {post.date}{" "}
-                          <span className="text-accent">/ Articles</span>
-                        </p>
-                        <h3 className="mt-3 text-lg font-bold uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-accent lg:text-xl">
-                          {post.title}
-                        </h3>
-                        {post.summary ? (
-                          <p className="mt-4 text-sm leading-relaxed text-muted">{post.summary}</p>
-                        ) : null}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
+          <BlogArticlesSection posts={posts} ro={blogRo} limit={3} showBrowseLink layout="split" />
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 

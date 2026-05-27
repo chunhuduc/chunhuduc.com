@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { profile } from "@/data/profile";
 import { CONTACT_FORM_HREF } from "@/lib/contactHref";
+import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 
 export default function HomeHero() {
   const gh = profile.social.github?.trim();
@@ -11,7 +12,7 @@ export default function HomeHero() {
 
   return (
     <section
-      id="hero"
+      id={HEADER_BLEED_ID}
       className="relative flex min-h-dvh w-full max-lg:h-[100svh] max-lg:max-h-[100svh] flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal] lg:h-[100dvh] lg:max-h-[100dvh] lg:[container-type:size]"
       aria-label="Hero"
     >
