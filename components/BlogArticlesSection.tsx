@@ -6,12 +6,15 @@ import type { PostFrontmatter } from "@/lib/posts";
 
 type RevealOrder = () => CSSProperties;
 
+/** Default preview cap for home and other previews. */
+export const BLOG_ARTICLES_PREVIEW_DEFAULT = 3;
+
 type Props = {
   posts: PostFrontmatter[];
   /** Pass `createRevealOrders()` for scroll reveal stagger on children */
   ro?: RevealOrder;
-  /** Cap list length (home preview); omit to show all */
-  limit?: number;
+  /** Max posts to show; default {@link BLOG_ARTICLES_PREVIEW_DEFAULT}. Pass `null` for no cap. */
+  limit?: number | null;
   showBrowseLink?: boolean;
   /** `split`: header left + list right (home). `stacked`: header above list (blog page) */
   layout?: "split" | "stacked";
@@ -127,14 +130,14 @@ function BlogArticlesHeader({
 export default function BlogArticlesSection({
   posts,
   ro,
-  limit,
+  limit = BLOG_ARTICLES_PREVIEW_DEFAULT,
   showBrowseLink = false,
   showSectionLabel = true,
   layout = "split",
   heading = DEFAULT_HEADING,
   className = "",
 }: Props) {
-  const visiblePosts = limit != null ? posts.slice(0, limit) : posts;
+  const visiblePosts = limit == null ? posts : posts.slice(0, limit);
 
   if (layout === "stacked") {
     return (

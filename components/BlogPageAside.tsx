@@ -13,7 +13,7 @@ type Props = {
 export default function BlogPageAside({ ro, variant = "panel", className = "" }: Props) {
   const shell =
     variant === "flat"
-      ? "lg:sticky lg:top-28 lg:py-2"
+      ? ""
       : "rounded-2xl border border-white/10 bg-white/[0.04] p-8 sm:p-10 lg:sticky lg:top-28";
 
   return (

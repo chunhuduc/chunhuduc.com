@@ -24,7 +24,7 @@ type SplitPanelProps = {
 function SplitPanel({ surface, kind, innerClassName = "", children }: SplitPanelProps) {
   return (
     <section
-      className={`${SURFACE[surface]} text-foreground ${STRIP_VERTICAL[kind]} min-w-0`.trim()}
+      className={`${SURFACE[surface]} text-foreground ${STRIP_VERTICAL[kind]} min-w-0 lg:flex lg:min-h-dvh lg:flex-col lg:justify-center`.trim()}
     >
       <div className={`${SPLIT_INNER} ${innerClassName}`.trim()}>{children}</div>
     </section>
@@ -50,6 +50,7 @@ export default function BlogPageMainSplit({ posts, articlesRo, asideRo }: Props)
         layout="stacked"
         heading="Blog & articles"
         showSectionLabel={false}
+        limit={2}
       />
     </RevealStaggerRoot>
   );

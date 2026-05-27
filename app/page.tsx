@@ -13,7 +13,7 @@ import { createRevealOrders } from "@/lib/revealStagger";
 import { getAllPostsMeta } from "@/lib/posts";
 
 export default function Home() {
-  const posts = getAllPostsMeta().slice(0, 3);
+  const posts = getAllPostsMeta();
   const featuredProjects = projects.slice(0, 3);
 
   const skillsRo = createRevealOrders();
@@ -131,7 +131,7 @@ export default function Home() {
       {/* Strip 4 · base · Blog */}
       <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
-          <BlogArticlesSection posts={posts} ro={blogRo} limit={3} showBrowseLink layout="split" />
+          <BlogArticlesSection posts={posts} ro={blogRo} showBrowseLink layout="split" />
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
