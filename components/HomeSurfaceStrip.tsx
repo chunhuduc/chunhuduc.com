@@ -22,17 +22,27 @@ const STRIP_VERTICAL: Record<HomeSurfaceStripKind, string> = {
   closing: "lg:py-32 md:py-24 sm:py-16 py-12",
 };
 
+/** Less top inset when a band follows a hero/header (e.g. blog article body). */
+const STRIP_VERTICAL_COMPACT_TOP: Record<HomeSurfaceStripKind, string> = {
+  firstAfterHero: "pb-12 pt-6 sm:pb-16 sm:pt-8 md:pb-24 md:pt-12 lg:pb-32 lg:pt-16",
+  continuation: "pb-12 pt-6 sm:pb-16 sm:pt-8 md:pb-24 md:pt-12 lg:pb-32 lg:pt-16",
+  closing: "pb-12 pt-6 sm:pb-16 sm:pt-8 md:pb-24 md:pt-12 lg:pb-32 lg:pt-16",
+};
+
 type Props = {
   surface: HomeSurface;
   kind: HomeSurfaceStripKind;
+  /** Tighter top padding; bottom rhythm unchanged. */
+  compactTop?: boolean;
   children: ReactNode;
 };
 
 /**
  * Homepage colored bands plus one shared gutter system for horizontal and vertical rhythm.
  */
-export default function HomeSurfaceStrip({ surface, kind, children }: Props) {
-  const inner = ["mx-auto max-w-6xl px-4 sm:px-6", STRIP_VERTICAL[kind]].join(" ");
+export default function HomeSurfaceStrip({ surface, kind, compactTop, children }: Props) {
+  const vertical = compactTop ? STRIP_VERTICAL_COMPACT_TOP[kind] : STRIP_VERTICAL[kind];
+  const inner = ["mx-auto max-w-6xl px-4 sm:px-6", vertical].join(" ");
 
   return (
     <div className={`${SURFACE[surface]} text-foreground`}>

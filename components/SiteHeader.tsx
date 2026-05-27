@@ -205,13 +205,9 @@ export default function SiteHeader() {
       style={{
         transform: dockVisible ? "translateY(0)" : "translateY(-100%)",
         transition: dockMotionEnabled
-          ? "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)"
-          : "background-color 360ms cubic-bezier(0.22, 1, 0.36, 1), border-color 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1)",
+          ? "transform 300ms cubic-bezier(0.22, 1, 0.36, 1), background-color 360ms cubic-bezier(0.22, 1, 0.36, 1)"
+          : "background-color 360ms cubic-bezier(0.22, 1, 0.36, 1)",
         backgroundColor: `rgba(${BACKGROUND_RGB[0]}, ${BACKGROUND_RGB[1]}, ${BACKGROUND_RGB[2]}, ${0.92 * a})`,
-        borderBottomWidth: 1,
-        borderBottomStyle: "solid",
-        borderBottomColor: `rgba(255, 255, 255, ${0.1 * a})`,
-        boxShadow: a > 0.04 ? `0 1px 0 rgb(255 255 255 / ${0.05 * a})` : "none",
       }}
       className={`fixed inset-x-0 z-[100] transition-colors duration-300 ease-out ${
         heroInk ? "text-white" : "text-foreground"

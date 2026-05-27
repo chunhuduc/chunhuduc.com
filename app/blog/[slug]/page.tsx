@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import BlogPostByline from "@/components/BlogPostByline";
+import HomeSurfaceStrip from "@/components/HomeSurfaceStrip";
 import MarkdownBody from "@/components/MarkdownBody";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import { createRevealOrders } from "@/lib/revealStagger";
@@ -55,62 +56,78 @@ export default async function BlogPostPage({
   if (post.repo) links.push({ label: post.repo, href: githubRepoUrl(post.repo) });
   post.relatedRepos?.forEach((r) => links.push({ label: r, href: githubRepoUrl(r) }));
 
-  const ro = createRevealOrders();
+  const headerRo = createRevealOrders();
+  const linksRo = createRevealOrders();
+  const bodyRo = createRevealOrders();
+
+  const bodySurface = links.length > 0 ? "base" : "soft";
+  const blogColumn = "mx-auto w-full max-w-3xl lg:max-w-4xl";
 
   return (
-    <RevealStaggerRoot as="article" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
-      <Link
-        href="/blog"
-        className="reveal-stagger-item text-sm font-semibold text-accent hover:opacity-90"
-        style={ro()}
-      >
-        Back to blog
-      </Link>
-      <header className="mt-6">
-        <p className="reveal-stagger-item text-sm font-medium text-muted" style={ro()}>
-          {post.date}
-        </p>
-        <h1
-          className="reveal-stagger-item mt-2 text-4xl font-extrabold tracking-tight text-foreground"
-          style={ro()}
-        >
-          {post.title}
-        </h1>
-        {post.summary ? (
-          <p className="reveal-stagger-item mt-4 text-lg leading-relaxed text-muted" style={ro()}>
-            {post.summary}
-          </p>
-        ) : null}
-      </header>
+    <article>
+      <HomeSurfaceStrip surface="base" kind="firstAfterHero">
+        <RevealStaggerRoot as="header" className={blogColumn}>
+          <span
+            className="reveal-stagger-item block h-px w-20 bg-foreground"
+            aria-hidden
+            style={headerRo()}
+          />
+          <h1
+            className="reveal-stagger-item mt-8 text-4xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem]"
+            style={headerRo()}
+          >
+            {post.title}
+          </h1>
+          {post.summary ? (
+            <p
+              className="reveal-stagger-item mt-6 text-base leading-relaxed text-muted sm:text-lg"
+              style={headerRo()}
+            >
+              {post.summary}
+            </p>
+          ) : null}
+        </RevealStaggerRoot>
+      </HomeSurfaceStrip>
 
       {links.length > 0 ? (
-        <aside
-          className="reveal-stagger-item mt-10 rounded-xl border border-white/10 bg-white/[0.05] p-5"
-          style={ro()}
-        >
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-accent">
-            Related code
-          </h2>
-          <ul className="mt-3 space-y-2">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="font-medium text-accent hover:opacity-90"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </aside>
+        <HomeSurfaceStrip surface="soft" kind="continuation">
+          <RevealStaggerRoot as="aside" className={blogColumn}>
+            <h2
+              className="reveal-stagger-item text-xs font-semibold uppercase tracking-[0.2em] text-accent"
+              style={linksRo()}
+            >
+              Related code
+            </h2>
+            <ul className="reveal-stagger-item mt-4 space-y-2" style={linksRo()}>
+              {links.map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    className="font-medium text-accent hover:opacity-90"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </RevealStaggerRoot>
+        </HomeSurfaceStrip>
       ) : null}
 
-      <div className="reveal-stagger-item mt-10" style={ro()}>
-        <MarkdownBody content={post.content} />
-      </div>
-    </RevealStaggerRoot>
+      <HomeSurfaceStrip surface={bodySurface} kind="closing" compactTop>
+        <RevealStaggerRoot className={blogColumn}>
+          <BlogPostByline
+            date={post.date}
+            className="reveal-stagger-item mb-8"
+            style={bodyRo()}
+          />
+          <div className="reveal-stagger-item" style={bodyRo()}>
+            <MarkdownBody content={post.content} />
+          </div>
+        </RevealStaggerRoot>
+      </HomeSurfaceStrip>
+    </article>
   );
 }
