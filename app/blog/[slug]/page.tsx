@@ -66,7 +66,8 @@ export default async function BlogPostPage({
   return (
     <article>
       <HomeSurfaceStrip surface="base" kind="firstAfterHero">
-        <RevealStaggerRoot as="header" className={blogColumn}>
+        <header>
+          <RevealStaggerRoot className={blogColumn}>
           <span
             className="reveal-stagger-item block h-px w-20 bg-foreground"
             aria-hidden
@@ -86,12 +87,14 @@ export default async function BlogPostPage({
               {post.summary}
             </p>
           ) : null}
-        </RevealStaggerRoot>
+          </RevealStaggerRoot>
+        </header>
       </HomeSurfaceStrip>
 
       {links.length > 0 ? (
         <HomeSurfaceStrip surface="soft" kind="continuation">
-          <RevealStaggerRoot as="aside" className={blogColumn}>
+          <aside>
+            <RevealStaggerRoot className={blogColumn}>
             <h2
               className="reveal-stagger-item text-xs font-semibold uppercase tracking-[0.2em] text-accent"
               style={linksRo()}
@@ -112,7 +115,8 @@ export default async function BlogPostPage({
                 </li>
               ))}
             </ul>
-          </RevealStaggerRoot>
+            </RevealStaggerRoot>
+          </aside>
         </HomeSurfaceStrip>
       ) : null}
 
