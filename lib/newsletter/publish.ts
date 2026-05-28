@@ -121,6 +121,8 @@ export async function publishPost(slug: string): Promise<PublishResult> {
         slug: post.slug,
         title: post.title,
         summary,
+        content: post.content,
+        date: post.date,
         subscriberId: delivery.subscriberId,
       });
 

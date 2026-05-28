@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Site-wide dark canvas (#1b1f24). RGB echoed in lib/themeColors.ts BACKGROUND_RGB for header blend. */
+  /* Site-wide dark canvas. Hex values: lib/designTokens.ts `siteColors` (keep in sync). */
   --background: #1b1f24;
   --foreground: #f4f4f5;
   --muted: #9ca3af;
