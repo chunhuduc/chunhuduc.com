@@ -1,6 +1,5 @@
-import Link from "next/link";
+import BlogNewsletterForm from "@/components/BlogNewsletterForm";
 import type { CSSProperties } from "react";
-import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 
 type Props = {
   ro?: () => CSSProperties;
@@ -9,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-/** Right column on /blog — contact CTA styled like a newsletter panel. */
+/** Right column on /blog — newsletter subscription. */
 export default function BlogPageAside({ ro, variant = "panel", className = "" }: Props) {
   const shell =
     variant === "flat"
@@ -19,27 +18,20 @@ export default function BlogPageAside({ ro, variant = "panel", className = "" }:
   return (
     <aside className={`${shell} ${className}`.trim()}>
       <h2
-        className="reveal-stagger-item text-2xl font-extrabold leading-tight tracking-tight text-foreground sm:text-[1.65rem]"
+        className="reveal-stagger-item max-w-md text-[2rem] font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-4xl lg:text-[2.65rem]"
         style={ro?.()}
       >
-        Interested in working together?
+        Subscribe to my newsletter today
       </h2>
       <p
-        className="reveal-stagger-item mt-4 text-sm leading-relaxed text-muted sm:text-base"
+        className="reveal-stagger-item mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
         style={ro?.()}
       >
-        Architecture, integrations, or hands-on delivery — a short intro and realistic timelines help me
-        reply faster.
+        Occasional notes on architecture, integrations, and practical delivery patterns. No spam,
+        only useful updates.
       </p>
-      <div className="reveal-stagger-item mt-8 border-t border-line pt-6" style={ro?.()}>
-        <Link
-          href={CONTACT_FORM_HREF}
-          className="inline-flex items-center gap-1.5 text-sm font-bold text-accent transition-opacity hover:opacity-90"
-        >
-          Get in touch
-          <span aria-hidden>→</span>
-        </Link>
-      </div>
+
+      <BlogNewsletterForm className="reveal-stagger-item mt-12 max-w-xl" style={ro?.()} />
     </aside>
   );
 }

@@ -50,6 +50,7 @@ export default function BlogPageMainSplit({ posts, articlesRo, asideRo }: Props)
         layout="stacked"
         heading="Blog & articles"
         showSectionLabel={false}
+        typography="feature"
         limit={2}
       />
     </RevealStaggerRoot>

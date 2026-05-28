@@ -9,6 +9,46 @@ type RevealOrder = () => CSSProperties;
 /** Default preview cap for home and other previews. */
 export const BLOG_ARTICLES_PREVIEW_DEFAULT = 3;
 
+/** Slightly larger type for full-width feature columns (e.g. /blog split). */
+export type BlogArticlesTypography = "default" | "feature";
+
+const TYPOGRAPHY: Record<
+  BlogArticlesTypography,
+  {
+    heading: string;
+    browse: string;
+    meta: string;
+    title: string;
+    arrow: string;
+    summary: string;
+    empty: string;
+  }
+> = {
+  default: {
+    heading: "text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl",
+    browse:
+      "reveal-stagger-item mt-8 inline-block text-sm font-bold text-accent transition-opacity hover:opacity-90",
+    meta: "text-[11px] font-bold uppercase tracking-[0.2em] text-muted",
+    title:
+      "text-lg font-bold uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-accent lg:text-xl",
+    arrow: "mt-1 shrink-0 text-sm font-bold text-muted transition-colors group-hover:text-accent",
+    summary: "mt-4 text-sm leading-relaxed text-muted",
+    empty: "text-sm text-muted",
+  },
+  feature: {
+    heading:
+      "text-[2rem] font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-4xl lg:text-[2.65rem]",
+    browse:
+      "reveal-stagger-item mt-8 inline-block text-base font-bold text-accent transition-opacity hover:opacity-90",
+    meta: "text-xs font-bold uppercase tracking-[0.2em] text-muted",
+    title:
+      "text-xl font-bold uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-accent lg:text-2xl",
+    arrow: "mt-1 shrink-0 text-base font-bold text-muted transition-colors group-hover:text-accent",
+    summary: "mt-4 text-sm leading-relaxed text-muted sm:text-base",
+    empty: "text-base text-muted",
+  },
+};
+
 type Props = {
   posts: PostFrontmatter[];
   /** Pass `createRevealOrders()` for scroll reveal stagger on children */
@@ -19,6 +59,8 @@ type Props = {
   /** `split`: header left + list right (home). `stacked`: header above list (blog page) */
   layout?: "split" | "stacked";
   showSectionLabel?: boolean;
+  /** `feature`: larger type for hero-style columns; default elsewhere */
+  typography?: BlogArticlesTypography;
   heading?: string;
   className?: string;
 };
@@ -34,14 +76,18 @@ function BlogArticlesList({
   posts,
   ro,
   listClassName = "",
+  typography = "default",
 }: {
   posts: PostFrontmatter[];
   ro?: RevealOrder;
   listClassName?: string;
+  typography?: BlogArticlesTypography;
 }) {
+  const t = TYPOGRAPHY[typography];
+
   if (posts.length === 0) {
     return (
-      <p className={`reveal-stagger-item text-sm text-muted lg:pt-1 ${listClassName}`.trim()} style={ro?.()}>
+      <p className={`reveal-stagger-item lg:pt-1 ${t.empty} ${listClassName}`.trim()} style={ro?.()}>
         No posts yet.
       </p>
     );
@@ -61,24 +107,17 @@ function BlogArticlesList({
               href={`/blog/${post.slug}`}
               className="group block rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted">
+              <p className={t.meta}>
                 <time dateTime={dateTime}>{label}</time>{" "}
                 <span className="text-accent">/ Articles</span>
               </p>
               <div className="mt-3 flex items-start justify-between gap-4">
-                <h3 className="text-lg font-bold uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-accent lg:text-xl">
-                  {post.title}
-                </h3>
-                <span
-                  className="mt-1 shrink-0 text-sm font-bold text-muted transition-colors group-hover:text-accent"
-                  aria-hidden
-                >
+                <h3 className={t.title}>{post.title}</h3>
+                <span className={t.arrow} aria-hidden>
                   →
                 </span>
               </div>
-              {post.summary ? (
-                <p className="mt-4 text-sm leading-relaxed text-muted">{post.summary}</p>
-              ) : null}
+              {post.summary ? <p className={t.summary}>{post.summary}</p> : null}
             </Link>
           </li>
         );
@@ -92,14 +131,18 @@ function BlogArticlesHeader({
   heading,
   showBrowseLink,
   showSectionLabel,
+  typography = "default",
   className = "",
 }: {
   ro?: RevealOrder;
   heading: string;
   showBrowseLink: boolean;
   showSectionLabel: boolean;
+  typography?: BlogArticlesTypography;
   className?: string;
 }) {
+  const t = TYPOGRAPHY[typography];
+
   return (
     <header className={className}>
       {showSectionLabel ? (
@@ -107,18 +150,11 @@ function BlogArticlesHeader({
           Blog & articles
         </SectionLabel>
       ) : null}
-      <h2
-        className="reveal-stagger-item text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
-        style={ro?.()}
-      >
+      <h2 className={`reveal-stagger-item ${t.heading}`} style={ro?.()}>
         {heading}
       </h2>
       {showBrowseLink ? (
-        <Link
-          href="/blog"
-          className="reveal-stagger-item mt-8 inline-block text-sm font-bold text-accent transition-opacity hover:opacity-90"
-          style={ro?.()}
-        >
+        <Link href="/blog" className={t.browse} style={ro?.()}>
           Browse all articles -&gt;
         </Link>
       ) : null}
@@ -134,6 +170,7 @@ export default function BlogArticlesSection({
   showBrowseLink = false,
   showSectionLabel = true,
   layout = "split",
+  typography = "default",
   heading = DEFAULT_HEADING,
   className = "",
 }: Props) {
@@ -142,8 +179,19 @@ export default function BlogArticlesSection({
   if (layout === "stacked") {
     return (
       <div className={className}>
-        <BlogArticlesHeader ro={ro} heading={heading} showBrowseLink={showBrowseLink} showSectionLabel={showSectionLabel} />
-        <BlogArticlesList posts={visiblePosts} ro={ro} listClassName="mt-12" />
+        <BlogArticlesHeader
+          ro={ro}
+          heading={heading}
+          showBrowseLink={showBrowseLink}
+          showSectionLabel={showSectionLabel}
+          typography={typography}
+        />
+        <BlogArticlesList
+          posts={visiblePosts}
+          ro={ro}
+          typography={typography}
+          listClassName="mt-12"
+        />
       </div>
     );
   }
@@ -157,10 +205,11 @@ export default function BlogArticlesSection({
         heading={heading}
         showBrowseLink={showBrowseLink}
         showSectionLabel={showSectionLabel}
+        typography={typography}
         className="max-lg:max-w-xl lg:col-span-5"
       />
       <div className="lg:col-span-7">
-        <BlogArticlesList posts={visiblePosts} ro={ro} />
+        <BlogArticlesList posts={visiblePosts} ro={ro} typography={typography} />
       </div>
     </div>
   );

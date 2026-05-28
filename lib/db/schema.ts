@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -103,8 +104,69 @@ export const liveMessages = pgTable(
   (t) => [index("live_messages_conversation_created_idx").on(t.conversationId, t.createdAt)],
 );
 
+export const newsletterSubscribers = pgTable(
+  "newsletter_subscribers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: text("email").notNull().unique(),
+    status: text("status").notNull().default("active"),
+    resendContactId: text("resend_contact_id"),
+    subscribedAt: timestamp("subscribed_at", { withTimezone: true }).notNull().defaultNow(),
+    unsubscribedAt: timestamp("unsubscribed_at", { withTimezone: true }),
+  },
+  (t) => [index("newsletter_subscribers_status_idx").on(t.status)],
+);
+
+export const newsletterPosts = pgTable("newsletter_posts", {
+  slug: text("slug").primaryKey(),
+  title: text("title").notNull(),
+  summary: text("summary").notNull().default(""),
+  firstPublishedAt: timestamp("first_published_at", { withTimezone: true }),
+  lastPublishAt: timestamp("last_publish_at", { withTimezone: true }),
+  publishCount: integer("publish_count").notNull().default(0),
+});
+
+export const newsletterDeliveries = pgTable(
+  "newsletter_deliveries",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    postSlug: text("post_slug")
+      .notNull()
+      .references(() => newsletterPosts.slug, { onDelete: "cascade" }),
+    subscriberId: uuid("subscriber_id")
+      .notNull()
+      .references(() => newsletterSubscribers.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    status: text("status").notNull().default("pending"),
+    resendEmailId: text("resend_email_id"),
+    errorMessage: text("error_message"),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("newsletter_deliveries_post_email_uidx").on(t.postSlug, t.email),
+    index("newsletter_deliveries_post_status_idx").on(t.postSlug, t.status),
+    index("newsletter_deliveries_subscriber_idx").on(t.subscriberId),
+    index("newsletter_deliveries_resend_email_id_idx").on(t.resendEmailId),
+  ],
+);
+
+export type NewsletterSubscriberStatus = "active" | "unsubscribed";
+export type NewsletterDeliveryStatus =
+  | "pending"
+  | "sent"
+  | "delivered"
+  | "failed"
+  | "bounced"
+  | "complained"
+  | "skipped_unsubscribed";
+
 export type DocumentRow = typeof documents.$inferSelect;
 export type ChatLogRow = typeof chatLogs.$inferSelect;
 export type KnowledgeGapRow = typeof knowledgeGaps.$inferSelect;
 export type LiveConversationRow = typeof liveConversations.$inferSelect;
 export type LiveMessageRow = typeof liveMessages.$inferSelect;
+export type NewsletterSubscriberRow = typeof newsletterSubscribers.$inferSelect;
+export type NewsletterPostRow = typeof newsletterPosts.$inferSelect;
+export type NewsletterDeliveryRow = typeof newsletterDeliveries.$inferSelect;
