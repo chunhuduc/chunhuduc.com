@@ -1,6 +1,6 @@
 ---
 name: Newsletter Resend Integration
-overview: "Newsletter /blog — chốt gửi bài qua Resend transactional (emails.send); Neon DB tracking matrix post×email; Contacts+Topic chỉ sync subscribe/opt-in; Phase 1 xong (subscribe, unsub, webhook); Phase 2–3: publish + admin UI."
+overview: "Newsletter /blog — transactional emails.send; Neon tracking; Phase 1 ✅; Phase 2: publishPost + template + admin APIs + /admin/newsletter only (không publish trên public site)."
 todos:
   - id: resend-dashboard
     content: "Resend: Topic opt-in + webhook (transactional events); env README — không cần Segment/Broadcast"
@@ -15,23 +15,23 @@ todos:
     content: POST /api/newsletter/webhooks/resend (Svix) → cập nhật delivery status
     status: completed
   - id: publish-core
-    content: publishPost + email template + batch resend.emails.send (transactional); POST /api/admin/newsletter/publish
-    status: pending
+    content: publishPost + email-template + batch resend.emails.send; POST/GET admin newsletter APIs (cookie only)
+    status: completed
   - id: admin-ui
-    content: /admin/newsletter hub + BlogPublishButton modal trên /blog/[slug]
-    status: pending
+    content: /admin/newsletter hub — login ADMIN_SECRET, bảng bài, Publish, delivery detail (không UI trên /blog)
+    status: completed
   - id: welcome-email
     content: Optional welcome email on subscribe (NEWSLETTER_WELCOME_ENABLED, transactional)
     status: pending
   - id: verify
-    content: "Phase 1 code audit + build pass (2026-05-27); manual E2E cần migration 004 + env trên Neon/Resend"
-    status: completed
+    content: "Phase 1 audit ✅; Phase 2 E2E sau khi implement publish + admin"
+    status: pending
 isProject: false
 ---
 
 # Newsletter — Transactional send + DB tracking
 
-Plan thống nhất: subscribe trên `/blog`, gửi bài qua **transactional API**, tracking per-email trong Neon, unsubscribe signed.
+Plan thống nhất: subscribe trên `/blog`, gửi bài qua **transactional API**, tracking per-email trong Neon, unsubscribe signed. **Publish chỉ từ `/admin/newsletter`.**
 
 ## Hiện trạng vs còn lại
 
@@ -41,13 +41,13 @@ Plan thống nhất: subscribe trên `/blog`, gửi bài qua **transactional API
 | Subscribe API + `BlogNewsletterForm` + `BlogPageAside` | ✅ |
 | Unsubscribe signed (`GET /api/newsletter/unsubscribe`) | ✅ |
 | Webhook Resend → `newsletter_deliveries` | ✅ (handler sẵn; deliveries tăng khi Publish) |
-| `publishPost()` + email template + admin publish API | ⏳ Phase 2 |
-| `/admin/newsletter` + `BlogPublishButton` | ⏳ Phase 3 |
-| Welcome email (optional) | ⏳ Phase 4 |
+| `publishPost()` + email template + admin publish/read APIs | ✅ Phase 2 |
+| `/admin/newsletter` hub (Publish + stats + deliveries) | ✅ Phase 2 |
+| Welcome email (optional) | ⏳ Phase 3 |
 
-**Đã có:** `lib/newsletter/{config,parse,subscribe,unsubscribe,unsubscribe-token,resend-contact,delivery}.ts`, `app/api/newsletter/{subscribe,unsubscribe,webhooks/resend}/route.ts`, `components/BlogNewsletterForm.tsx`.
+**Đã có:** `lib/newsletter/{config,parse,subscribe,unsubscribe,unsubscribe-token,resend-contact,delivery,publish,email-template,admin-guard}.ts`, `app/api/newsletter/**`, `app/api/admin/newsletter/**`, `components/BlogNewsletterForm.tsx`, `app/admin/newsletter/page.tsx`.
 
-**Chưa có:** `lib/newsletter/publish.ts`, `email-template.ts`, `app/api/admin/newsletter/**`, `BlogPublishButton`, `app/admin/newsletter/page.tsx`.
+**Đã bỏ khỏi scope:** `BlogPublishButton`, modal secret trên `/blog/[slug]`, publish API auth qua `{ secret }` trong body.
 
 ---
 
@@ -61,15 +61,19 @@ Plan thống nhất: subscribe trên `/blog`, gửi bài qua **transactional API
 | **Marketing Contacts + Topics** | Sync opt-in khi subscribe; opt-out khi unsubscribe (compliance Resend) | Gửi bài hàng loạt |
 | **Segments / Broadcasts** | *(optional, dashboard only)* | Luồng Publish trên site; tracking matrix |
 
-**Lý do chốt transactional:**
-- Neon giữ matrix **(post_slug × email)** + idempotent retry — Resend Broadcast không có.
-- Publish lại bài cũ chỉ gửi subscriber/delivery **thiếu** (`pending` / `failed`).
-- Webhook map `email_id` + tags `delivery_id`, `post_slug` về từng row DB.
-- List nhỏ (<1k): Free transactional (~3k email/tháng, **100/ngày**) đủ; cùng quota với contact form.
+**Free tier:** ~3k email/tháng transactional, **100/ngày** — batch publish theo `NEWSLETTER_PUBLISH_BATCH_SIZE` (default 25).
 
-**Free tier cần nhớ:** 1 lần Publish N subscriber = N email transactional. List >100 → batch qua ngày hoặc nâng Pro transactional. Marketing Free **1k contacts** dư cho subscribe sync; **Segment 1/3** không ảnh hưởng luồng này.
+---
 
-**Inbox người nhận:** transactional vs marketing trên Resend **không đổi UI inbox** — cùng From/domain; Gmail có thể xếp Promotions/Updates theo nội dung newsletter.
+## Quyết định: Publish chỉ `/admin` (chốt)
+
+| Trước | Sau |
+|-------|-----|
+| Admin hub + popup Publish trên `/blog/[slug]` | **Chỉ** `/admin/newsletter` |
+| Publish API: admin cookie **hoặc** `{ secret }` body | Publish API: **`verifyAdminCookie` only** ([`lib/admin-auth.ts`](lib/admin-auth.ts)) |
+| `BlogPublishButton` trên trang bài public | **Không làm** — public site không lộ nút/action publish |
+
+**Lý do:** tránh lộ surface publish trên trang public; cùng pattern login với [`/admin/knowledge`](app/admin/knowledge/page.tsx), [`/admin/chat`](app/admin/chat/page.tsx).
 
 ---
 
@@ -78,16 +82,14 @@ Plan thống nhất: subscribe trên `/blog`, gửi bài qua **transactional API
 | Thành phần | Vai trò |
 |-----------|---------|
 | **Resend Transactional** | `emails.send` mỗi subscriber khi Publish |
-| **Resend Contacts/Topics** | Opt-in subscribe, opt-out unsubscribe (không thay DB) |
-| **Neon + Drizzle** | **Source of truth** — subscribers, deliveries, idempotency |
-| **ALTCHA** | Anti-spam form subscribe |
-| **ADMIN_SECRET** | Admin hub + popup Publish |
-
-Resend không lưu “email X đã nhận bài Y” — chỉ events/logs. Business rules nằm ở DB.
+| **Resend Contacts/Topics** | Sync subscribe/unsub (phụ; DB là chính) |
+| **Neon + Drizzle** | Source of truth — subscribers, deliveries |
+| **ALTCHA** | Anti-spam subscribe |
+| **ADMIN_SECRET** | Login `/admin/*` → cookie `ask_admin` |
 
 ```mermaid
 flowchart TB
-  subgraph subscribe [Subscribe]
+  subgraph subscribe [Subscribe public]
     Form[BlogNewsletterForm]
     SubAPI[POST_api_newsletter_subscribe]
     Subscribers[(newsletter_subscribers)]
@@ -95,13 +97,11 @@ flowchart TB
     SubAPI --> ResendContact[Contacts_Topic_opt_in]
   end
 
-  subgraph publish [Publish transactional]
+  subgraph publish [Publish admin only]
     AdminHub["/admin/newsletter"]
-    BlogPopup[Publish_popup_on_blog_slug]
     PubAPI[POST_api_admin_newsletter_publish]
     Deliveries[(newsletter_deliveries)]
-    AdminHub --> PubAPI
-    BlogPopup --> PubAPI
+    AdminHub -->|"cookie ask_admin"| PubAPI
     PubAPI --> Deliveries
     PubAPI --> ResendSend["resend.emails.send"]
   end
@@ -121,41 +121,21 @@ flowchart TB
 
 ---
 
-## Resend dashboard (one-time)
+## Data model (Neon) — không đổi Phase 2
 
-1. **Topic** `Blog updates` (**Opt-in**) → `RESEND_NEWSLETTER_TOPIC_ID` (subscribe sync).
-2. **Webhook** → `https://chunhuduc.com/api/newsletter/webhooks/resend`  
-   Events: `email.sent`, `email.delivered`, `email.failed`, `email.bounced`, `email.complained` → `RESEND_WEBHOOK_SECRET`.
-3. **Không bắt buộc:** Segment, Broadcast campaign trên dashboard.
-
-Docs: [Contacts](https://resend.com/docs/dashboard/audiences/contacts), [Topics](https://resend.com/docs/dashboard/topics/introduction), [Send Email API](https://resend.com/docs/api-reference/emails/send-email), [Webhooks](https://resend.com/docs/webhooks/introduction).
-
----
-
-## Data model (Neon)
-
-Migration: [`supabase/migrations/004_newsletter.sql`](supabase/migrations/004_newsletter.sql) + [`lib/db/schema.ts`](lib/db/schema.ts).
-
-### `newsletter_subscribers`
-- `email` UNIQUE, `status` active|unsubscribed, `resend_contact_id`, timestamps
-
-### `newsletter_posts`
-- `slug` PK, `title`, `summary`, publish metadata
-
-### `newsletter_deliveries`
-- `post_slug`, `subscriber_id`, `email`, `status`, `resend_email_id`
-- **`UNIQUE(post_slug, email)`**
+Migration [`004_newsletter.sql`](supabase/migrations/004_newsletter.sql) + [`lib/db/schema.ts`](lib/db/schema.ts) đã có đủ 3 bảng.
 
 ### Quy tắc Publish (idempotent)
 
-Publish slug `X`:
-1. Upsert `newsletter_posts` từ [`lib/posts.ts`](lib/posts.ts).
-2. Subscribers `active` → `INSERT` delivery `ON CONFLICT DO NOTHING`.
-3. Gửi **transactional** chỉ `pending` / `failed` (skip `delivered`).
-4. Mỗi send: `resend.emails.send` + tags `{ post_slug, delivery_id }` → `sent` + `resend_email_id`.
-5. Webhook → `delivered` / `failed` / `bounced` / `complained`.
+Publish slug `X` (từ admin):
+1. Upsert `newsletter_posts` từ [`lib/posts.ts`](lib/posts.ts) (`getPostBySlug` / `getAllPostsMeta`).
+2. Subscribers `status = active`.
+3. `INSERT newsletter_deliveries … ON CONFLICT (post_slug, email) DO NOTHING`.
+4. Gửi transactional chỉ row `pending` / `failed` (skip `delivered`).
+5. Mỗi send: `resend.emails.send` + tags `{ post_slug, delivery_id }` → update `sent`, `resend_email_id`.
+6. Webhook (Phase 1 ✅) → `delivered` / `failed` / `bounced` / `complained`.
 
-Publish lại: subscriber mới được gửi; đã `delivered` → skip. Quét bài cũ = Publish lại slug đó (DB quyết định ai thiếu).
+Publish lại cùng slug: subscriber mới → gửi; đã `delivered` → skip. Quét bài cũ = bấm Publish lại trên admin.
 
 ---
 
@@ -166,117 +146,138 @@ Publish lại: subscriber mới được gửi; đã `delivered` → skip. Quét
 | `POST /api/newsletter/subscribe` | ALTCHA + rate limit | ✅ |
 | `GET /api/newsletter/unsubscribe?token=` | HMAC signed | ✅ |
 | `POST /api/newsletter/webhooks/resend` | Svix | ✅ |
-| `POST /api/admin/newsletter/publish` | Admin cookie hoặc `{ secret }` | ⏳ |
-| `GET /api/admin/newsletter/posts` | Admin | ⏳ |
-| `GET /api/admin/newsletter/posts/[slug]/deliveries` | Admin | ⏳ |
+| `POST /api/admin/newsletter/publish` | **`verifyAdminCookie`** | ✅ |
+| `GET /api/admin/newsletter/posts` | **`verifyAdminCookie`** | ✅ |
+| `GET /api/admin/newsletter/posts/[slug]/deliveries` | **`verifyAdminCookie`** | ✅ |
 
-Helpers: [`lib/newsletter/`](lib/newsletter/) — thêm `publish.ts`, `email-template.ts` ở Phase 2.
-
----
-
-## Subscribe flow (✅)
-
-- DB insert/reactivate → `syncResendContactOptIn` (Contacts + Topic)
-- UI: [`BlogNewsletterForm.tsx`](components/BlogNewsletterForm.tsx) trong [`BlogPageAside.tsx`](components/BlogPageAside.tsx)
+Pattern auth: giống [`app/api/admin/gaps/route.ts`](app/api/admin/gaps/route.ts) — 401 nếu không có cookie hợp lệ.
 
 ---
 
-## Publish (⏳ Phase 2–3)
+## Phase 2 — Publish + Admin (verify scope)
 
-### Core — `lib/newsletter/publish.ts`
-- Batch `NEWSLETTER_PUBLISH_BATCH_SIZE` (default 25) — tránh timeout Vercel **và** gói Free 100 email/ngày (log warning nếu batch > remaining daily quota).
-- Trả về `{ sent, skipped, failed }`.
+### 2a. Core — `lib/newsletter/publish.ts`
 
-### Email template — `lib/newsletter/email-template.ts`
+- `publishPost(slug: string)` → `{ sent, skipped, failed, errors? }`
+- Đọc markdown → upsert `newsletter_posts`
+- Với mỗi active subscriber: ensure delivery row → send nếu eligible
+- Batch size: `NEWSLETTER_PUBLISH_BATCH_SIZE` (default 25)
+- Sequential hoặc parallel nhỏ trong batch; tránh timeout Vercel (~10s serverless)
+- Resend fail trên 1 email → `failed` + `error_message`, tiếp tục batch
+
+**Phụ thuộc Phase 1:** `delivery.ts` webhook, `unsubscribe-token.ts` (`createUnsubscribeToken`, `buildUnsubscribeUrl`).
+
+### 2b. Email template — `lib/newsletter/email-template.ts`
+
+- `buildNewsletterEmail({ slug, title, summary, subscriberId })` → `{ subject, html, text }`
 - Subject: `New post: {title}`
-- HTML + text, CTA `/blog/{slug}`, footer unsubscribe (signed token)
-- From: `CONTACT_FROM_EMAIL` / `CONTACT_FROM_NAME`
+- CTA → `{siteUrl}/blog/{slug}`
+- Footer unsubscribe: `buildUnsubscribeUrl(createUnsubscribeToken(subscriberId))`
+- From: `CONTACT_FROM_EMAIL` / `CONTACT_FROM_NAME` ([`lib/contact.ts`](lib/contact.ts) pattern)
 
-### Admin hub — `/admin/newsletter`
-- Pattern [`app/admin/knowledge/page.tsx`](app/admin/knowledge/page.tsx)
-- Bảng bài + stats + Publish + chi tiết deliveries
+### 2c. Admin APIs — `app/api/admin/newsletter/`
 
-### Popup — [`BlogPublishButton.tsx`](components/BlogPublishButton.tsx) trên [`app/blog/[slug]/page.tsx`](app/blog/[slug]/page.tsx)
+| File | Method | Body / query | Response |
+|------|--------|--------------|----------|
+| `publish/route.ts` | POST | `{ slug }` | `{ sent, skipped, failed }` |
+| `posts/route.ts` | GET | — | Mọi slug từ `getAllPostsMeta()` + stats delivery từ DB (left join `newsletter_posts`) |
+| `posts/[slug]/deliveries/route.ts` | GET | — | List deliveries: email, status, timestamps |
+
+Stats gợi ý per post: `{ delivered, failed, pending, sent, totalActiveSubscribers }`.
+
+**Posts chưa từng publish:** vẫn hiện trong list (slug từ markdown); stats toàn `pending`/0 cho đến lần Publish đầu.
+
+### 2d. Admin UI — `app/admin/newsletter/page.tsx`
+
+- Client page, pattern [`app/admin/knowledge/page.tsx`](app/admin/knowledge/page.tsx):
+  1. Form login `ADMIN_SECRET` → `POST /api/admin/login` → cookie
+  2. Bảng posts: slug, title, stats, nút **Publish** (confirm optional)
+  3. Expand row / panel: danh sách deliveries (`GET .../deliveries`)
+  4. Sau Publish: refresh stats + toast/message `{ sent, skipped, failed }`
+
+**Không** thêm component publish vào [`app/blog/[slug]/page.tsx`](app/blog/[slug]/page.tsx) hay [`components/BlogPageAside.tsx`](components/BlogPageAside.tsx).
+
+### 2e. Env / docs (Phase 2)
+
+- `.env.example` / README: nhấn mạnh publish cần `ADMIN_SECRET` + đăng nhập admin; webhook + transactional quota
+- Không document popup secret trên blog
+
+### Phase 2 checklist (implementation verify)
+
+| # | Hạng mục | Done khi |
+|---|----------|----------|
+| 1 | `publishPost` idempotent | Publish 2 lần → lần 2 skip `delivered` |
+| 2 | Subscriber mới sau publish | Publish lại → chỉ gửi người thiếu delivery |
+| 3 | Unsubscribed skip | Không insert/send cho `unsubscribed` |
+| 4 | Email có unsub link hợp lệ | Token verify + GET unsub hoạt động |
+| 5 | Resend tags | Webhook cập nhật đúng row qua `delivery_id` |
+| 6 | Admin cookie | Publish/list/deliveries 401 không login |
+| 7 | Public blog | **Không** có nút/modal publish |
+| 8 | `npm run build` | pass |
+
+---
+
+## Phase 3 — Polish
+
+- Welcome email on subscribe (`NEWSLETTER_WELCOME_ENABLED`, transactional)
+- Rate limit riêng cho `POST .../publish` (optional)
+- E2E manual checklist production
 
 ---
 
 ## Env
 
 ```env
-RESEND_API_KEY=                      # transactional + contacts API
+RESEND_API_KEY=
 DATABASE_URL=
-ADMIN_SECRET=
+ADMIN_SECRET=                         # /admin/newsletter login only
 CONTACT_FROM_EMAIL=
 CONTACT_FROM_NAME=
 
-RESEND_NEWSLETTER_TOPIC_ID=          # subscribe/opt-out sync (Marketing Contacts)
-RESEND_WEBHOOK_SECRET=               # transactional webhook events
-NEWSLETTER_UNSUBSCRIBE_SECRET=       # openssl rand -hex 32
+RESEND_NEWSLETTER_TOPIC_ID=           # subscribe sync (optional)
+RESEND_WEBHOOK_SECRET=
+NEWSLETTER_UNSUBSCRIBE_SECRET=
 NEWSLETTER_PUBLISH_BATCH_SIZE=25
-NEWSLETTER_WELCOME_ENABLED=true      # optional, transactional welcome on subscribe
+NEWSLETTER_WELCOME_ENABLED=true       # Phase 3 optional
 ```
-
----
-
-## Phases
-
-### Phase 1 — Foundation ✅
-
-Migration, Drizzle, subscribe, unsub, webhook, form, `.env.example` + README newsletter section.
-
-#### Verification audit (2026-05-27)
-
-| Hạng mục | Plan | Implementation | Ghi chú |
-|----------|------|----------------|---------|
-| Migration `004_newsletter.sql` | 3 bảng + indexes + UNIQUE(post_slug, email) | ✅ Khớp | Partial index `resend_email_id` trong SQL; Drizzle dùng full index — không ảnh hưởng runtime |
-| Drizzle `lib/db/schema.ts` | newsletter_* tables + types | ✅ Khớp | |
-| Subscribe API | ALTCHA, rate limit, honeypot, DB, Resend opt-in | ✅ | `POST /api/newsletter/subscribe`, `lib/newsletter/{parse,subscribe,resend-contact}.ts` |
-| Unsubscribe | HMAC token, HTML page, DB + Resend opt-out | ✅ | `createUnsubscribeToken` sẵn cho Phase 2 email; chưa có UI gửi link (đúng scope) |
-| Webhook | Svix verify, 5 email events → deliveries | ✅ | Handler no-op nếu chưa có delivery row (Publish Phase 2) |
-| Form UI | Client form + BlogPageAside | ✅ | Wired qua `BlogPageMainSplit` trên `/blog` |
-| `.env.example` | Topic, webhook, unsub secret | ✅ | |
-| README | Setup + Phase 1 ops table | ✅ | |
-| `npm run build` | pass | ✅ | 3 newsletter routes registered |
-
-**Hành vi cần biết (không phải bug):**
-- Subscribe cần `DATABASE_URL`; `RESEND_API_KEY` optional (skip contact sync nếu thiếu).
-- Nếu có `RESEND_API_KEY` mà sync fail → API 502 dù row DB có thể đã insert (retry subscribe idempotent).
-- Webhook/delivery matrix chỉ có data sau Phase 2 Publish.
-- Manual E2E Phase 1: chạy migration 004 trên Neon + set env → test subscribe/unsubscribe (token generate qua `createUnsubscribeToken` tạm thời hoặc sau Phase 2 email).
-
-### Phase 2 — Publish (transactional)
-`publishPost()`, email template, `POST /api/admin/newsletter/publish`, admin read APIs.
-
-### Phase 3 — Admin UI
-`/admin/newsletter`, `BlogPublishButton`.
-
-### Phase 4 — Polish
-Welcome email (transactional), E2E checklist, rate limit publish.
 
 ---
 
 ## Không làm trong scope
 
-- Resend **Broadcast** làm luồng chính
-- Segment bắt buộc trên dashboard
-- JWT admin dashboard
+- **Publish UI trên public site** (`BlogPublishButton`, secret modal trên `/blog/**`)
+- Publish API auth qua `{ secret }` body (chỉ cookie admin)
+- Resend Broadcast làm luồng chính
+- JWT admin dashboard (sau)
 - Auto-publish on deploy
-- Force resend người đã `delivered` (nút riêng sau)
+- Force resend người đã `delivered`
 
 ---
 
 ## Kiểm thử
 
-**Phase 1 (manual):**
-1. Subscribe → row trong `newsletter_subscribers` + Resend contact opted-in.
-2. Unsubscribe link → `unsubscribed` + Resend opt-out.
-3. `npm run build` pass.
+**Phase 1 ✅** — xem audit 2026-05-27 bên dưới.
 
-**Sau Phase 2–3:**
-4. Publish slug A → N delivery; N× transactional send; webhook → `delivered`.
-5. Publish lại A → skip delivered; subscriber mới → chỉ người mới.
-6. Publish bài cũ cho subscriber mới subscribe sau → chỉ gửi delivery thiếu.
-7. Publish popup secret sai → 401.
+**Phase 2 (sau implement):**
+1. Login `/admin/newsletter` với `ADMIN_SECRET`.
+2. Publish slug A → N transactional sends; Neon N deliveries; webhook → `delivered`.
+3. Publish lại A → `skipped` cho delivered; subscriber mới → chỉ người mới.
+4. Publish bài cũ (subscriber subscribe sau) → chỉ delivery thiếu.
+5. Gọi publish API không cookie → 401.
+6. `/blog` và `/blog/[slug]` — không có control publish.
+7. `npm run build` pass.
+
+---
+
+## Phase 1 — Foundation ✅ (audit 2026-05-27)
+
+| Hạng mục | Implementation |
+|----------|----------------|
+| Migration + Drizzle | ✅ |
+| Subscribe + form | ✅ |
+| Unsubscribe + token helpers | ✅ |
+| Webhook handler | ✅ |
+| Docs env | ✅ |
 
 ---
 
@@ -284,14 +285,13 @@ Welcome email (transactional), E2E checklist, rate limit publish.
 
 | File | Phase | Trạng thái |
 |------|-------|------------|
-| `supabase/migrations/004_newsletter.sql` | 1 | ✅ |
-| `lib/db/schema.ts` | 1 | ✅ |
 | `lib/newsletter/{config,parse,subscribe,unsubscribe,unsubscribe-token,resend-contact,delivery}.ts` | 1 | ✅ |
-| `app/api/newsletter/subscribe/route.ts` | 1 | ✅ |
-| `app/api/newsletter/unsubscribe/route.ts` | 1 | ✅ |
-| `app/api/newsletter/webhooks/resend/route.ts` | 1 | ✅ |
+| `app/api/newsletter/**` | 1 | ✅ |
 | `components/BlogNewsletterForm.tsx` | 1 | ✅ |
-| `lib/newsletter/{publish,email-template}.ts` | 2 | ⏳ |
-| `app/api/admin/newsletter/**` | 2 | ⏳ |
-| `components/BlogPublishButton.tsx` | 3 | ⏳ |
-| `app/admin/newsletter/page.tsx` | 3 | ⏳ |
+| `lib/newsletter/publish.ts` | 2 | ✅ |
+| `lib/newsletter/email-template.ts` | 2 | ✅ |
+| `app/api/admin/newsletter/publish/route.ts` | 2 | ✅ |
+| `app/api/admin/newsletter/posts/route.ts` | 2 | ✅ |
+| `app/api/admin/newsletter/posts/[slug]/deliveries/route.ts` | 2 | ✅ |
+| `app/admin/newsletter/page.tsx` | 2 | ✅ |
+| ~~`components/BlogPublishButton.tsx`~~ | — | **Removed from scope** |

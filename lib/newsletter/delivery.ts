@@ -3,6 +3,7 @@ import type { WebhookEventPayload } from "resend";
 import { getDb } from "@/lib/db/client";
 import { newsletterDeliveries } from "@/lib/db/schema";
 import type { NewsletterDeliveryStatus } from "@/lib/db/schema";
+import { getEventTag } from "./webhook-tags";
 
 const EMAIL_EVENT_TYPES = new Set([
   "email.sent",
@@ -72,8 +73,7 @@ export async function applyDeliveryWebhookEvent(event: WebhookEventPayload): Pro
   }
 
   const emailId = event.data.email_id;
-  const tags = event.data.tags ?? {};
-  const deliveryId = typeof tags.delivery_id === "string" ? tags.delivery_id : null;
+  const deliveryId = getEventTag(event.data.tags, "delivery_id");
 
   const db = getDb();
   const now = new Date();
@@ -95,6 +95,14 @@ export async function applyDeliveryWebhookEvent(event: WebhookEventPayload): Pro
   if (!row) return false;
 
   if (row.status === "delivered" && nextStatus !== "complained") {
+    return true;
+  }
+
+  // Do not downgrade delivered/sent when a late email.sent webhook arrives.
+  if (
+    nextStatus === "sent" &&
+    (row.status === "delivered" || row.status === "sent")
+  ) {
     return true;
   }
 

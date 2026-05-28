@@ -149,15 +149,14 @@ Subscribe form on the blog index; subscribers and per-post delivery tracking liv
 4. Generate `NEWSLETTER_UNSUBSCRIBE_SECRET`: `openssl rand -hex 32`.
 5. Env: `DATABASE_URL`, `RESEND_API_KEY`, `RESEND_NEWSLETTER_TOPIC_ID`, `RESEND_WEBHOOK_SECRET`, `NEWSLETTER_UNSUBSCRIBE_SECRET`, `ALTCHA_HMAC_SECRET`.
 
-### Operations (Phase 1)
+### Operations (Phase 1–2)
 
 | Task | URL / command |
 |------|----------------|
 | Subscribe | Form on `/blog` → `POST /api/newsletter/subscribe` |
 | Unsubscribe | Signed link → `GET /api/newsletter/unsubscribe?token=…` |
 | Delivery webhooks | Resend → `/api/newsletter/webhooks/resend` |
-
-Publish UI and admin hub (`/admin/newsletter`) ship in Phase 2–3.
+| Publish + delivery stats | `/admin/newsletter` (requires `ADMIN_SECRET` login) |
 
 ## Fonts
 
