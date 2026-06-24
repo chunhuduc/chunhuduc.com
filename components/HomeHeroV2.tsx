@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
+import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
 import { profile } from "@/data/profile";
@@ -40,6 +41,12 @@ export default function HomeHeroV2() {
           className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_20%_30%,rgba(10,14,22,0.45),transparent_55%)]"
           aria-hidden
         />
+        {/* Animated gradient mesh blobs */}
+        <div className="absolute inset-0 overflow-hidden" aria-hidden>
+          <div className="hero-blob hero-blob-1" />
+          <div className="hero-blob hero-blob-2" />
+          <div className="hero-blob hero-blob-3" />
+        </div>
       </div>
 
       <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 max-lg:h-full max-lg:justify-end max-lg:pb-6 max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] lg:justify-center lg:pb-16 lg:pt-28">
@@ -49,7 +56,7 @@ export default function HomeHeroV2() {
             <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-hero-foreground sm:text-5xl lg:text-[2.75rem] xl:text-[3.15rem]">
               I&apos;m Đức,
               <span className="mt-2 block text-2xl font-bold text-hero-muted sm:text-3xl">
-                a Solution Architect and hands-on engineer.
+                a <HeroTypewriter />.
               </span>
             </h1>
             <p className="mt-4 max-w-md text-sm font-semibold text-hero-foreground/90">

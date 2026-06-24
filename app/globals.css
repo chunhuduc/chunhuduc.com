@@ -172,6 +172,83 @@ body {
   }
 }
 
+/* Typewriter cursor blink */
+@keyframes hero-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hero-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.82em;
+  background: var(--accent);
+  margin-left: 3px;
+  vertical-align: -0.08em;
+  border-radius: 1px;
+  animation: hero-cursor-blink 1.06s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cursor {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Hero animated gradient mesh blobs */
+@keyframes hero-blob-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -35px) scale(1.08); }
+  66% { transform: translate(-25px, 28px) scale(0.94); }
+}
+@keyframes hero-blob-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(-40px, 50px) scale(1.06); }
+  75% { transform: translate(35px, -18px) scale(0.92); }
+}
+@keyframes hero-blob-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(25px, 40px) scale(1.1); }
+  60% { transform: translate(-45px, -22px) scale(0.9); }
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-blob-1 {
+  width: min(700px, 70vw);
+  height: min(700px, 70vw);
+  left: -120px;
+  bottom: -120px;
+  background: radial-gradient(circle, rgba(110, 168, 255, 0.38) 0%, transparent 68%);
+  filter: blur(90px);
+  animation: hero-blob-float-1 28s ease-in-out infinite;
+}
+.hero-blob-2 {
+  width: min(550px, 55vw);
+  height: min(550px, 55vw);
+  right: 8%;
+  top: -60px;
+  background: radial-gradient(circle, rgba(99, 77, 200, 0.3) 0%, transparent 68%);
+  filter: blur(100px);
+  animation: hero-blob-float-2 34s ease-in-out infinite;
+}
+.hero-blob-3 {
+  width: min(420px, 42vw);
+  height: min(420px, 42vw);
+  left: 38%;
+  top: 25%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 68%);
+  filter: blur(85px);
+  animation: hero-blob-float-3 22s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob-1, .hero-blob-2, .hero-blob-3 { animation: none; }
+}
+
 /* Sitewide scroll reveal: dual animations like hero; stagger via inline animation-delay from `revealOrderStyle()` */
 .reveal-stagger-item {
   opacity: 0;
