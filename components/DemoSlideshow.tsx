@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 
 export interface DemoSlide {
   image: string;
@@ -135,39 +134,27 @@ export default function DemoSlideshow({
         </div>
       </main>
 
-      {/* Controls + CTA footer */}
-      <footer className="shrink-0 px-6 py-4 flex items-center justify-between gap-4 border-t border-white/10">
-        {/* Prev / counter / Next */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={prev}
-            disabled={total <= 1}
-            aria-label="Previous slide"
-            className="rounded-full px-4 py-1.5 text-sm font-medium disabled:opacity-30 hover:opacity-80 transition-opacity border border-white/20"
-          >
-            ← Prev
-          </button>
-          <span className="text-sm tabular-nums" style={{ color: "rgba(244,244,245,0.5)" }}>
-            {index + 1} / {total}
-          </span>
-          <button
-            onClick={next}
-            disabled={total <= 1}
-            aria-label="Next slide"
-            className="rounded-full px-4 py-1.5 text-sm font-medium disabled:opacity-30 hover:opacity-80 transition-opacity border border-white/20"
-          >
-            Next →
-          </button>
-        </div>
-
-        {/* Contact CTA */}
-        <a
-          href={CONTACT_FORM_HREF}
-          className="rounded-full px-5 py-1.5 text-sm font-semibold transition-opacity hover:opacity-80"
-          style={{ background: "var(--accent)", color: BG }}
+      {/* Controls footer */}
+      <footer className="shrink-0 px-6 py-4 flex items-center gap-4 border-t border-white/10">
+        <button
+          onClick={prev}
+          disabled={total <= 1}
+          aria-label="Previous slide"
+          className="rounded-full px-4 py-1.5 text-sm font-medium disabled:opacity-30 hover:opacity-80 transition-opacity border border-white/20"
         >
-          Work with me
-        </a>
+          ← Prev
+        </button>
+        <span className="text-sm tabular-nums" style={{ color: "rgba(244,244,245,0.5)" }}>
+          {index + 1} / {total}
+        </span>
+        <button
+          onClick={next}
+          disabled={total <= 1}
+          aria-label="Next slide"
+          className="rounded-full px-4 py-1.5 text-sm font-medium disabled:opacity-30 hover:opacity-80 transition-opacity border border-white/20"
+        >
+          Next →
+        </button>
       </footer>
     </div>
   );
