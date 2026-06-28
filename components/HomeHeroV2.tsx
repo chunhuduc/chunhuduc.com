@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
-import HeroSpotlight from "@/components/HeroSpotlight";
-import HeroParticles from "@/components/HeroParticles";
 import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
@@ -39,9 +37,6 @@ export default function HomeHeroV2() {
         <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to left, rgba(5,8,18,0.72) 0%, rgba(5,8,18,0.55) 35%, transparent 62%)"}} />
         {/* Film grain */}
         <div className="hero-noise" aria-hidden />
-        {/* Cursor spotlight + particle dust */}
-        <HeroSpotlight />
-        <HeroParticles />
       </div>
 
       <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 max-lg:h-full max-lg:justify-end max-lg:pb-6 max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] lg:justify-center lg:pb-16 lg:pt-28">
