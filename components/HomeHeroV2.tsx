@@ -42,12 +42,6 @@ export default function HomeHeroV2() {
         {/* Cursor spotlight + particle dust */}
         <HeroSpotlight />
         <HeroParticles />
-        {/* Animated gradient mesh blobs */}
-        <div className="absolute inset-0 overflow-hidden" aria-hidden>
-          <div className="hero-blob hero-blob-1" />
-          <div className="hero-blob hero-blob-2" />
-          <div className="hero-blob hero-blob-3" />
-        </div>
       </div>
 
       <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 max-lg:h-full max-lg:justify-end max-lg:pb-6 max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] lg:justify-center lg:pb-16 lg:pt-28">

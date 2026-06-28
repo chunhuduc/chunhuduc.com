@@ -2,11 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-/**
- * Faint slow-drifting dust particles rendered on canvas over the hero photo.
- * Drop inside the hero's background layer div.
- * Respects prefers-reduced-motion.
- */
 export default function HeroParticles() {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -16,16 +11,17 @@ export default function HeroParticles() {
     const canvas = ref.current!;
     const ctx = canvas.getContext("2d")!;
 
+    let w = 0, h = 0;
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      w = canvas.width = canvas.offsetWidth;
+      h = canvas.height = canvas.offsetHeight;
     };
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize, { passive: true });
 
-    const particles = Array.from({ length: 55 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
+    const particles = Array.from({ length: 24 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
       r: Math.random() * 1.2 + 0.3,
       vx: (Math.random() - 0.5) * 0.25,
       vy: -(Math.random() * 0.18 + 0.04),
@@ -34,25 +30,31 @@ export default function HeroParticles() {
       speed: Math.random() * 0.018 + 0.008,
     }));
 
+    const FRAME_MS = 1000 / 24;
     let raf: number;
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
+    let last = 0;
+
+    const animate = (now: number) => {
+      raf = requestAnimationFrame(animate);
+      if (now - last < FRAME_MS) return;
+      last = now;
+
+      ctx.clearRect(0, 0, w, h);
+      for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
         p.phase += p.speed;
-        if (p.x < -2) p.x = canvas.width + 2;
-        if (p.x > canvas.width + 2) p.x = -2;
-        if (p.y < -2) p.y = canvas.height + 2;
-        const a = p.base * (0.6 + 0.4 * Math.sin(p.phase));
+        if (p.x < -2) p.x = w + 2;
+        else if (p.x > w + 2) p.x = -2;
+        if (p.y < -2) p.y = h + 2;
+        const a = (p.base * (0.6 + 0.4 * Math.sin(p.phase))).toFixed(3);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200, 220, 255, ${a})`;
+        ctx.fillStyle = `rgba(200,220,255,${a})`;
         ctx.fill();
-      });
-      raf = requestAnimationFrame(animate);
+      }
     };
-    animate();
+    raf = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(raf);
