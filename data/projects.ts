@@ -21,9 +21,16 @@ export const projects: ProjectCard[] = [
     tags: ["Akamai", "HarperDB", "CDN", "Streaming security", "Architecture"],
   },
   {
+    title: "TikTok fleet automation system",
+    summary:
+      "Python system for managing 50-100+ TikTok accounts via Geelark cloud Android phones: per-device hardware fingerprinting, Webshare residential proxies, ffmpeg content pipeline with LUT color grading and speed/pitch jitter, OpenAI/Gemini caption rewriting per country, SQLite scheduler with organic cadence jitter, and in-app posting via Geelark task API.",
+    tags: ["Python", "Geelark", "ffmpeg", "SQLite", "Webshare", "OpenAI"],
+    demoUrl: "https://chunhuduc.github.io/tiktok-multi-account-management-geelark",
+  },
+  {
     title: "Creator automation pipelines",
     summary:
-      "Python tooling for TikTok workflows: Playwright/Selenium uploads, FFmpeg/MoviePy processing, OpenAI + Whisper assisted captions and scripting.",
+      "Python tooling for individual TikTok creators: Playwright/Selenium uploads, FFmpeg/MoviePy processing, OpenAI + Whisper assisted captions and scripting.",
     tags: ["Python", "Automation", "OpenAI", "Playwright"],
   },
 ];

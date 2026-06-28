@@ -25,9 +25,10 @@ export const experience: ExperienceEntry[] = [
     period: "2023 to 2025",
     location: "Remote",
     highlights: [
-      "Built automation pipelines for TikTok creators: auto-editing, auto-captioning, trend detection, script generation, batch rendering, and scheduled posting.",
-      "Automated TikTok uploads via Playwright/Selenium with support for captions, hashtags, covers, and posting timeline.",
-      "Integrated OpenAI + Whisper to automate voiceovers, scripts, captions, and content variations.",
+      "Built a Python fleet system for managing 50-100+ TikTok accounts via Geelark cloud Android phones: unique per-device IMEI, MAC, WiFi fingerprint, and SIM; Webshare residential proxies (1 IP per account, country-matched); SQLite state store; 30-second poll daemon.",
+      "Engineered a content pipeline: yt-dlp source scrape, PySceneDetect scene split, ffmpeg LUT color grading, speed/pitch jitter, watermark replacement, OpenAI/Gemini caption rewriting per country.",
+      "Implemented account-safety patterns: post schedules derived from source channel cadence with jitter, Geelark tag-based warmup quarantine, in-app posting via Geelark task API.",
+      "Built creator-focused automation: auto-editing, auto-captioning, trend detection, batch rendering, and scheduled posting via Playwright/Selenium. Integrated OpenAI + Whisper for voiceovers and content variations.",
     ],
   },
   {
