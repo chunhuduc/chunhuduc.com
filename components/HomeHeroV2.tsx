@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
+import HeroSpotlight from "@/components/HeroSpotlight";
+import HeroParticles from "@/components/HeroParticles";
 import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
@@ -29,18 +31,17 @@ export default function HomeHeroV2() {
           className="object-cover object-center"
           aria-hidden
         />
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/50 to-black/25"
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/35"
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_20%_30%,rgba(10,14,22,0.45),transparent_55%)]"
-          aria-hidden
-        />
+        {/* Cinematic text-side scrim */}
+        <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.22) 62%, rgba(0,0,0,0.06) 100%)"}} />
+        <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 42%, rgba(0,0,0,0.18) 100%)"}} />
+        <div aria-hidden className="absolute inset-0" style={{background: "radial-gradient(ellipse 55% 70% at 12% 50%, rgba(5,8,16,0.55), transparent 60%)"}} />
+        {/* Right column text scrim */}
+        <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to left, rgba(5,8,18,0.72) 0%, rgba(5,8,18,0.55) 35%, transparent 62%)"}} />
+        {/* Film grain */}
+        <div className="hero-noise" aria-hidden />
+        {/* Cursor spotlight + particle dust */}
+        <HeroSpotlight />
+        <HeroParticles />
         {/* Animated gradient mesh blobs */}
         <div className="absolute inset-0 overflow-hidden" aria-hidden>
           <div className="hero-blob hero-blob-1" />
@@ -66,7 +67,7 @@ export default function HomeHeroV2() {
             <div className="hidden md:mt-10 md:block">
               <a
                 href="#about"
-                className="group inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-[1.04] hover:opacity-95"
+                className="group inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-[1.04] hover:opacity-95 hero-cta-pulse"
                 aria-label="Scroll to about section"
               >
                 <span className="hero-scroll-chevron-bounce" aria-hidden>
