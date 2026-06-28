@@ -18,7 +18,7 @@ export default function HeroTypewriter() {
   const [text, setText] = useState(ROLES[0]);
   const indexRef = useRef(0);
   const posRef = useRef(ROLES[0].length);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
