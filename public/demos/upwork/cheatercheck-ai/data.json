@@ -1,0 +1,22 @@
+{
+  "title": "CheaterCheck.ai",
+  "tags": ["Next.js", "HarperDB", "Python", "Docker"],
+  "github": "https://github.com/chunhuduc/CheaterCheck.ai",
+  "slides": [
+    {
+      "image": "step-01.png",
+      "caption": "User submits name and location for lookup",
+      "sub": "POST /api/lookup -- HarperDB signals table queried"
+    },
+    {
+      "image": "step-02.png",
+      "caption": "Background check results returned with confidence score",
+      "sub": "GET /api/results/:id -- scored by Python ML model"
+    },
+    {
+      "image": "step-03.png",
+      "caption": "Admin dashboard shows all recent lookups",
+      "sub": "HarperDB NoSQL table, Docker-composed microservices"
+    }
+  ]
+}

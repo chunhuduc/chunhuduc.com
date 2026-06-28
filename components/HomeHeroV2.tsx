@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
+import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
 import { profile } from "@/data/profile";
@@ -28,18 +29,14 @@ export default function HomeHeroV2() {
           className="object-cover object-center"
           aria-hidden
         />
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/50 to-black/25"
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/35"
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_20%_30%,rgba(10,14,22,0.45),transparent_55%)]"
-          aria-hidden
-        />
+        {/* Cinematic text-side scrim */}
+        <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.22) 62%, rgba(0,0,0,0.06) 100%)"}} />
+        <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 42%, rgba(0,0,0,0.18) 100%)"}} />
+        <div aria-hidden className="absolute inset-0" style={{background: "radial-gradient(ellipse 55% 70% at 12% 50%, rgba(5,8,16,0.55), transparent 60%)"}} />
+        {/* Right column text scrim */}
+        <div aria-hidden className="absolute inset-0" style={{background: "linear-gradient(to left, rgba(5,8,18,0.72) 0%, rgba(5,8,18,0.55) 35%, transparent 62%)"}} />
+        {/* Film grain */}
+        <div className="hero-noise" aria-hidden />
       </div>
 
       <div className="hero-animate-text relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col px-4 sm:px-6 max-lg:h-full max-lg:justify-end max-lg:pb-6 max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] lg:justify-center lg:pb-16 lg:pt-28">
@@ -49,7 +46,7 @@ export default function HomeHeroV2() {
             <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-hero-foreground sm:text-5xl lg:text-[2.75rem] xl:text-[3.15rem]">
               I&apos;m Đức,
               <span className="mt-2 block text-2xl font-bold text-hero-muted sm:text-3xl">
-                a Solution Architect and hands-on engineer.
+                a <HeroTypewriter />.
               </span>
             </h1>
             <p className="mt-4 max-w-md text-sm font-semibold text-hero-foreground/90">
@@ -59,7 +56,7 @@ export default function HomeHeroV2() {
             <div className="hidden md:mt-10 md:block">
               <a
                 href="#about"
-                className="group inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-[1.04] hover:opacity-95"
+                className="group inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-[1.04] hover:opacity-95 hero-cta-pulse"
                 aria-label="Scroll to about section"
               >
                 <span className="hero-scroll-chevron-bounce" aria-hidden>
