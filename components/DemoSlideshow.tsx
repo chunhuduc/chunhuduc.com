@@ -135,7 +135,7 @@ export default function DemoSlideshow({
       </main>
 
       {/* Controls footer */}
-      <footer className="shrink-0 px-6 py-4 flex items-center gap-4 border-t border-white/10">
+      <footer className="shrink-0 px-6 py-4 flex items-center justify-center gap-4 border-t border-white/10">
         <button
           onClick={prev}
           disabled={total <= 1}
