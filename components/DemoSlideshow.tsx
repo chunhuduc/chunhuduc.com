@@ -18,7 +18,6 @@ export interface DemoData {
 }
 
 const BG = "#0d0f12";
-const ACCENT = "#4f8ef7";
 
 export default function DemoSlideshow({
   data,
@@ -73,7 +72,7 @@ export default function DemoSlideshow({
       <div className="h-[3px] w-full shrink-0" style={{ background: "rgba(255,255,255,0.08)" }}>
         <div
           className="h-full transition-all duration-300"
-          style={{ width: `${progress}%`, background: ACCENT }}
+          style={{ width: `${progress}%`, background: "var(--accent)" }}
         />
       </div>
 
@@ -84,8 +83,7 @@ export default function DemoSlideshow({
           {data.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded px-2 py-0.5 text-xs font-medium"
-              style={{ background: "rgba(79,142,247,0.15)", color: ACCENT }}
+              className="rounded px-2 py-0.5 text-xs font-medium bg-accent/15 text-accent"
             >
               {tag}
             </span>
@@ -96,8 +94,7 @@ export default function DemoSlideshow({
             href={data.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-auto text-sm font-medium hover:opacity-80"
-            style={{ color: ACCENT }}
+            className="ml-auto text-sm font-medium text-accent hover:opacity-80"
           >
             GitHub ↗
           </a>
@@ -167,7 +164,7 @@ export default function DemoSlideshow({
         <a
           href={CONTACT_FORM_HREF}
           className="rounded-full px-5 py-1.5 text-sm font-semibold transition-opacity hover:opacity-80"
-          style={{ background: ACCENT, color: "#0d0f12" }}
+          style={{ background: "var(--accent)", color: BG }}
         >
           Work with me
         </a>
