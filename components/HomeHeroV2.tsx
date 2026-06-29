@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import DownloadCvButton from "@/components/DownloadCvButton";
 import HeroFollowMe from "@/components/HeroFollowMe";
 import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
@@ -54,11 +55,7 @@ export default function HomeHeroV2() {
             </p>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-muted">{profile.headline}</p>
             <div className="mt-8 md:mt-10">
-              <a
-                href="/cv.pdf"
-                download="Chu-Nhu-Duc-Solution-Architect-CV-2026-06-30.pdf"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse"
-              >
+              <DownloadCvButton className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse">
                 <svg
                   className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
                   viewBox="0 0 24 24"
@@ -72,7 +69,7 @@ export default function HomeHeroV2() {
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                 </svg>
                 Download CV
-              </a>
+              </DownloadCvButton>
             </div>
           </div>
 

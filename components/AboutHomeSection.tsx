@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DownloadCvButton from "@/components/DownloadCvButton";
 import HeroFollowMe from "@/components/HeroFollowMe";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
@@ -45,9 +46,7 @@ export default function AboutHomeSection() {
           >
             {profile.aboutLead}
           </p>
-          <a
-            href="/cv.pdf"
-            download="Chu-Nhu-Duc-Solution-Architect-CV-2026-06-30.pdf"
+          <DownloadCvButton
             className="reveal-stagger-item group mt-8 inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-accent/50 hover:text-accent"
             style={ro()}
           >
@@ -64,7 +63,7 @@ export default function AboutHomeSection() {
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
             </svg>
             Download CV
-          </a>
+          </DownloadCvButton>
         </div>
 
         <div className="flex min-w-0 flex-col gap-10">
