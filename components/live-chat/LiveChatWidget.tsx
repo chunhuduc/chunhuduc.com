@@ -11,6 +11,7 @@ import { type FormEvent, useCallback, useEffect, useRef, useState } from "react"
 import {
   LIVE_CHAT_ALTCHA_SESSION_KEY,
   LIVE_CHAT_ALTCHA_TTL_MS,
+  LIVE_CHAT_OPEN_EVENT,
   STORAGE_CONVERSATION_ID,
   STORAGE_LAST_READ_AT,
   STORAGE_VISITOR_TOKEN,
@@ -126,6 +127,12 @@ export default function LiveChatWidget() {
     markAllRead(messages);
     setOpen(false);
   }, [messages, markAllRead]);
+
+  useEffect(() => {
+    const openFromEvent = () => setOpen(true);
+    window.addEventListener(LIVE_CHAT_OPEN_EVENT, openFromEvent);
+    return () => window.removeEventListener(LIVE_CHAT_OPEN_EVENT, openFromEvent);
+  }, []);
 
   useEffect(() => {
     if (open) {

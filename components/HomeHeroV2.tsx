@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import DownloadCvButton from "@/components/DownloadCvButton";
+import WorkWithMeButton from "@/components/WorkWithMeButton";
 import HeroFollowMe from "@/components/HeroFollowMe";
 import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
@@ -55,7 +56,8 @@ export default function HomeHeroV2() {
             </p>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-muted">{profile.headline}</p>
             <div className="mt-8 md:mt-10">
-              <DownloadCvButton className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse">
+              {/* Desktop: download the CV. Mobile: open the live chat instead. */}
+              <DownloadCvButton className="group hidden items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse sm:inline-flex">
                 <svg
                   className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
                   viewBox="0 0 24 24"
@@ -70,6 +72,21 @@ export default function HomeHeroV2() {
                 </svg>
                 Download CV
               </DownloadCvButton>
+              <WorkWithMeButton className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse sm:hidden">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                Work with me
+              </WorkWithMeButton>
             </div>
           </div>
 
