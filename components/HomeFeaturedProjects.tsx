@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
+import ProjectMotif from "@/components/ProjectMotif";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
 import { createRevealOrders } from "@/lib/revealStagger";
@@ -28,6 +30,14 @@ function LockIcon() {
   );
 }
 
+function Tag({ children }: { children: ReactNode }) {
+  return (
+    <span className="rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted">
+      {children}
+    </span>
+  );
+}
+
 export default function HomeFeaturedProjects() {
   const ro = createRevealOrders();
   const featured = projects.find((p) => p.featured);
@@ -37,15 +47,15 @@ export default function HomeFeaturedProjects() {
     <RevealStaggerRoot as="section" aria-labelledby="portfolio-heading">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="reveal-stagger-item" style={ro()}>
-          <SectionLabel>My portfolio</SectionLabel>
+          <SectionLabel>Selected work</SectionLabel>
           <h2
             id="portfolio-heading"
             className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
           >
-            Enterprise and freelance initiative snapshots.
+            Projects that show how I deliver.
           </h2>
           <p className="mt-2 text-sm text-muted">
-            Summaries follow public NDA guidelines — scope and impact over client names.
+            Public code where I can, NDA-safe summaries where I can&apos;t — outcomes over client names.
           </p>
         </div>
         <Link
@@ -57,39 +67,35 @@ export default function HomeFeaturedProjects() {
         </Link>
       </div>
 
-      {/* Featured card — full width, prominent */}
+      {/* Featured card — thumbnail-driven, full width */}
       {featured && (
         <article
-          className="reveal-stagger-item mt-12 overflow-hidden rounded-2xl border border-accent/25 bg-white/[0.04] shadow-[0_18px_56px_rgba(0,0,0,0.38)] transition-[border-color,box-shadow] hover:border-accent/40 hover:shadow-[0_24px_64px_rgba(0,0,0,0.45)]"
+          className="reveal-stagger-item group mt-12 overflow-hidden rounded-2xl border border-accent/25 bg-white/[0.04] shadow-[0_18px_56px_rgba(0,0,0,0.38)] transition-[border-color,box-shadow] hover:border-accent/45 hover:shadow-[0_24px_64px_rgba(0,0,0,0.45)] lg:grid lg:grid-cols-2"
           style={ro()}
         >
-          <div className="h-2 bg-gradient-to-r from-accent via-accent/60 to-accent/20" />
-          <div className="p-6 sm:p-8 lg:grid lg:grid-cols-[1fr_auto] lg:gap-10 lg:items-start">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-accent/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-accent">
-                  Public repo
-                </span>
-                {featured.tags.slice(0, 4).map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <h3 className="mt-4 text-xl font-bold leading-snug text-foreground sm:text-2xl">
-                {featured.title}
-              </h3>
-              {featured.outcome && (
-                <p className="mt-2 text-sm font-semibold text-foreground/85">
-                  {featured.outcome}
-                </p>
-              )}
-              <p className="mt-3 text-sm leading-relaxed text-muted">{featured.summary}</p>
+          {featured.motif && (
+            <div className="relative h-48 lg:h-full lg:min-h-[20rem]">
+              <ProjectMotif motif={featured.motif} className="h-full w-full" glyphClassName="h-56 w-56" />
+              <span className="absolute left-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+                <GithubIcon />
+                Public repo
+              </span>
             </div>
-            <div className="mt-6 flex flex-wrap gap-3 lg:mt-0 lg:flex-col lg:items-end lg:shrink-0">
+          )}
+          <div className="flex flex-col p-6 sm:p-8">
+            <div className="flex flex-wrap gap-2">
+              {featured.tags.slice(0, 5).map((t) => (
+                <Tag key={t}>{t}</Tag>
+              ))}
+            </div>
+            <h3 className="mt-4 text-xl font-bold leading-snug text-foreground sm:text-2xl">
+              {featured.title}
+            </h3>
+            {featured.outcome && (
+              <p className="mt-2 text-sm font-semibold text-foreground/85">{featured.outcome}</p>
+            )}
+            <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{featured.summary}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
               {featured.href && (
                 <a
                   href={featured.href}
@@ -117,7 +123,7 @@ export default function HomeFeaturedProjects() {
         </article>
       )}
 
-      {/* Remaining cards */}
+      {/* Remaining cards — thumbnail banner on top */}
       <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {rest.map((p) => {
           const hasLinks = p.href || p.demoUrl;
@@ -127,16 +133,17 @@ export default function HomeFeaturedProjects() {
               className="reveal-stagger-item group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_18px_48px_rgba(0,0,0,0.32)] transition-[border-color,box-shadow] hover:border-accent/20 hover:shadow-[0_22px_56px_rgba(0,0,0,0.38)]"
               style={ro()}
             >
-              <div className="h-2 bg-gradient-to-r from-accent to-accent/40 transition-opacity group-hover:opacity-90" />
+              {p.motif && (
+                <ProjectMotif
+                  motif={p.motif}
+                  className="h-40 transition-transform duration-500 group-hover:scale-[1.03]"
+                  glyphClassName="h-40 w-40"
+                />
+              )}
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex flex-wrap gap-2">
                   {p.tags.slice(0, 3).map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted"
-                    >
-                      {t}
-                    </span>
+                    <Tag key={t}>{t}</Tag>
                   ))}
                 </div>
                 <h3 className="mt-4 text-lg font-bold leading-snug text-foreground">{p.title}</h3>

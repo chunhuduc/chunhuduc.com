@@ -23,18 +23,23 @@ export default function Home() {
       {/* Full-viewport hero: its own overlays and semantics inside the component */}
       <HomeHeroV2 />
 
-      {/* Strip 1 · soft · About */}
+      {/* Strip 1 · soft · Portfolio (primary conversion asset, surfaced first) */}
       <HomeSurfaceStrip surface="soft" kind="firstAfterHero">
+        <HomeFeaturedProjects />
+      </HomeSurfaceStrip>
+
+      {/* Strip 2 · base · About */}
+      <HomeSurfaceStrip surface="base" kind="continuation">
         <AboutHomeSection />
       </HomeSurfaceStrip>
 
-      {/* Strip 2 · base · Career Highlights */}
-      <HomeSurfaceStrip surface="base" kind="continuation">
+      {/* Strip 3 · soft · Career Highlights */}
+      <HomeSurfaceStrip surface="soft" kind="continuation">
         <CareerHighlightsSection />
       </HomeSurfaceStrip>
 
-      {/* Strip 3 · soft · Skills */}
-      <HomeSurfaceStrip surface="soft" kind="continuation">
+      {/* Strip 4 · base · Skills */}
+      <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="reveal-stagger-item" style={skillsRo()}>
@@ -77,11 +82,6 @@ export default function Home() {
             ))}
           </div>
         </RevealStaggerRoot>
-      </HomeSurfaceStrip>
-
-      {/* Strip 4 · base · Portfolio */}
-      <HomeSurfaceStrip surface="base" kind="continuation">
-        <HomeFeaturedProjects />
       </HomeSurfaceStrip>
 
       {/* Strip 5 · soft · Blog */}
