@@ -12,6 +12,7 @@ import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import WorkTogetherSection from "@/components/WorkTogetherSection";
 import { skillGroups } from "@/data/homeSkills";
+import { testimonials } from "@/data/testimonials";
 import { createRevealOrders } from "@/lib/revealStagger";
 import { getAllPostsMeta } from "@/lib/posts";
 
@@ -19,6 +20,7 @@ export default function Home() {
   const posts = getAllPostsMeta();
   const skillsRo = createRevealOrders();
   const blogRo = createRevealOrders();
+  const hasTestimonials = testimonials.length > 0;
 
   return (
     <>
@@ -98,13 +100,15 @@ export default function Home() {
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 7 · soft · Testimonials */}
-      <HomeSurfaceStrip surface="soft" kind="continuation">
-        <TestimonialsSection />
-      </HomeSurfaceStrip>
+      {/* Strip 7 · soft · Testimonials (only when real quotes exist) */}
+      {hasTestimonials && (
+        <HomeSurfaceStrip surface="soft" kind="continuation">
+          <TestimonialsSection />
+        </HomeSurfaceStrip>
+      )}
 
-      {/* Strip 8 · base · Contact CTA */}
-      <HomeSurfaceStrip surface="base" kind="closing">
+      {/* Closing · Contact CTA — surface keeps soft/base alternation with/without testimonials */}
+      <HomeSurfaceStrip surface={hasTestimonials ? "base" : "soft"} kind="closing">
         <WorkTogetherSection />
       </HomeSurfaceStrip>
     </>
