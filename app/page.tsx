@@ -2,25 +2,21 @@ import Link from "next/link";
 import AboutHomeSection from "@/components/AboutHomeSection";
 import BlogArticlesSection from "@/components/BlogArticlesSection";
 import CareerHighlightsSection from "@/components/CareerHighlightsSection";
+import HomeFeaturedProjects from "@/components/HomeFeaturedProjects";
 // Swap to `@/components/HomeHero` for the two-layer hero (background + portrait cutout).
 import HomeHeroV2 from "@/components/HomeHeroV2";
 import HomeSurfaceStrip from "@/components/HomeSurfaceStrip";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
 import WorkTogetherSection from "@/components/WorkTogetherSection";
-import { projects } from "@/data/projects";
 import { skillGroups } from "@/data/homeSkills";
 import { createRevealOrders } from "@/lib/revealStagger";
 import { getAllPostsMeta } from "@/lib/posts";
 
 export default function Home() {
   const posts = getAllPostsMeta();
-  const featuredProjects = projects.slice(0, 3);
-
   const skillsRo = createRevealOrders();
-  const portfolioRo = createRevealOrders();
   const blogRo = createRevealOrders();
-  // careerRo is created inside CareerHighlightsSection (server component)
 
   return (
     <>
@@ -85,63 +81,7 @@ export default function Home() {
 
       {/* Strip 4 · base · Portfolio */}
       <HomeSurfaceStrip surface="base" kind="continuation">
-        <RevealStaggerRoot as="section">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="reveal-stagger-item" style={portfolioRo()}>
-              <SectionLabel>My portfolio</SectionLabel>
-              <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Enterprise and freelance initiative snapshots.
-              </h2>
-              <p className="mt-2 text-sm text-muted">
-                Summaries follow public NDA guidelines — scope and impact over client names.
-              </p>
-            </div>
-            <Link
-              href="/projects"
-              className="reveal-stagger-item text-sm font-bold text-accent hover:opacity-90 sm:shrink-0"
-              style={portfolioRo()}
-            >
-              Browse all projects -&gt;
-            </Link>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.map((p) => (
-              <article
-                key={p.title}
-                className="reveal-stagger-item group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_18px_48px_rgba(0,0,0,0.32)] transition-[border-color,box-shadow] hover:border-accent/20"
-                style={portfolioRo()}
-              >
-                <div className="h-2 bg-gradient-to-r from-accent to-accent/40 transition-opacity group-hover:opacity-90" />
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="flex flex-wrap gap-2">
-                    {p.tags.slice(0, 3).map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-muted"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="mt-4 text-lg font-bold leading-snug text-foreground">{p.title}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{p.summary}</p>
-                  <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold">
-                    {p.href ? (
-                      <a className="text-accent hover:opacity-90" href={p.href}>
-                        Repository
-                      </a>
-                    ) : null}
-                    {p.demoUrl ? (
-                      <a className="text-accent hover:opacity-90" href={p.demoUrl}>
-                        Demo
-                      </a>
-                    ) : null}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </RevealStaggerRoot>
+        <HomeFeaturedProjects />
       </HomeSurfaceStrip>
 
       {/* Strip 5 · soft · Blog */}
