@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import ProjectArchitecture from "@/components/ProjectArchitecture";
 import ProjectMotif from "@/components/ProjectMotif";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
 import { createRevealOrders } from "@/lib/revealStagger";
-import { projects } from "@/data/projects";
+import { projects, type ProjectCard } from "@/data/projects";
 
 function GithubIcon() {
   return (
@@ -38,19 +39,71 @@ function Tag({ children }: { children: ReactNode }) {
   );
 }
 
-/** Derive GitHub's auto-generated repo preview image from a github.com URL. */
-function githubOgImage(url?: string): string | null {
-  if (!url) return null;
-  const m = url.match(/github\.com\/([^/?#]+)\/([^/?#]+)/);
-  if (!m) return null;
-  return `https://opengraph.githubassets.com/1/${m[1]}/${m[2]}`;
+/** Pill shown over a card banner, e.g. "Public repo" or "NDA-protected". */
+function BannerBadge({ icon, children }: { icon: ReactNode; children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
+      {icon}
+      {children}
+    </span>
+  );
+}
+
+/**
+ * Card banner visual. Priority: real screenshot banner -> architecture diagram
+ * -> motif. Public repos get a "Public repo" pill; everything else (NDA work)
+ * gets an "NDA-protected" pill, since the diagram already conveys the build.
+ */
+function CardVisual({
+  project,
+  className,
+  glyphClassName,
+}: {
+  project: ProjectCard;
+  className?: string;
+  glyphClassName?: string;
+}) {
+  const isPublic = Boolean(project.href);
+  const badge = isPublic ? (
+    <BannerBadge icon={<GithubIcon />}>Public repo</BannerBadge>
+  ) : (
+    <BannerBadge icon={<LockIcon />}>NDA-protected</BannerBadge>
+  );
+
+  if (project.bannerImage) {
+    return (
+      <div className={`relative ${className ?? ""}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={project.bannerImage}
+          alt={`${project.title} preview`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute left-4 top-4 z-10">{badge}</div>
+      </div>
+    );
+  }
+
+  if (project.architecture) {
+    return (
+      <ProjectArchitecture
+        architecture={project.architecture}
+        className={className}
+        badge={badge}
+      />
+    );
+  }
+
+  return (
+    <ProjectMotif motif={project.motif!} className={className} glyphClassName={glyphClassName} />
+  );
 }
 
 export default function HomeFeaturedProjects() {
   const ro = createRevealOrders();
   const featured = projects.find((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
-  const featuredImage = featured ? githubOgImage(featured.href) : null;
 
   return (
     <RevealStaggerRoot as="section" aria-labelledby="portfolio-heading">
@@ -82,37 +135,13 @@ export default function HomeFeaturedProjects() {
           className="reveal-stagger-item group mt-12 overflow-hidden rounded-2xl border border-accent/25 bg-white/[0.04] shadow-[0_18px_56px_rgba(0,0,0,0.38)] transition-[border-color,box-shadow] hover:border-accent/45 hover:shadow-[0_24px_64px_rgba(0,0,0,0.45)] lg:grid lg:grid-cols-2"
           style={ro()}
         >
-          {(featuredImage || featured.motif) && (
-            <div className="relative h-48 lg:h-full lg:min-h-[20rem]">
-              {featuredImage ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={featuredImage}
-                    alt={`${featured.title} — GitHub repository preview`}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(ellipse 95% 95% at 50% 45%, transparent 60%, rgba(8,11,18,0.5))",
-                    }}
-                  />
-                </>
-              ) : featured.motif ? (
-                <ProjectMotif motif={featured.motif} className="h-full w-full" glyphClassName="h-56 w-56" />
-              ) : null}
-              {featuredImage && (
-                <span className="absolute left-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
-                  <GithubIcon />
-                  Public repo
-                </span>
-              )}
-            </div>
-          )}
+          <div className="relative h-52 lg:h-full lg:min-h-[20rem]">
+            <CardVisual
+              project={featured}
+              className="h-full w-full"
+              glyphClassName="h-56 w-56"
+            />
+          </div>
           <div className="flex flex-col p-6 sm:p-8">
             <div className="flex flex-wrap gap-2">
               {featured.tags.slice(0, 5).map((t) => (
@@ -158,30 +187,19 @@ export default function HomeFeaturedProjects() {
       <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {rest.map((p) => {
           const hasLinks = p.href || p.demoUrl;
-          const cardImage = githubOgImage(p.href);
           return (
             <article
               key={p.title}
               className="reveal-stagger-item group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_18px_48px_rgba(0,0,0,0.32)] transition-[border-color,box-shadow] hover:border-accent/20 hover:shadow-[0_22px_56px_rgba(0,0,0,0.38)]"
               style={ro()}
             >
-              {cardImage ? (
-                <div className="relative h-40 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={cardImage}
-                    alt={`${p.title} — GitHub repository preview`}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
-              ) : p.motif ? (
-                <ProjectMotif
-                  motif={p.motif}
+              <div className="h-40 overflow-hidden">
+                <CardVisual
+                  project={p}
                   className="h-40 transition-transform duration-500 group-hover:scale-[1.03]"
                   glyphClassName="h-40 w-40"
                 />
-              ) : null}
+              </div>
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex flex-wrap gap-2">
                   {p.tags.slice(0, 3).map((t) => (
@@ -220,9 +238,8 @@ export default function HomeFeaturedProjects() {
                       )}
                     </>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.06] px-3 py-1 text-[11px] font-semibold text-muted">
-                      <LockIcon />
-                      NDA-protected
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted/80">
+                      Architecture overview
                     </span>
                   )}
                 </div>

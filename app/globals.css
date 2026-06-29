@@ -196,6 +196,23 @@ body {
   }
 }
 
+/* Architecture diagram dataflow: marching dashes along edges */
+@keyframes arch-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.arch-flow {
+  animation: arch-flow 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-flow {
+    animation: none;
+  }
+}
+
 
 /* Sitewide scroll reveal: dual animations like hero; stagger via inline animation-delay from `revealOrderStyle()` */
 .reveal-stagger-item {
