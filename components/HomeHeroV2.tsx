@@ -15,7 +15,7 @@ export default function HomeHeroV2() {
   return (
     <section
       id={HEADER_BLEED_ID}
-      className="relative flex min-h-dvh w-full max-lg:h-[100svh] max-lg:max-h-[100svh] flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal] lg:h-[100dvh] lg:max-h-[100dvh]"
+      className="relative flex h-svh min-h-svh w-full flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal]"
       aria-label="Hero"
     >
       <div className="pointer-events-none absolute inset-0 z-0">
