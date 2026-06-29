@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import HeroFollowMe from "@/components/HeroFollowMe";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
@@ -46,37 +45,26 @@ export default function AboutHomeSection() {
           >
             {profile.aboutLead}
           </p>
-          <div
-            className="reveal-stagger-item mt-8 flex flex-wrap items-center gap-x-7 gap-y-4"
+          <a
+            href="/cv.pdf"
+            download="Chu-Nhu-Duc-Solution-Architect-CV-2026-06-30.pdf"
+            className="reveal-stagger-item group mt-8 inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-accent/50 hover:text-accent"
             style={ro()}
           >
-            <Link
-              href="/experience"
-              className="inline-flex items-center gap-1 text-sm font-bold text-foreground underline decoration-foreground/35 underline-offset-[6px] transition-opacity hover:opacity-90"
+            <svg
+              className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
             >
-              More about me
-              <span aria-hidden> -&gt;</span>
-            </Link>
-            <a
-              href="/cv.pdf"
-              download="Chu-Nhu-Duc-CV.pdf"
-              className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-accent/50 hover:text-accent"
-            >
-              <svg
-                className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.25"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-              </svg>
-              Download CV
-            </a>
-          </div>
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Download CV
+          </a>
         </div>
 
         <div className="flex min-w-0 flex-col gap-10">
@@ -116,7 +104,7 @@ export default function AboutHomeSection() {
         {employers.map(({ name, logoSrc }) => (
           <li
             key={name}
-            className="group flex flex-col items-center gap-3.5 rounded-2xl border border-line/70 bg-surface-raised px-4 py-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:bg-white/[0.06]"
+            className="group flex flex-col items-center gap-3.5 px-2 py-4 text-center transition-all duration-300 hover:-translate-y-1"
           >
             <span className="employer-logo-chip relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5 transition-transform duration-300 group-hover:scale-105">
               <Image
