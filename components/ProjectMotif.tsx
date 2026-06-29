@@ -49,9 +49,9 @@ function Glyph({ icon, className }: { icon: ProjectMotifIcon; className?: string
 }
 
 /**
- * NDA-safe generated visual for a project card. Renders a branded gradient
- * with a faint dot grid, a soft highlight, and a large domain glyph.
- * Sizing is controlled by the caller via `className` (e.g. height/aspect).
+ * NDA-safe generated visual for a project card. Renders a layered mesh
+ * gradient with a faint dot grid, concentric ring accent, soft highlight,
+ * and a large domain glyph. Sizing is controlled by the caller via `className`.
  */
 export default function ProjectMotif({
   motif,
@@ -62,33 +62,57 @@ export default function ProjectMotif({
   className?: string;
   glyphClassName?: string;
 }) {
+  const { from, to, icon } = motif;
+  // Multiple radial blobs over a base diagonal gradient → "mesh" depth.
+  const mesh = [
+    `radial-gradient(ellipse 60% 55% at 14% 8%, ${from}, transparent 58%)`,
+    `radial-gradient(ellipse 55% 55% at 92% 16%, ${to}, transparent 52%)`,
+    `radial-gradient(ellipse 85% 75% at 74% 108%, ${from}, transparent 62%)`,
+    `linear-gradient(140deg, ${from} 0%, ${to} 100%)`,
+  ].join(", ");
+
   return (
     <div
       className={`relative overflow-hidden ${className ?? ""}`}
-      style={{ background: `linear-gradient(135deg, ${motif.from}, ${motif.to})` }}
+      style={{ background: mesh }}
       aria-hidden
     >
+      {/* concentric ring accent */}
+      <svg
+        className="absolute -bottom-12 -right-12 h-72 w-72 text-white/10"
+        viewBox="0 0 100 100"
+        fill="none"
+        stroke="currentColor"
+        aria-hidden
+      >
+        <circle cx="50" cy="50" r="47" strokeWidth="0.4" />
+        <circle cx="50" cy="50" r="35" strokeWidth="0.4" />
+        <circle cx="50" cy="50" r="23" strokeWidth="0.4" />
+      </svg>
+      {/* dot grid texture */}
       <div
-        className="absolute inset-0 opacity-[0.16]"
+        className="absolute inset-0 opacity-[0.14]"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.85) 1px, transparent 1px)",
-          backgroundSize: "15px 15px",
+            "radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)",
+          backgroundSize: "16px 16px",
         }}
       />
+      {/* soft top highlight */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 85% 85% at 78% 18%, rgba(255,255,255,0.28), transparent 60%)",
+            "radial-gradient(ellipse 70% 70% at 80% 10%, rgba(255,255,255,0.30), transparent 55%)",
         }}
       />
+      {/* bottom scrim for depth */}
       <div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(to top, rgba(8,11,18,0.45), transparent 55%)" }}
+        style={{ background: "linear-gradient(to top, rgba(8,11,18,0.5), transparent 55%)" }}
       />
       <div className="absolute -bottom-7 -right-6 text-white/25">
-        <Glyph icon={motif.icon} className={glyphClassName} />
+        <Glyph icon={icon} className={glyphClassName} />
       </div>
     </div>
   );
