@@ -5,7 +5,6 @@ import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
 import { profile } from "@/data/profile";
-import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 
 /** Single full-bleed hero photo (`public/hero-v6.jpg`). Swap `HomeHero` back in `app/page.tsx` for the two-layer variant. */
 const HERO_IMAGE = "/hero-v6.jpg";
@@ -54,37 +53,25 @@ export default function HomeHeroV2() {
               {profile.subline}
             </p>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-muted">{profile.headline}</p>
-            <div className="mt-6">
+            <div className="mt-8 md:mt-10">
               <a
-                href={CONTACT_FORM_HREF}
-                className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-[0_6px_20px_rgba(31,75,130,0.35)] transition-all hover:scale-[1.02] hover:opacity-95"
+                href="/cv.pdf"
+                download="DucCN-CV.pdf"
+                className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse"
               >
-                Work together
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <path d="M5 12h14M12 5l7 7-7 7" />
+                <svg
+                  className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                 </svg>
-              </a>
-            </div>
-            <div className="hidden md:mt-10 md:block">
-              <a
-                href="#about"
-                className="group inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-transform hover:scale-[1.04] hover:opacity-95 hero-cta-pulse"
-                aria-label="Scroll to about section"
-              >
-                <span className="hero-scroll-chevron-bounce" aria-hidden>
-                  <svg
-                    className="h-6 w-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.25"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
+                Download CV
               </a>
             </div>
           </div>
