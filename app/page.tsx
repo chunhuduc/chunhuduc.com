@@ -8,6 +8,8 @@ import HomeHeroV2 from "@/components/HomeHeroV2";
 import HomeSurfaceStrip from "@/components/HomeSurfaceStrip";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
+import ServicesSection from "@/components/ServicesSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import WorkTogetherSection from "@/components/WorkTogetherSection";
 import { skillGroups } from "@/data/homeSkills";
 import { createRevealOrders } from "@/lib/revealStagger";
@@ -28,18 +30,23 @@ export default function Home() {
         <HomeFeaturedProjects />
       </HomeSurfaceStrip>
 
-      {/* Strip 2 · base · About */}
+      {/* Strip 2 · base · Services */}
       <HomeSurfaceStrip surface="base" kind="continuation">
+        <ServicesSection />
+      </HomeSurfaceStrip>
+
+      {/* Strip 3 · soft · About */}
+      <HomeSurfaceStrip surface="soft" kind="continuation">
         <AboutHomeSection />
       </HomeSurfaceStrip>
 
-      {/* Strip 3 · soft · Career Highlights */}
-      <HomeSurfaceStrip surface="soft" kind="continuation">
+      {/* Strip 4 · base · Career Highlights */}
+      <HomeSurfaceStrip surface="base" kind="continuation">
         <CareerHighlightsSection />
       </HomeSurfaceStrip>
 
-      {/* Strip 4 · base · Skills */}
-      <HomeSurfaceStrip surface="base" kind="continuation">
+      {/* Strip 5 · soft · Skills */}
+      <HomeSurfaceStrip surface="soft" kind="continuation">
         <RevealStaggerRoot as="section">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="reveal-stagger-item" style={skillsRo()}>
@@ -84,14 +91,19 @@ export default function Home() {
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 5 · soft · Blog */}
-      <HomeSurfaceStrip surface="soft" kind="continuation">
+      {/* Strip 6 · base · Blog */}
+      <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
           <BlogArticlesSection posts={posts} ro={blogRo} showBrowseLink layout="split" />
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 6 · base · Contact CTA */}
+      {/* Strip 7 · soft · Testimonials */}
+      <HomeSurfaceStrip surface="soft" kind="continuation">
+        <TestimonialsSection />
+      </HomeSurfaceStrip>
+
+      {/* Strip 8 · base · Contact CTA */}
       <HomeSurfaceStrip surface="base" kind="closing">
         <WorkTogetherSection />
       </HomeSurfaceStrip>
