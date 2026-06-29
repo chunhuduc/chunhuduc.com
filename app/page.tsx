@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AboutHomeSection from "@/components/AboutHomeSection";
 import BlogArticlesSection from "@/components/BlogArticlesSection";
+import CareerHighlightsSection from "@/components/CareerHighlightsSection";
 // Swap to `@/components/HomeHero` for the two-layer hero (background + portrait cutout).
 import HomeHeroV2 from "@/components/HomeHeroV2";
 import HomeSurfaceStrip from "@/components/HomeSurfaceStrip";
@@ -19,6 +20,7 @@ export default function Home() {
   const skillsRo = createRevealOrders();
   const portfolioRo = createRevealOrders();
   const blogRo = createRevealOrders();
+  // careerRo is created inside CareerHighlightsSection (server component)
 
   return (
     <>
@@ -30,19 +32,30 @@ export default function Home() {
         <AboutHomeSection />
       </HomeSurfaceStrip>
 
-      {/* Strip 2 · base · Skills */}
+      {/* Strip 2 · base · Career Highlights */}
       <HomeSurfaceStrip surface="base" kind="continuation">
+        <CareerHighlightsSection />
+      </HomeSurfaceStrip>
+
+      {/* Strip 3 · soft · Skills */}
+      <HomeSurfaceStrip surface="soft" kind="continuation">
         <RevealStaggerRoot as="section">
-          <SectionLabel className="reveal-stagger-item" style={skillsRo()}>
-            My skills
-          </SectionLabel>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <h2
-              className="reveal-stagger-item max-w-xl text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
+            <div className="reveal-stagger-item" style={skillsRo()}>
+              <SectionLabel>My skills</SectionLabel>
+              <h2
+                className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl"
+              >
+                A practical stack for enterprise web and distributed backends.
+              </h2>
+            </div>
+            <Link
+              href="/experience"
+              className="reveal-stagger-item text-sm font-bold text-accent hover:opacity-90 sm:shrink-0"
               style={skillsRo()}
             >
-              A practical stack for enterprise web and distributed backends.
-            </h2>
+              View full experience -&gt;
+            </Link>
           </div>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {skillGroups.map((g) => (
@@ -70,15 +83,18 @@ export default function Home() {
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 3 · soft · Portfolio */}
-      <HomeSurfaceStrip surface="soft" kind="continuation">
+      {/* Strip 4 · base · Portfolio */}
+      <HomeSurfaceStrip surface="base" kind="continuation">
         <RevealStaggerRoot as="section">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="reveal-stagger-item" style={portfolioRo()}>
               <SectionLabel>My portfolio</SectionLabel>
               <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Recent initiative snapshots (NDA-safe).
+                Enterprise and freelance initiative snapshots.
               </h2>
+              <p className="mt-2 text-sm text-muted">
+                Summaries follow public NDA guidelines — scope and impact over client names.
+              </p>
             </div>
             <Link
               href="/projects"
@@ -128,14 +144,14 @@ export default function Home() {
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 4 · base · Blog */}
-      <HomeSurfaceStrip surface="base" kind="continuation">
+      {/* Strip 5 · soft · Blog */}
+      <HomeSurfaceStrip surface="soft" kind="continuation">
         <RevealStaggerRoot as="section">
           <BlogArticlesSection posts={posts} ro={blogRo} showBrowseLink layout="split" />
         </RevealStaggerRoot>
       </HomeSurfaceStrip>
 
-      {/* Strip 5 · soft · Contact CTA */}
+      {/* Strip 6 · base · Contact CTA */}
       <HomeSurfaceStrip surface="base" kind="closing">
         <WorkTogetherSection />
       </HomeSurfaceStrip>

@@ -66,12 +66,12 @@ export default function AboutHomeSection() {
                 Years of experience
               </span>
             </div>
-            <div className="flex min-w-[12rem] items-baseline gap-3">
+            <div className="flex min-w-[13rem] items-baseline gap-3">
               <span className="text-5xl font-extrabold tabular-nums tracking-tight text-foreground sm:text-[3.25rem]">
-                900
+                6+
               </span>
               <span className="max-w-[9.5rem] text-sm font-medium leading-snug text-muted">
-                TOEIC (English depth)
+                Industries and team contexts
               </span>
             </div>
           </div>
