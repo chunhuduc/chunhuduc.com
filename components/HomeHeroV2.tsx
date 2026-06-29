@@ -53,6 +53,18 @@ export default function HomeHeroV2() {
               {profile.subline}
             </p>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-muted">{profile.headline}</p>
+            <div className="mt-6">
+              <a
+                href="/cv.pdf"
+                download="DucCN-CV.pdf"
+                className="inline-flex items-center gap-2 rounded-lg border border-hero-foreground/20 px-4 py-2 text-sm font-bold text-hero-foreground/80 transition-colors hover:border-hero-foreground/40 hover:text-hero-foreground"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                Download CV
+              </a>
+            </div>
             <div className="hidden md:mt-10 md:block">
               <a
                 href="#about"
