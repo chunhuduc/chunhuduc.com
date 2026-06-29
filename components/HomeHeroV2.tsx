@@ -5,6 +5,7 @@ import HeroTypewriter from "@/components/HeroTypewriter";
 import { HEADER_BLEED_ID } from "@/lib/headerBleed";
 import { getAllPostsMeta } from "@/lib/posts";
 import { profile } from "@/data/profile";
+import { CONTACT_FORM_HREF } from "@/lib/contactHref";
 
 /** Single full-bleed hero photo (`public/hero-v6.jpg`). Swap `HomeHero` back in `app/page.tsx` for the two-layer variant. */
 const HERO_IMAGE = "/hero-v6.jpg";
@@ -53,6 +54,17 @@ export default function HomeHeroV2() {
               {profile.subline}
             </p>
             <p className="mt-5 max-w-md text-base leading-relaxed text-hero-muted">{profile.headline}</p>
+            <div className="mt-6">
+              <a
+                href={CONTACT_FORM_HREF}
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-[0_6px_20px_rgba(31,75,130,0.35)] transition-all hover:scale-[1.02] hover:opacity-95"
+              >
+                Work together
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
             <div className="hidden md:mt-10 md:block">
               <a
                 href="#about"
