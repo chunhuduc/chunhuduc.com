@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import DownloadCvButton from "@/components/DownloadCvButton";
 import HeroFollowMe from "@/components/HeroFollowMe";
 import RevealStaggerRoot from "@/components/RevealStaggerRoot";
 import SectionLabel from "@/components/SectionLabel";
@@ -46,14 +46,24 @@ export default function AboutHomeSection() {
           >
             {profile.aboutLead}
           </p>
-          <Link
-            href="/experience"
-            className="reveal-stagger-item mt-8 inline-flex items-center gap-1 text-sm font-bold text-foreground underline decoration-foreground/35 underline-offset-[6px] transition-opacity hover:opacity-90"
+          <DownloadCvButton
+            className="reveal-stagger-item group mt-8 inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-accent/50 hover:text-accent"
             style={ro()}
           >
-            More about me
-            <span aria-hidden> -&gt;</span>
-          </Link>
+            <svg
+              className="h-4 w-4 transition-transform group-hover:translate-y-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Download CV
+          </DownloadCvButton>
         </div>
 
         <div className="flex min-w-0 flex-col gap-10">
@@ -87,21 +97,26 @@ export default function AboutHomeSection() {
         </p>
       </div>
       <ul
-        className="reveal-stagger-item mt-8 flex list-none flex-col gap-6 p-0 md:flex-row md:flex-wrap md:gap-x-14 md:gap-y-6"
+        className="reveal-stagger-item mt-8 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:grid-cols-5"
         style={ro()}
       >
         {employers.map(({ name, logoSrc }) => (
-          <li key={name} className="flex w-full items-center gap-3 md:w-auto">
-            <span className="employer-logo-chip relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden p-1.5">
+          <li
+            key={name}
+            className="group flex flex-col items-center gap-3.5 px-2 py-4 text-center transition-all duration-300 hover:-translate-y-1"
+          >
+            <span className="employer-logo-chip relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5 transition-transform duration-300 group-hover:scale-105">
               <Image
                 src={logoSrc}
                 alt=""
                 fill
-                sizes="44px"
+                sizes="48px"
                 className="object-contain p-0.5"
               />
             </span>
-            <span className="text-sm font-semibold tracking-tight text-foreground/90">{name}</span>
+            <span className="text-xs font-semibold leading-snug tracking-tight text-foreground/90">
+              {name}
+            </span>
           </li>
         ))}
       </ul>
