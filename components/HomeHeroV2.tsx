@@ -15,7 +15,7 @@ export default function HomeHeroV2() {
   return (
     <section
       id={HEADER_BLEED_ID}
-      className="relative flex min-h-dvh w-full max-lg:h-[100svh] max-lg:max-h-[100svh] flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal] lg:h-[100dvh] lg:max-h-[100dvh]"
+      className="relative flex h-svh min-h-svh w-full flex-col overflow-hidden bg-hero-background text-hero-foreground [container-type:normal]"
       aria-label="Hero"
     >
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -81,14 +81,16 @@ export default function HomeHeroV2() {
             <div className="space-y-0 lg:max-w-md lg:justify-self-end">
               <div className="border-b border-hero-line pb-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-hero-foreground">
-                  About me
+                  What I offer
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-hero-muted line-clamp-4">{profile.aboutFocus}</p>
+                <p className="mt-3 text-sm leading-relaxed text-hero-muted line-clamp-4">
+                  Solution architecture from whiteboard to production — composable web platforms, distributed systems, and secure media delivery. Hands-on across the full stack with a track record at enterprise scale.
+                </p>
                 <Link
                   href="/experience"
                   className="mt-5 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-hero-foreground transition-colors hover:text-accent"
                 >
-                  Learn more
+                  See my work
                   <span aria-hidden> -&gt;</span>
                 </Link>
               </div>

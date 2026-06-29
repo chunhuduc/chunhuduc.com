@@ -8,32 +8,32 @@ export type SkillGroup = {
 export const skillGroups: SkillGroup[] = [
   {
     title: "Backend & architecture",
-    blurb: "Service boundaries, APIs, and dependable delivery patterns.",
+    blurb: "Service design, event-driven patterns, and API contracts that hold under enterprise load.",
     tags: ["Node.js", "TypeScript", "NestJS", "Microservices", "Event-driven"],
   },
   {
     title: "Composable web",
-    blurb: "Editorial platforms, CDN-backed front ends, integration-ready CMS.",
+    blurb: "CDN-backed composable platforms — Sitecore XM Cloud, Next.js, and Vercel for scalable editorial delivery.",
     tags: ["Next.js", "Sitecore XM Cloud", "Vercel", "REST"],
   },
   {
     title: "Streaming & edge security",
-    blurb: "Token enforcement, CDN delivery, high-throughput validation paths.",
+    blurb: "High-throughput token enforcement at CDN edge — abuse mitigation, legitimate-playback flows, and Akamai delivery.",
     tags: ["Akamai", "HarperDB", "Token logic", "Performance"],
   },
   {
     title: "Cloud & DevOps",
-    blurb: "Containers, pipelines, and observable production systems.",
+    blurb: "GCP-native infrastructure: GKE, Cloud SQL, Pub/Sub, CI/CD pipelines, and observable rollouts.",
     tags: ["GCP", "GKE", "Docker", "CI/CD", "Pub/Sub"],
   },
   {
     title: "AI & automation",
-    blurb: "LLM-assisted workflows and reliable browser automation.",
+    blurb: "Python-first: LLM-augmented pipelines, browser automation at scale, and content processing.",
     tags: ["Python", "OpenAI", "Whisper", "Playwright"],
   },
   {
     title: "Data stores",
-    blurb: "Operational databases and caching where latency matters.",
+    blurb: "Operational and caching layers — PostgreSQL, Redis, MongoDB, and Cloud SQL for latency-sensitive workloads.",
     tags: ["PostgreSQL", "Redis", "MongoDB", "Cloud SQL"],
   },
 ];
