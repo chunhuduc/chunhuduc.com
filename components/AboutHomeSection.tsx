@@ -59,7 +59,7 @@ export default function AboutHomeSection() {
             </Link>
             <a
               href="/cv.pdf"
-              download="DucCN-CV.pdf"
+              download="Chu-Nhu-Duc-CV.pdf"
               className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:border-accent/50 hover:text-accent"
             >
               <svg

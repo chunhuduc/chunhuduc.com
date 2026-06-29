@@ -56,7 +56,7 @@ export default function HomeHeroV2() {
             <div className="mt-8 md:mt-10">
               <a
                 href="/cv.pdf"
-                download="DucCN-CV.pdf"
+                download="Chu-Nhu-Duc-CV.pdf"
                 className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(31,75,130,0.4)] transition-all hover:scale-[1.03] hover:opacity-95 hero-cta-pulse"
               >
                 <svg
