@@ -50,7 +50,8 @@ This is a **Next.js 16.2.6 App Router** portfolio + consulting platform. Several
 All site content is typed TypeScript — there is no CMS:
 
 - `data/profile.ts` — name, contact details, social URLs (single source of truth)
-- `data/experience.ts`, `data/projects.ts`, `data/homeSkills.ts` — structured content (project cards link a public repo via `href` when one exists)
+- `data/experience.ts`, `data/homeSkills.ts` — structured content
+- `data/projects.ts` — **generated** by `npm run projects:sync` (`scripts/sync-projects.ts`) from each public repo's README showcase block; never hand-edit. `data/projects-nda.ts` holds the hand-authored entries for NDA-protected projects with no public repo. Format spec: `docs/projects/SHOWCASE-FORMAT.md` in the sibling `SA` workspace.
 - `content/blog/*.md` — blog posts with YAML frontmatter (`title`, `date`, `summary`, optional `repo`, `relatedRepos`)
 
 ### Database

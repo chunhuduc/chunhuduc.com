@@ -22,7 +22,15 @@ Open [http://localhost:3000](http://localhost:3000).
 | `content/blog/*.md` | Blog posts (YAML frontmatter: `title`, `date`, `summary`, optional `repo`, `relatedRepos`) |
 | `data/profile.ts` | Name, headline, contact, social URLs, optional `heroPortrait` (`public/` path) |
 | `data/experience.ts` | Employment entries |
-| `data/projects.ts` | Project cards, public repo link via `href` when available |
+| `data/projects.ts` | **Generated** project cards — run `npm run projects:sync` to regenerate, do not hand-edit |
+| `data/projects-nda.ts` | Hand-authored project cards for NDA-protected work with no public repo |
+
+Public-repo project cards are sourced from each repo's own README (a
+`chunhuduc.com:showcase` block — format documented in
+`docs/projects/SHOWCASE-FORMAT.md` in the sibling `SA` workspace, written
+via that workspace's `/inspect-project` skill). Run `npm run
+projects:sync` (or the `/sync-projects` skill) to pull the latest and
+regenerate `data/projects.ts`.
 
 ## Deploy (Vercel)
 

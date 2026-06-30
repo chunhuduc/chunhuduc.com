@@ -102,8 +102,8 @@ function CardVisual({
 
 export default function HomeFeaturedProjects() {
   const ro = createRevealOrders();
-  const featured = projects.find((p) => p.featured);
-  const rest = projects.filter((p) => !p.featured);
+  // projects is pre-sorted by complexityScore descending (see data/projects.ts); index 0 is the hero card.
+  const [featured, ...rest] = projects;
 
   return (
     <RevealStaggerRoot as="section" aria-labelledby="portfolio-heading">
