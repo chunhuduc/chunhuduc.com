@@ -4,7 +4,6 @@ import { profile } from "@/data/profile";
 import { experience } from "@/data/experience";
 import { projects } from "@/data/projects";
 import { skillGroups } from "@/data/homeSkills";
-import { repos } from "@/data/repos";
 import { getAllPosts } from "@/lib/posts";
 import type { SourceDocument } from "./types";
 
@@ -51,15 +50,6 @@ function serializeSkills(): string {
     .join("\n\n");
 }
 
-function serializeRepos(): string {
-  if (repos.length === 0) {
-    return "No public GitHub repos listed on the site yet.";
-  }
-  return repos
-    .map((r) => `### ${r.title}\n${r.summary}\nTags: ${r.tags.join(", ")}`)
-    .join("\n\n");
-}
-
 export function loadSiteSources(): SourceDocument[] {
   const docs: SourceDocument[] = [
     {
@@ -85,12 +75,6 @@ export function loadSiteSources(): SourceDocument[] {
       source: "data/homeSkills.ts",
       sourceUri: "/#about",
       text: serializeSkills(),
-    },
-    {
-      title: "GitHub showcase",
-      source: "data/repos.ts",
-      sourceUri: "/projects",
-      text: serializeRepos(),
     },
   ];
 

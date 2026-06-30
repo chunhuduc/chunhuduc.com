@@ -138,4 +138,45 @@ export const projects: ProjectCard[] = [
       ],
     },
   },
+  {
+    title: "PyloMarket",
+    summary:
+      "Self-owned Next.js + HarperDB prediction market with Server Actions, GraphQL-defined data model, order-book style trading, JWT/HttpOnly cookie auth, and Solana deposit/withdraw automation. Docker + GitHub Actions deploy to DigitalOcean.",
+    tags: ["Next.js", "HarperDB", "TypeScript", "Solana", "Docker", "GitHub Actions"],
+    href: "https://github.com/chunhuduc/pylomarket",
+    outcome: "Polymarket-style order-book trading with end-to-end Solana wallet automation.",
+    motif: { from: "#7c3aed", to: "#06b6d4", icon: "web" },
+  },
+  {
+    title: "CheaterCheck.ai",
+    summary:
+      "Turborepo monorepo (Next.js 15 + NestJS) with a Postgres-backed job queue on Neon/Prisma, Ably realtime progress, Stripe Checkout paywall with signature-verified webhooks, and Resend email.",
+    tags: ["Next.js", "NestJS", "Turborepo", "Prisma", "Stripe", "Ably"],
+    href: "https://github.com/chunhuduc/CheaterCheck.ai",
+    outcome: "Postgres job queue with realtime progress and a Stripe-gated report flow.",
+    motif: { from: "#0891b2", to: "#84cc16", icon: "automation" },
+  },
+  {
+    title: "stripe-global-payout",
+    summary: "Portfolio reference API demonstrating Stripe Global Payouts integration.",
+    tags: ["Stripe", "Express", "API"],
+    href: "https://github.com/chunhuduc/stripe-global-payout",
+    motif: { from: "#16a34a", to: "#65a30d", icon: "web" },
+  },
+  {
+    title: "Chợ Xuân Mai",
+    summary:
+      'Hyperlocal marketplace for residents of a single apartment complex to pass along household items and post "Tôi cần" (I need) requests, separated from generic Facebook food-listing noise.',
+    tags: ["Next.js", "Marketplace"],
+    href: "https://github.com/chunhuduc/choxuanmai.app",
+    motif: { from: "#db2777", to: "#f97316", icon: "web" },
+  },
+  {
+    title: "ConOi",
+    summary:
+      "Personalized daily email from parent to child, tailored by name, age, and interests. Brainstorm docs plus a tested Google Apps Script proof-of-concept; Next.js + Neon + OpenAI build in progress.",
+    tags: ["Next.js", "Neon", "OpenAI"],
+    href: "https://github.com/chunhuduc/conoi.app",
+    motif: { from: "#f59e0b", to: "#ec4899", icon: "creator" },
+  },
 ];

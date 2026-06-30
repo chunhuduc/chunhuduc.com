@@ -50,7 +50,7 @@ This is a **Next.js 16.2.6 App Router** portfolio + consulting platform. Several
 All site content is typed TypeScript — there is no CMS:
 
 - `data/profile.ts` — name, contact details, social URLs (single source of truth)
-- `data/experience.ts`, `data/projects.ts`, `data/repos.ts`, `data/homeSkills.ts` — structured content
+- `data/experience.ts`, `data/projects.ts`, `data/homeSkills.ts` — structured content (project cards link a public repo via `href` when one exists)
 - `content/blog/*.md` — blog posts with YAML frontmatter (`title`, `date`, `summary`, optional `repo`, `relatedRepos`)
 
 ### Database
