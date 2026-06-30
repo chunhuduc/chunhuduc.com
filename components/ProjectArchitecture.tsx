@@ -71,11 +71,14 @@ export default function ProjectArchitecture({
   architecture,
   className,
   badge,
+  badgeAlign = "left",
 }: {
   architecture: ProjectArchitecture;
   className?: string;
-  /** Optional pill shown top-left over the diagram (e.g. NDA-protected). */
+  /** Optional pill shown over the diagram (e.g. NDA-protected). */
   badge?: ReactNode;
+  /** Corner to anchor the badge in, so it doesn't sit on top of a node label. */
+  badgeAlign?: "left" | "right";
 }) {
   const { from, to, nodes, edges } = architecture;
   const byId = new Map(nodes.map((n) => [n.id, n]));
@@ -108,17 +111,6 @@ export default function ProjectArchitecture({
         className="absolute inset-0"
         style={{ background: "linear-gradient(160deg, rgba(8,11,18,0.32), rgba(8,11,18,0.62))" }}
       />
-      {/* extra top-left scrim so the badge never sits directly over a node label */}
-      {badge && (
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 8% 10%, rgba(8,11,18,0.78), transparent 70%)",
-          }}
-        />
-      )}
 
       <svg
         viewBox="0 0 100 64"
@@ -215,7 +207,11 @@ export default function ProjectArchitecture({
         </g>
       </svg>
 
-      {badge && <div className="absolute left-4 top-4 z-10">{badge}</div>}
+      {badge && (
+        <div className={`absolute top-4 z-10 ${badgeAlign === "right" ? "right-4" : "left-4"}`}>
+          {badge}
+        </div>
+      )}
     </div>
   );
 }

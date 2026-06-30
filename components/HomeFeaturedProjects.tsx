@@ -58,10 +58,13 @@ function CardVisual({
   project,
   className,
   glyphClassName,
+  badgeAlign = "left",
 }: {
   project: ProjectCard;
   className?: string;
   glyphClassName?: string;
+  /** Corner to anchor the banner badge in. The featured card keeps it top-left; grid cards move it top-right to clear diagram node labels. */
+  badgeAlign?: "left" | "right";
 }) {
   const isPublic = Boolean(project.href);
   const badge = isPublic ? (
@@ -80,7 +83,9 @@ function CardVisual({
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute left-4 top-4 z-10">{badge}</div>
+        <div className={`absolute top-4 z-10 ${badgeAlign === "right" ? "right-4" : "left-4"}`}>
+          {badge}
+        </div>
       </div>
     );
   }
@@ -91,6 +96,7 @@ function CardVisual({
         architecture={project.architecture}
         className={className}
         badge={badge}
+        badgeAlign={badgeAlign}
       />
     );
   }
@@ -198,6 +204,7 @@ export default function HomeFeaturedProjects() {
                   project={p}
                   className="h-40 transition-transform duration-500 group-hover:scale-[1.03]"
                   glyphClassName="h-40 w-40"
+                  badgeAlign="right"
                 />
               </div>
               <div className="flex flex-1 flex-col p-6">
