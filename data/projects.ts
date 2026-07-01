@@ -69,6 +69,35 @@ const projectsFromRepos: ProjectCard[] = [
     },
   },
   {
+    title: "ConOi",
+    summary: "ConOi personalizes a daily 'letter' from parent to child, matched to the child's name, age, and interests, and delivers it however the family reads: email today, with a printed A4 letter mailed to the door as the primary long-term channel. Families onboard in a guided wizard, then an AI content engine rotates topics and resources so no letter repeats, writing and sending on a daily schedule without a human in the loop.",
+    tags: ["Next.js", "Neon", "Drizzle", "OpenAI", "Resend"],
+    href: "https://github.com/chunhuduc/conoi.app",
+    outcome: "AI writer that never repeats a topic or resource, running on a daily schedule from one family to many",
+    complexityScore: 7,
+    motif: { from: "#f59e0b", to: "#ec4899", icon: "creator" },
+    architecture: {
+      from: "#f59e0b",
+      to: "#ec4899",
+      nodes: [
+        { id: "onboarding", label: "Family onboarding", x: 18, y: 15, kind: "primary" },
+        { id: "cron", label: "Daily cron", x: 55, y: 15, kind: "default" },
+        { id: "db", label: "Neon (families, topics, logs)", x: 18, y: 55, kind: "store" },
+        { id: "ai", label: "OpenAI content engine", x: 55, y: 55, kind: "default" },
+        { id: "email", label: "Resend email", x: 88, y: 38, kind: "default" },
+        { id: "print", label: "Print + mail fulfillment", x: 88, y: 72, kind: "store" },
+      ],
+      edges: [
+        { from: "onboarding", to: "db", flow: true },
+        { from: "cron", to: "db", flow: true },
+        { from: "db", to: "ai", flow: true },
+        { from: "ai", to: "email", flow: true },
+        { from: "ai", to: "print", flow: true, curve: 4 },
+        { from: "email", to: "db", curve: -6 },
+      ],
+    },
+  },
+  {
     title: "CheaterCheck.ai",
     summary: "Turborepo monorepo (Next.js 15 + NestJS) with a Postgres-backed job queue on Neon/Prisma, Ably realtime progress, Stripe Checkout paywall with signature-verified webhooks, and Resend email.",
     tags: ["Next.js", "NestJS", "Turborepo", "Prisma", "Stripe", "Ably"],
@@ -152,14 +181,6 @@ const projectsFromRepos: ProjectCard[] = [
         { from: "webhook", to: "db", curve: 4 },
       ],
     },
-  },
-  {
-    title: "ConOi",
-    summary: "Personalized daily email from parent to child, tailored by name, age, and interests. Brainstorm docs plus a tested Google Apps Script proof-of-concept; Next.js + Neon + OpenAI build in progress.",
-    tags: ["Next.js", "Neon", "OpenAI"],
-    href: "https://github.com/chunhuduc/conoi.app",
-    complexityScore: 3,
-    motif: { from: "#f59e0b", to: "#ec4899", icon: "creator" },
   },
 ];
 
